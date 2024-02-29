@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subnet módosítás</title>
+</head>
+<body>
+
+    <form id="modifysubnetForm" class="hidden" action="/service/modify" method="post">
+        <input type="hidden" name="form_id" value="subnet-modify">
+
+        <p>Subnet módosítása:</p>
+        <p>Alhálózat neve: </p>
+        <p>{{ configarray[0] }}</p>
+        <input type="hidden" value="{{ configarray[0] }}" id="subnet-name" name="subnet-name" pattern="[a-zA-Z0-9\-\.]*" required>
+        <br>
+
+        <label for="subnet-address">Alhálózat címe:</label><br>
+        <input type="text" value="{{ configarray[1] }}" id="subnet-address" name="subnet-address" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" required>
+        <br>
+        
+        <label for="subnet-mask">Subnet maszk:</label><br>
+        <input type="text" value="{{ configarray[2] }}" id="subnet-mask" name="subnet-mask" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" required>
+        <br>
+
+        <label for="start-address">Kezdő cím:</label><br>
+        <input type="text" value="{{ configarray[3] }}" id="start-address" name="start-address" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" required>
+        <br>
+        <label for="last-address">Utolsó cím:</label><br>
+        <input type="text" value="{{ configarray[4] }}" id="last-address" name="last-address" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" required>
+        <br>
+
+        <label for="dns-server-name">DNS szerver címe:</label><br>
+        <input type="text" value="{{ configarray[5] }}" id="dns-server-name" name="dns-server-name" pattern="[a-zA-Z0-9\-\.]*" required>
+        <br>
+
+        <label for="broadcast-address">Broadcast cím:</label><br>
+        <input type="text" value="{{ configarray[6] }}" id="broadcast-address" name="broadcast-address" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" required>
+        <br>
+
+        <label for="routers">Router címe:</label><br>
+        <input type="text" value="{{ configarray[7] }}" id="routers" name="routers" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" required>
+        <br>
+
+        <label for="ntp-server">NTP szerver:</label><br>
+        <input type="text" {% if configarray[8] == "---" %} value="" {% else %} value="{{ configarray[8] }}" {% endif %} id="ntp-server" name="ntp-server" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}">
+        <br>
+
+        <label for="domain-name">Domain név:</label><br>
+        <input type="text" {% if configarray[9] == "---" %} value="" {% else %} value="{{ configarray[9] }}" {% endif %} id="domain-name" name="domain-name" pattern="[a-zA-Z0-9\-\.]*">
+        <br>
+
+        <label for="default-lease-time">Default lease time:</label><br>
+        <input type="text" value="{{ configarray[10] }}" id="default-lease-time" name="default-lease-time" pattern="[0-9]+" required>
+        <br>
+        <label for="max-lease-time">Max lease time:</label><br>
+        <input type="text" value="{{ configarray[11] }}" id="max-lease-time" name="max-lease-time" pattern="[0-9]+" required>
+        <br>
+        <select name="network-adapter" id="network-adapter" required>
+            {% for i in adapterarray %}
+            <option value="{{ i }}" {% if i == configarray[12] %} selected {% endif %}>{{ i }}</option>
+            {% endfor %}
+        </select>
+        <br>
+
+        <input type="submit" value="Küldés">
+</body>
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{{url_for('static', filename='scripts/dhcp_javascript.js')}}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/dhcp_style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/sidebar_style.css') }}" />
+
+    <title>DHCP</title>
+</head>
+<body>
+    <div class="dhcp_site">
+    <div class="sidebar">
+    {% include 'shared/sidebar.html' %}
+    </div>
+    <div class="main_site">
+    {% if status == 6 %}
+        <p>A DHCP kiszolgáló nincs telepítve.</p>
+        <button id="installdhcpButton">Telepítés</button>
+        <form id="installdhcpForm" class="hidden" action="/service/install" method="post">
+            <input type="hidden" name="form_id" value="dhcp">
+            <p>Adja meg, hogy authoritative legyen-e a kiszolgáló:</p>
+            <input type="radio" id="authoritative" name="authoritative" value="yes">
+            <label for="authoritative">Igen</label>
+            <br>
+            <input type="radio" id="not-authoritative" name="authoritative" value="no">
+            <label for="not-authoritative">Nem</label>
+            <br>
+            
+            <p>Adja meg a ddns-update-style típusát:</p>
+            <input type="radio" id="none" name="ddns-update-style" value="none">
+            <label for="none">None</label>
+            <br>
+            <input type="radio" id="interim" name="ddns-update-style" value="interim">
+            <label for="interim">Interim</label>
+            <br>
+            <input type="radio" id="standard" name="ddns-update-style" value="standard">
+            <label for="standard">Standard</label>
+            <br>
+
+            <p>Subnet megadása:</p>
+            <label for="subnet-name">Alhálózat neve:</label><br>
+            <input type="text" id="subnet-name" name="subnet-name" pattern="[a-zA-Z0-9\-\.]*" required>
+            <br>
+
+            <label for="subnet-address">Alhálózat címe:</label><br>
+            <input type="text" id="subnet-address" name="subnet-address" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" required>
+            <br>
+
+            <label for="start-address">Kezdő cím:</label><br>
+            <input type="text" id="start-address" name="start-address" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" required>
+            <br>
+            <label for="last-address">Utolsó cím:</label><br>
+            <input type="text" id="last-address" name="last-address" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" required>
+            <br>
+
+            <label for="dns-server-name">DNS szerver címe:</label><br>
+            <input type="text" id="dns-server-name" name="dns-server-name" pattern="[a-zA-Z0-9\-\.]*" required>
+            <br>
+
+            <label for="broadcast-address">Broadcast cím:</label><br>
+            <input type="text" id="broadcast-address" name="broadcast-address" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" required>
+            <br>
+
+            <label for="routers">Router címe:</label><br>
+            <input type="text" id="routers" name="routers" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" required>
+            <br>
+
+            <label for="subnet-mask">Subnet maszk:</label><br>
+            <input type="text" id="subnet-mask" name="subnet-mask" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" required>
+            <br>
+
+            <label for="default-lease-time">Default lease time:</label><br>
+            <input type="text" id="default-lease-time" name="default-lease-time" pattern="[0-9]+" required>
+            <br>
+
+            <label for="max-lease-time">Max lease time:</label><br>
+            <input type="text" id="max-lease-time" name="max-lease-time" pattern="[0-9]+" required>
+            <br>
+            
+            <label for="ntp-server">NTP szerver:</label><br>
+            <input type="text" id="ntp-server" name="ntp-server" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}">
+            <br>
+
+            <label for="domain-name">Domain név:</label><br>
+            <input type="text" id="domain-name" name="domain-name" pattern="[a-zA-Z0-9\-\.]*">
+            <br>
+
+            <label for="network-adapter">Hálózati adapter kiválasztása:</label><br>
+            <select name="network-adapter" id="network-adapter" required>
+                {% for i in adapterarray %}
+                <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+            </select>
+            <br>
+
+            <input type="submit" value="Küldés">
+        </form>
+        
+
+    {% else %}
+        <p>A DHCP kiszolgáló telepítve van.</p>
+        <form action="/service/remove" method="post">
+            <input type="hidden" name="form_id" value="dhcp">
+
+            <p>Az eltávolításhoz kattintson az "Eltávolítás gombra!"</p>
+
+            <button type="submit">Eltávolítás</button>
+        </form>
+        {% if status == 7 %}
+            <p>A DHCP kiszolgáló státusza: Aktív</p>
+        {% else %}
+            {% if status == 8 %}
+                <p>A DHCP kiszolgáló státusza: Inaktív</p>
+            {% else %}
+                <p>A DHCP kiszolgáló státusza: Hiba</p>
+            {% endif %}
+        {% endif %}
+
+        {% if status == 7 %}
+        <form action="/service/status" method="post">
+            <input type="hidden" name="form_id" value="dhcp">
+
+            <input type="radio" id="restart" name="startstop" value="restart">
+            <label for="restart">Újraindítás</label><br>
+    
+            <input type="radio" id="stop" name="startstop" value="stop">
+            <label for="stop">Leállítás</label><br>
+
+            <button type="submit">Küldés</button>
+        </form>
+        {% else %}
+        <form action="/service/status" method="post">
+            <input type="hidden" name="form_id" value="dhcp">
+
+            <input type="radio" id="restart" name="startstop" value="restart">
+            <label for="restart">Újraindítás</label><br>
+    
+            <button type="submit">Küldés</button>
+        </form>
+        {% endif %}
+
+        <h1>Konfiguráció</h1>
+        <form id="modifydhcpglobalForm" action="/service/modify" method="post">
+        <input type="hidden" name="form_id" value="dhcp-global-modify">
+
+        <p>Authoritative módosítása:</p>
+        <input type="radio" id="yes" name="authoritative" value="yes" {% if globalconfarray[0] == "authoritative" %} checked {% endif %}>
+        <label for="authoritative">Igen</label>
+        <br>
+        <input type="radio" id="no" name="authoritative" value="no" {% if globalconfarray[0] == "not authoritative" %} checked {% endif %}>
+        <label for="not-authoritative">Nem</label>
+        <br>
+        
+        <p>Ddns-update-style típusa:</p>
+        <input type="radio" id="none" name="ddns-update-style" value="none" {% if globalconfarray[1] == "none" %} checked {% endif %}>
+        <label for="none">None</label>
+        <br>
+        <input type="radio" id="interim" name="ddns-update-style" value="interim" {% if globalconfarray[1] == "interim" %} checked {% endif %}>
+        <label for="interim">Interim</label>
+        <br>
+        <input type="radio" id="standard" name="ddns-update-style" value="standard" {% if globalconfarray[1] == "standard" %} checked {% endif %}>
+        <label for="standard">Standard</label>
+        <br>
+        <button type="submit">Küldés</button>
+        </form>
+        <table border="1">
+            <tr>
+                <th>Név</th>
+                <th>Hálózati cím</th>
+                <th>Alhálózati maszk</th>
+                <th>Első cím</th>
+                <th>Utolsó cím</th>
+                <th>DNS szerver</th>
+                <th>Broadcast</th>
+                <th>Router</th>
+                <th>NTP szerver</th>
+                <th>Domain név</th>
+                <th>Hálózati adapter</th>
+                <th>DLT</th>
+                <th>MLT</th>
+            </tr>
+            <form id="modifysubnetForm" action="/service/modify" method="post">
+                <input type="hidden" name="form_id" value="subnet-check">
+                {% for i in configarray %}
+                    {% if (loop.index-1) % 13 == 0 %}
+                        </tr><tr>
+                        <td>{{ i }}</td>
+                    {% else %}
+                        <td>{{ i }}</td>
+                    {% endif %}
+            
+                    {% if loop.index % 13 == 0 or loop.last %}
+                        <td><button name="modify-subnet-button" id="modifysubnet{{ configarray[loop.index0 - (loop.index % 13) - 12] }}Button" value="modify_subnet_{{ configarray[loop.index0 - (loop.index % 13) - 12] }}_Button">Módosítás</button></td>
+                        <td><button name="delete-subnet-button" id="deletesubnet{{ configarray[loop.index0 - (loop.index % 13) - 12] }}Button" value="delete_subnet_{{ configarray[loop.index0 - (loop.index % 13) - 12] }}_Button">Törlés</button></td>
+                    {% endif %}
+                {% endfor %}
+            </form>
+        
+        </tr></table>
+
+
+        <table border="1">
+            <tr>
+                <th>Név</th>
+                <th>MAC cím</th>
+                <th>IP cím</th>
+            </tr>
+            <form id="modifystatichostForm" action="/service/modify" method="post">
+                <input type="hidden" name="form_id" value="static-host-check">
+                {% for i in staticarray %}
+                    {% if (loop.index-1) % 3 == 0 %}
+                        </tr><tr>
+                        <td>{{ i }}</td>
+                    {% else %}
+                        <td>{{ i }}</td>
+                    {% endif %}
+            
+                    {% if loop.index % 3 == 0 or loop.last %}
+                        <td><button name="modify-static-host-button" id="modifystatichost{{ staticarray[loop.index0 - (loop.index % 3) - 2] }}Button" value="modify_static_host_{{ staticarray[loop.index0 - (loop.index % 3) - 2] }}_Button">Módosítás</button></td>
+                        <td><button name="delete-static-host-button" id="deletestatichost{{ staticarray[loop.index0 - (loop.index % 3) - 2] }}Button" value="delete_static_host_{{ staticarray[loop.index0 - (loop.index % 3) - 2] }}_Button">Törlés</button></td>
+                    {% endif %}
+                {% endfor %}
+            </form>
+        
+        </tr></table>
+
+
+        <button id="addnewsubnetButton">Új subnet hozzáadása</button>
+
+        <form id="addnewsubnetForm" class="hidden" action="/service/add" method="post">
+        <input type="hidden" name="form_id" value="subnet" required>
+
+        <p>Subnet megadása:</p>
+        <label for="subnet-name">Alhálózat neve:</label><br>
+        <input type="text" id="subnet-name" name="subnet-name" pattern="[a-zA-Z0-9\-\.]*" required>
+        <br>
+
+        <label for="subnet-address">Alhálózat címe:</label><br>
+        <input type="text" id="subnet-address" name="subnet-address" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" required>
+        <br>
+
+        <label for="start-address">Kezdő cím:</label><br>
+        <input type="text" id="start-address" name="start-address" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" required>
+        <br>
+        <label for="last-address">Utolsó cím:</label><br>
+        <input type="text" id="last-address" name="last-address" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" required>
+        <br>
+
+        <label for="dns-server-name">DNS szerver címe:</label><br>
+        <input type="text" id="dns-server-name" name="dns-server-name" pattern="[a-zA-Z0-9\-\.]*" required>
+        <br>
+
+        <label for="broadcast-address">Broadcast cím:</label><br>
+        <input type="text" id="broadcast-address" name="broadcast-address" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" required>
+        <br>
+
+        <label for="routers">Router címe:</label><br>
+        <input type="text" id="routers" name="routers" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" required>
+        <br>
+
+        <label for="subnet-mask">Subnet maszk:</label><br>
+        <input type="text" id="subnet-mask" name="subnet-mask" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" required>
+        <br>
+
+        <label for="default-lease-time">Default lease time:</label><br>
+        <input type="text" id="default-lease-time" name="default-lease-time" pattern="[0-9]+" required>
+        <br>
+        <label for="max-lease-time">Max lease time:</label><br>
+        <input type="text" id="max-lease-time" name="max-lease-time" pattern="[0-9]+" required>
+        <br>
+        
+        <label for="ntp-server">NTP szerver:</label><br>
+        <input type="text" id="ntp-server" name="ntp-server" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}">
+        <br>
+
+        <label for="domain-name">Domain név:</label><br>
+        <input type="text" id="domain-name" name="domain-name" pattern="[a-zA-Z0-9\-\.]*">
+        <br>
+
+        <label for="network-adapter">Hálózati adapter kiválasztása:</label><br>
+        <select name="network-adapter" id="network-adapter" required>
+            {% for i in adapterarray %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select>
+        <br>
+
+        <input type="submit" value="Küldés">
+        </form>
+
+
+
+        <button id="addnewstatichostButton">Új statikus hoszt</button>
+
+        <form id="addnewstatichostForm" class="hidden" action="/service/add" method="post">
+        <input type="hidden" name="form_id" value="static-host" required>
+
+
+        <label for="static-host-name">Statikus hoszt neve:</label><br>
+        <input type="text" id="static-host-name" name="static-host-name" pattern="[a-zA-Z0-9\-\.]*" required>
+        <br>
+        <label for="static-host-address">IP cím:</label><br>
+        <input type="text" id="static-host-address" name="static-host-address" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" required>
+        <br>
+        <label for="static-host-mac">MAC cím:</label><br>
+        <input type="text" id="static-host-mac" name="static-host-mac" pattern=([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2}) required>
+        <br>
+
+        <input type="submit" value="Küldés">
+        </form>
+
+
+        <p>Mentés / Visszaállítás</p>
+        <form id="backupForm" action="/service/add" method="post">
+            <input type="hidden" name="form_id" value="backup">
+            <label for="create-backup-button">Jelenlegi konfiguráció mentése</label>
+            <button name="create-backup-button">Mentés</button>
+            <br>
+            {% if lastbackupdate != 1 %}
+            <p>Az utolsó mentés dátuma: {{ lastbackupdate }}</p>
+            <label for="restore-backup-button">Mentett konfiguráció visszaállítása</label>
+            <button name="restore-backup-button">Visszaállítás</button>
+            {% else %}
+                <p>Jelenleg nincs mentett konfiguráció!</p>
+            {% endif %}
+        </form>
+    {% endif %}
+    </div>
+    </div>
+</body>
+</html>

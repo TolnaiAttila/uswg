@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statikus hoszt módosítása</title>
+</head>
+<body>
+    <form id="modifystatichostForm" class="hidden" action="/service/modify" method="post">
+        <input type="hidden" name="form_id" value="static-host-modify">
+
+        <p>Hoszt módosítása:</p>
+        <p>Hoszt neve: </p>
+        <p>{{ configarray[0] }}</p>
+        <input type="hidden" value="{{ configarray[0] }}" id="static-host-name" name="static-host-name" pattern="[a-zA-Z0-9\-\.]*" required>
+        <br>
+
+        <label for="static-host-mac">MAC cím:</label><br>
+        <input type="text" value="{{ configarray[1] }}" id="static-host-mac" name="static-host-mac" pattern=([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2}) required>
+        <br>
+
+        <label for="static-host-address">IP cím:</label><br>
+        <input type="text" value="{{ configarray[2] }}" id="static-host-address" name="static-host-address" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" required>
+        <br>
+        
+
+
+        <input type="submit" value="Küldés">   
+</body>
+</html>
