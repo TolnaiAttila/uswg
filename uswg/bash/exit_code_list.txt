@@ -1,0 +1,11 @@
+successful=0
+file_not_exist=1
+network_error=3
+file_exist=4
+invalid_value=5
+service_not_installed=6
+service_active=7
+service_inactive=8
+service_error=9
+invalid_option=10
+text_not_found_in_file=11
