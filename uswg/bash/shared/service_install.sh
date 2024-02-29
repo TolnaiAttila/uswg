@@ -19,7 +19,14 @@ case $service in
         fi
         exit 0
         ;;
-    dns)
+    bind9)
+        sudo -S apt update
+        sudo -S apt install bind9 -y
+
+        if [ $? -ne 0 ]; then
+            exit 3
+        fi
+        exit 0
         ;;
     samba)
         ;;

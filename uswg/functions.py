@@ -203,9 +203,9 @@ def dhcp_restore_backup():
 
 
 
-def dhcp_status():
-    bash_path = 'bash/dhcp/dhcp_status.sh'
-    check = subprocess.run(['bash', bash_path])
+def status(service):
+    bash_path = 'bash/shared/status.sh'
+    check = subprocess.run(['bash', bash_path, service])
     number = check.returncode
 
     return number
