@@ -1,0 +1,15 @@
+[Unit]
+Description=Gunicorn flask app
+After=network.target
+
+[Service]
+User=uswguser
+Group=sudo
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=uswg
+WorkingDirectory=/home/uswguser/uswg
+ExecStart=/home/uswguser/uswgvenv/bin/gunicorn --workers 12 --bind unix:uswg.sock -m 007 wsgi:app
+
+[Install]
+WantedBy=multi-user.target
