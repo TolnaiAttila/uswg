@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/dns_style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/sidebar_style.css') }}" />
+    <title>DNS</title>
+</head>
+<body>
+    <div class="dns_site">
+        <div class="sidebar">
+            {% include 'shared/sidebar.html' %}
+        </div>
+        <div class="main_site">
+            {% if status == 6 %}
+                <p>A DNS kiszolgáló nincs telepítve.</p>
+                <form id="installdnsForm" action="/service/install" method="post">
+                    <input type="hidden" name="form_id" value="dns">
+                    <input type="submit" value="Telepítés">
+                </form>
+            {% else %}
+                <p>A DNS kiszolgáló telepítve van.</p>
+                <form action="/service/remove" method="post">
+                    <input type="hidden" name="form_id" value="dns">
+
+                    <p>Az eltávolításhoz kattintson az "Eltávolítás" gombra!</p>
+    
+                    <button type="submit">Eltávolítás</button>
+                </form>
+
+                {% if status == 7 %}
+                    <p>A DNS kiszolgáló státusza: Aktív</p>
+                {% else %}
+                    {% if status == 8 %}
+                        <p>A DNS kiszolgáló státusza: Inaktív</p>
+                    {% else %}
+                        <p>A DNS kiszolgáló státusza: Hiba</p>
+                    {% endif %}
+                {% endif %}
+
+
+                {% if status == 7 %}
+                <form action="/service/status" method="post">
+                    <input type="hidden" name="form_id" value="dns">
+        
+                    <input type="radio" id="restart" name="startstop" value="restart">
+                    <label for="restart">Újraindítás</label><br>
+            
+                    <input type="radio" id="stop" name="startstop" value="stop">
+                    <label for="stop">Leállítás</label><br>
+        
+                    <button type="submit">Küldés</button>
+                </form>
+                {% else %}
+                <form action="/service/status" method="post">
+                    <input type="hidden" name="form_id" value="dns">
+        
+                    <input type="radio" id="restart" name="startstop" value="restart">
+                    <label for="restart">Újraindítás</label><br>
+            
+                    <button type="submit">Küldés</button>
+                </form>
+                {% endif %}
+
+
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

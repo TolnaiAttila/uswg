@@ -84,8 +84,8 @@ def login():
 @app.route("/dhcp")
 @token_required
 def dhcp(current_user):
-    
-    status = f.dhcp_status()
+    service = "isc-dhcp-server"
+    status = f.status(service)
     adapterarray = f.list_all_network_adapter()
     
     configarray = f.dhcp_list_all_subnet()
@@ -98,6 +98,13 @@ def dhcp(current_user):
     return render_template('dhcp/dhcp.html', status=status, configarray=configarray, staticarray=staticarray, globalconfarray=globalconfarray, lastbackupdate=lastbackupdate, adapterarray=adapterarray)
 
 
+@app.route("/dns")
+@token_required
+def dns(current_user):
+    service = "named"
+    status = f.status(service)
+
+    return render_template('dns/dns.html', status=status)
 
 @app.route("/service/add", methods=['POST'])
 @token_required
@@ -158,6 +165,8 @@ def service_add(current_user):
             return render_template('shared/error.html', text=text)
 
         return redirect(url_for('dhcp'))
+
+
 
     if id == "backup":
         if 'create-backup-button' in request.form:
@@ -246,6 +255,7 @@ def service_modify(current_user):
             return redirect(url_for('dhcp'))
 
 
+
     if id == "subnet-modify":
         subnetname = str(request.form.get('subnet-name'))
         dnsserver = str(request.form.get('dns-server-name'))
@@ -325,6 +335,7 @@ def service_modify(current_user):
             return render_template('shared/error.html', text=text)
 
 
+
     if id == "dhcp-global-modify":
         author = str(request.form.get('authoritative'))
         ddns = str(request.form.get('ddns-update-style'))
@@ -340,6 +351,8 @@ def service_modify(current_user):
             return render_template('shared/error.html', text=text)
 
         return redirect(url_for('dhcp'))
+
+
 
     if id == "static-host-check":
         if 'modify-static-host-button' in request.form:
@@ -377,6 +390,7 @@ def service_modify(current_user):
             return redirect(url_for('dhcp'))
 
 
+
     if id == "static-host-modify":
         name = str(request.form.get('static-host-name'))
         ip = str(request.form.get('static-host-address'))
@@ -400,6 +414,8 @@ def service_modify(current_user):
 
 
         return redirect(url_for('dhcp'))
+
+
 
     return render_template('shared/error.html', text=text)
 
@@ -467,6 +483,18 @@ def service_install(current_user):
 
         return redirect(url_for('dhcp'))
 
+
+    if id == "dns":
+        service = "bind9"
+        number = f.service_install(service)
+
+        if number != 0:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        return redirect(url_for('dns'))
+
+
     return render_template('shared/error.html', text=text)
 
 @app.route("/service/remove", methods=['POST'])
@@ -486,7 +514,21 @@ def service_remove(current_user):
 
         return redirect(url_for('dhcp'))
 
+
+    if id == "dns":
+        service = "bind9"
+        number = f.service_remove(service)
+
+        if number != 0:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        return redirect(url_for('dns'))
+
+
     return render_template('shared/error.html')
+
+
 
 
 @app.route("/service/status", methods=['POST'])
@@ -505,7 +547,17 @@ def service_status(current_user):
             text = err.error(number)
             return render_template('shared/error.html', text=text)
 
-        
+    
+    if id == "dns":
+        action = str(request.form.get('startstop'))
+        service = "bind9"
+        number = f.service_startstop(service, action)
+
+        if number == 0:
+            return redirect(url_for('dns'))
+        else:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
         
 
     return render_template('shared/error.html', text=text)

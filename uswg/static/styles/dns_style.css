@@ -1,0 +1,18 @@
+.hidden {
+    display: none;
+}
+body {
+    background-color: #3c3c3c;
+    color: white;
+}
+
+.dhcp_site {
+    display: flex;
+    height: 100%;
+    position: relative;
+}
+
+.main_site {
+    margin-left: 160px;
+    padding: 0px 10px;
+  }

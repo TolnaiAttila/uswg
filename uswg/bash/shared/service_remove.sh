@@ -13,14 +13,26 @@ case $service in
         sudo rm -d -r /etc/dhcp/.uswg_dhcp_config/
         sudo rm -d -r /etc/dhcp/.old_uswg_dhcp_config/
 
-        ./bash/dhcp/dhcp_status.sh
+        
+        ./bash/shared/status.sh $service
 
         if [ $? -eq 9 ]; then
-            sudo systemctl reset-failed isc-dhcp-server
+            sudo systemctl reset-failed $service
         fi
         exit 0
         ;;
-    dns)
+    bind9)
+        
+        sudo -S systemctl stop $service
+        sudo -S apt purge $service -y
+
+        ./bash/shared/status.sh $service
+
+        if [ $? -eq 9 ]; then
+            sudo systemctl reset-failed $service
+        fi
+
+        exit 0
         ;;
     samba)
         ;;

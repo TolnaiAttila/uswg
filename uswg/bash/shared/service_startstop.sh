@@ -5,7 +5,7 @@ service=$2
 
 #megfelelo nevre atirni a szolgaltatasokat
 
-if [ $service == "isc-dhcp-server" ] || [ $service == "dns" ] || [ $service == "nfs" ] || [ $service == "samba" ]; then
+if [ $service == "isc-dhcp-server" ] || [ $service == "bind9" ] || [ $service == "nfs" ] || [ $service == "samba" ]; then
 
     case $action in
         stop)
