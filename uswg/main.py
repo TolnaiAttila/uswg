@@ -104,7 +104,16 @@ def dns(current_user):
     service = "named"
     status = f.status(service)
 
-    return render_template('dns/dns.html', status=status)
+    listenon = f.dns_check_listenon()
+
+    if isinstance(listenon, int):
+        number = listenon
+        text = err.error(number)
+        return render_template('shared/error.html', text=text)
+    
+
+
+    return render_template('dns/dns.html', status=status, listenon=listenon)
 
 @app.route("/service/add", methods=['POST'])
 @token_required
@@ -185,6 +194,19 @@ def service_add(current_user):
             
             return redirect(url_for('dhcp'))
         
+    if id == "listen-on":
+
+        ip = str(request.form.get("listen-on-ip"))
+        port = str(request.form.get("listen-on-port"))
+
+        number = f.dns_create_listenon(ip, port)
+
+        if number != 0:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        return redirect(url_for('dns'))
+
 
     return render_template('shared/error.html', text=text)
 
@@ -415,6 +437,15 @@ def service_modify(current_user):
 
         return redirect(url_for('dhcp'))
 
+
+    if id == "listen-on-delete":
+        button = str(request.form.get('delete-listen-on-button'))
+        number = f.dns_delete_listenon(button)
+        if number != 0:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        return redirect(url_for('dns'))
 
 
     return render_template('shared/error.html', text=text)

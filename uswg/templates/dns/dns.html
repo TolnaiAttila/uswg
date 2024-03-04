@@ -62,7 +62,38 @@
                     <button type="submit">Küldés</button>
                 </form>
                 {% endif %}
-
+                <h1>Konfiguráció</h1>
+                <p>Listen-on tulajdonság</p>
+                <table border="1">
+                    <tr>
+                        <th>IP cím</th>
+                        <th>Port</th>
+                    </tr>
+                    <form action="/service/modify" id="deletelistenonForm" method="post">
+                        <input type="hidden" name="form_id" value="listen-on-delete">
+                        {% for i in listenon %}
+                            {% if (loop.index-1) % 2 == 0 %}
+                                </tr><tr>
+                                <td>{{ i }}</td>
+                            {% else %}
+                                <td>{{ i }}</td>
+                            {% endif %}
+        
+                            {% if loop.index % 2 == 0 or loop.last %}
+                                <td><button name="delete-listen-on-button" id="deletelistenon{{ listenon[loop.index0 - (loop.index % 2) - 1] }}{{ listenon[loop.index0 - (loop.index % 2)] }}Button" value="delete_listenon_{{ listenon[loop.index0 - (loop.index % 2) - 1] }}_{{ listenon[loop.index0 - (loop.index % 2)] }}_Button">Törlés</button></td>
+                            {% endif %}
+                        {% endfor %}
+                    </form>
+                </table>
+                <p>Új listen-on hozzáadása:</p>
+                <form action="/service/add" method="post">
+                    <input type="hidden" name="form_id" value="listen-on">
+                    <label for="listen-on-ip">IP cím:</label>
+                    <input type="text" id="listen-on-ip" name="listen-on-ip" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" required>
+                    <label for="listen-on-port">Port:</label>
+                    <input type="text" id="listen-on-port" name="listen-on-port" pattern="[0-9]{1,5}" required>
+                    <input type="submit" value="Küldés">
+                </form>
 
             {% endif %}
         </div>

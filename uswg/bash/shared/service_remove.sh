@@ -27,7 +27,8 @@ case $service in
         sudo -S apt purge $service -y
 
         ./bash/shared/status.sh $service
-
+        sudo -S rm -d -r /etc/bind/.uswg_dns_config
+        sudo -S rm -d -r /etc/bind/.old_uswg_dns_config
         if [ $? -eq 9 ]; then
             sudo systemctl reset-failed $service
         fi
