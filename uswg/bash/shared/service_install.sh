@@ -19,19 +19,29 @@ case $service in
         fi
         exit 0
         ;;
+
     bind9)
         sudo -S apt update
         sudo -S apt install bind9 -y
 
         if [ $? -ne 0 ]; then
             exit 3
+        else
+
+        sudo -S mkdir /etc/bind/.uswg_dns_config
+        sudo -S mkdir /etc/bind/.old_uswg_dns_config
+
         fi
+
         exit 0
         ;;
+
     samba)
         ;;
+
     nfs)
         ;;
+        
     *)
         exit 5
         ;;
