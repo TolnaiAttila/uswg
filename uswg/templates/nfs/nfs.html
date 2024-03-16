@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/nfs_style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/sidebar_style.css') }}" />
+    <title>NFS</title>
+</head>
+<body>
+    <div class="nfs_site">
+        <div class="sidebar">
+            {% include 'shared/sidebar.html' %}
+        </div>
+
+        <div class="main_site">
+            
+            {% if status == 6 %}
+                <p>Az NFS kiszolgáló nincs telepítve.</p>
+                <form id="installnfsForm" action="/service/install" method="post">
+                    <input type="hidden" name="form_id" value="nfs">
+                    <input type="submit" value="Telepítés">
+                </form>
+            {% else %}
+                <p>A NFS kiszolgáló telepítve van.</p>
+                <form action="/service/remove" method="post">
+                    <input type="hidden" name="form_id" value="nfs">
+
+                    <p>Az eltávolításhoz kattintson az "Eltávolítás" gombra!</p>
+
+                    <button type="submit">Eltávolítás</button>
+                </form>
+
+                {% if status == 7 %}
+                    <p>A NFS kiszolgáló státusza: Aktív</p>
+                {% else %}
+                    {% if status == 8 %}
+                        <p>A NFS kiszolgáló státusza: Inaktív</p>
+                    {% else %}
+                        <p>A NFS kiszolgáló státusza: Hiba</p>
+                    {% endif %}
+                {% endif %}
+
+
+                {% if status == 7 %}
+                    <form action="/service/status" method="post">
+                        <input type="hidden" name="form_id" value="nfs">
+    
+                        <input type="radio" id="restart" name="startstop" value="restart">
+                        <label for="restart">Újraindítás</label><br>
+        
+                        <input type="radio" id="stop" name="startstop" value="stop">
+                        <label for="stop">Leállítás</label><br>
+    
+                        <button type="submit">Küldés</button>
+                    </form>
+                {% else %}
+                    <form action="/service/status" method="post">
+                        <input type="hidden" name="form_id" value="nfs">
+    
+                        <input type="radio" id="restart" name="startstop" value="restart">
+                        <label for="restart">Újraindítás</label><br>
+        
+                        <button type="submit">Küldés</button>
+                    </form>
+                {% endif %}
+                <h1>Konfiguráció</h1>
+
+                    <table>
+                        <tr>
+                            <th>Elérhető</th>
+                            <th>Szabályok</th>
+                        </tr>
+                        <form id="modifynfsshareForm" action="/service/modify" method="post">
+                            <input type="hidden" name="form_id" value="nfs-share-check">
+
+                            {% set saveindex = [0] %}
+                            {% set counter = [0] %}
+                            {% for i in configarray %}
+
+                                {% if loop.index0 == 0 or loop.index0 == 1%}
+                                    {% if loop.index0 == 0 %}
+                                        <td class="table-share-name" colspan="4">{{ i }} | 
+                                    {% else %}
+                                        {{ i }}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% else %}
+
+                                    {% if spanarray|length > counter[-1] %}
+
+                                        {% set tmp = (loop.index0) - (saveindex[-1] + 2 + spanarray[counter[-1]] | int * 2) %}
+                                        {% if tmp == 0 %}
+                                            {% set _ = saveindex.append(loop.index0) %}
+                                            <td class="table-share-name" colspan="4">{{ i }} |
+                                        {% else %}
+                                            {% set tmp = (loop.index0) - (1 + 2 + spanarray[counter[-1]] | int * 2) %}
+                                            {% if saveindex[-1] == loop.index0-1 %}
+                                                {{ i }}</td>
+                                                </tr>
+                                                {% set _ = counter.append(counter[-1] + 1) %}
+                                            {% else %}
+                                                {% if loop.index0 % 2 == 1 and saveindex[-1]+1 != loop.index0%}
+                                                    <td>{{i}}</td>
+                                                    <td><button name="modify-nfs-share-button" id="modifynfsshare{{ configarray[saveindex[-1]] }}Button" value="modify_nfs_share_{{ configarray[saveindex[-1]] }}_Button">Módosítás</button></td>
+                                                    <td><button name="delete-nfs-share-button" id="deletenfsshare{{ configarray[saveindex[-1]] }}Button" value="delete_nfs_share_{{ configarray[saveindex[-1]] }}_Button">Törlés</button></td>
+                                                    </tr>
+                                                {% else %}
+                                                    <tr>
+                                                    <td>{{ i }}</td>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endif %}
+                                    {%endif%}
+                                {% endif %}
+
+                            {% endfor %}
+                            
+                        </form>
+                    
+                    </tr></table>
+
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

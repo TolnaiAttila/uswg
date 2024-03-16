@@ -35,12 +35,30 @@ case $service in
 
         exit 0
         ;;
+    
+    nfs-kernel-server)
+        path="/etc/exports"
+        sudo -S apt update
+        sudo -S apt install nfs-kernel-server -y
 
+        if [ $? -ne 0 ]; then
+            exit 3
+        fi
+        sudo -S truncate -s 0 $path
+        sudo -S mkdir /etc/.uswg_nfs_config
+        if [ ! -d /srv ]; then
+            sudo -S mkdir /srv
+        fi
+
+
+        exit 0
+        ;;
+    
+    
     samba)
         ;;
 
-    nfs)
-        ;;
+
         
     *)
         exit 5
