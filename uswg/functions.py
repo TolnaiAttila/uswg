@@ -305,3 +305,32 @@ def dns_delete_listenon(buttonvalue):
     number = check.returncode
 
     return number
+
+
+def nfs_check_configuration():
+    part = "configuration"
+    try:
+        config = subprocess.check_output(["./bash/nfs/nfs_check_part.sh", op.oppart, part], universal_newlines=True)
+        array = config.split()
+        return array
+
+    except:
+        bash_path = '/bash/nfs/nfs_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number
+
+def nfs_check_rowspan():
+    part = "rowspan"
+    try:
+        config = subprocess.check_output(["./bash/nfs/nfs_check_part.sh", op.oppart, part], universal_newlines=True)
+        array = config.split()
+        return array
+
+    except:
+        bash_path = '/bash/nfs/nfs_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number

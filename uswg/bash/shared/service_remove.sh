@@ -26,19 +26,30 @@ case $service in
         sudo -S systemctl stop $service
         sudo -S apt purge $service -y
 
-        ./bash/shared/status.sh $service
         sudo -S rm -d -r /etc/bind/.uswg_dns_config
         sudo -S rm -d -r /etc/bind/.old_uswg_dns_config
+        ./bash/shared/status.sh $service
         if [ $? -eq 9 ]; then
             sudo systemctl reset-failed $service
         fi
 
         exit 0
         ;;
+
+    nfs-kernel-server)
+        sudo -S systemctl stop $service
+        sudo -S apt purge $service -y
+        
+        servicestatusname="nfs-server"
+        ./bash/shared/status.sh $servicestatusname
+        if [ $? -eq 9 ]; then
+            sudo systemctl reset-failed $service
+        fi
+        ;;
+    
     samba)
         ;;
-    nfs)
-        ;;
+
     *)
         exit 5
         ;;
