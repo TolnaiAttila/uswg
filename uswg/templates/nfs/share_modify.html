@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Megosztás módosítás</title>
+</head>
+<body>
+    <form id="modifynfsshareForm" class="hidden" action="/service/modify" method="post">
+        <input type="hidden" name="form_id" value="nfs-share-modify">
+
+        <h1>Megosztás módosítása</h1>
+        <p>Megosztás neve: {{ configarray[0] }}</p>
+        <input type="hidden" value="{{ configarray[0] }}" id="nfs-share-name" name="nfs-share-name" required>
+        <p>Megosztott mappa: {{ configarray[1] }}</p>
+        <input type="hidden" value="{{ configarray[1] }}" id="nfs-share-dir" name="nfs-share-dir" required>
+        <p>Mappa jogosultsága: <input type="text" value="{{ configarray[2] }}" id="dirperm" name="dirperm" pattern="[0-7][0-7][0-7]" required></p>
+        {% set saveindex = [] %}
+        <table border="1">
+            <tr>
+                <th>Elérheti</th>
+                <th celspan="4">Szabályok</th>
+            </tr>
+        {% for i in configarray %}
+            
+            
+            {% if loop.index != 1 and loop.index != 2 and loop.index != 3 %}
+                
+                {% if (loop.index % 5) == 4 %}
+                    <tr>
+                    <td><input type="text" value="{{ i }}" id="access" name="access_{{i}}" required></td>
+                    {% set _ = saveindex.append(loop.index0) %}
+
+                {% endif %}
+                {% if (loop.index % 5) == 0 %}
+                    <td>
+                    <input type="radio" id="rw" name="permission_{{configarray[saveindex[-1]]}}" value="rw" {% if i == "rw" %} checked {% endif %}>
+                    <label for="rw">Írás, olvasás</label>
+                    <br>
+                    <input type="radio" id="ro" name="permission_{{configarray[saveindex[-1]]}}" value="ro" {% if i == "ro" %} checked {% endif %}>
+                    <label for="ro">Csak olvasás</label>
+                    <br>
+                    </td>
+                {% endif %}
+                {% if (loop.index % 5) == 1 %}
+                    <td>
+                    <input type="radio" id="sync" name="sync_{{configarray[saveindex[-1]]}}" value="sync" {% if i == "sync" %} checked {% endif %}>
+                    <label for="sync">sync</label>
+                    <br>
+                    <input type="radio" id="async" name="sync_{{configarray[saveindex[-1]]}}" value="async" {% if i == "async" %} checked {% endif %}>
+                    <label for="async">async</label>
+                    <br>
+                    </td>
+                {% endif %}
+                {% if (loop.index % 5) == 2 %}
+                    <td>
+                    <input type="radio" id="squash" name="squash_{{configarray[saveindex[-1]]}}" value="root_squash" {% if i == "root_squash" %} checked {% endif %}>
+                    <label for="squash">root squash</label>
+                    <br>
+                    <input type="radio" id="nosquash" name="squash_{{configarray[saveindex[-1]]}}" value="no_root_squash" {% if i == "no_root_squash" %} checked {% endif %}>
+                    <label for="nosquash">no root squash</label>
+                    <br>
+                    </td>
+                {% endif %}
+               
+                
+                {% if (loop.index % 5) == 3 %}
+                    <td>
+                        <input type="radio" id="subtree" name="subtree_{{configarray[saveindex[-1]]}}" value="subtree_check" {% if i == "subtree_check" %} checked {% endif %}>
+                        <label for="subtree">subtree check</label>
+                        <br>
+                        <input type="radio" id="nosubtree" name="subtree_{{configarray[saveindex[-1]]}}" value="no_subtree_check" {% if i == "no_subtree_check" %} checked {% endif %}>
+                        <label for="nosubtree">no subtree check</label>
+                        <br>
+                    </td>
+                    </tr>
+                {% endif %}
+
+            {% endif %} 
+        {% endfor %}
+        
+    </form> 
+    </table>
+    <button type="submit">Küldés</button>
+</body>
+</html>

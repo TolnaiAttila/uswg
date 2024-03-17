@@ -24,3 +24,8 @@ table, th, td {
       background-color: coral;
       text-color: white;
   }
+
+  .delete-button{
+    width: 100%
+
+  }

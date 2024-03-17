@@ -334,3 +334,18 @@ def nfs_check_rowspan():
         number = check.returncode
 
         return number
+
+
+def nfs_check_configuration_modify(sharename):
+    part = "configuration"
+    try:
+        config = subprocess.check_output(["./bash/nfs/nfs_check_part.sh", op.oppart, part, op.opinput, sharename], universal_newlines=True)
+        array = config.split()
+        return array
+
+    except:
+        bash_path = '/bash/nfs/nfs_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part, op.opinput, sharename])
+        number = check.returncode
+
+        return number

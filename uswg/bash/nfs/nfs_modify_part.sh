@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ARGS=$(getopt -n "$0" -o x:n:d:a:p:s:c:r:i: --long action:,name:,directory:,access:,permission:,sync:,subtree-check:,root-squash:,directory-permission: -- "$@")
+ARGS=$(getopt -n "$0" -o n:d:a:p:s:c:r:i: --long name:,directory:,access:,permission:,sync:,subtree-check:,root-squash:,directory-permission: -- "$@")
 
 if [ $? -ne 0 ]; then
     exit 10
@@ -8,7 +8,6 @@ fi
 
 eval set -- "$ARGS"
 
-action=""
 name=""
 directory=""
 access=""
@@ -20,14 +19,6 @@ dirperm=""
 
 while true; do
     case "$1" in
-        --action | -x)
-            if [[ -n "$2" && "$2" != -* ]]; then
-                action="$2"
-                shift 2
-            else
-                exit 10
-            fi
-            ;;
 
           --directory-permission | -i)
             if [[ -n "$2" && "$2" != -* ]]; then
@@ -111,7 +102,7 @@ while true; do
 done
 
 
-if [ -z "$name" ] || [ -z "$access" ]; then
+if [ -z "$name" ] || [ -z "$directory" ] || [ -z "$dirperm" ]; then
     exit 5
 fi
 
@@ -132,54 +123,4 @@ if [ "$subtree" != "subtree_check" ] && [ "$subtree" != "no_subtree_check" ]; th
 fi
 
 path="/etc/.uswg_nfs_config/nfs_${name}_share.conf"
-
-case "$action" in
-    create)
-
-        if [ -z "$directory" ] || [ -z "$dirperm" ]; then
-            exit 5
-        fi
-
-        ./bash/shared/exist_file.sh $path
-        if [ $? -eq 0 ]; then
-            exit 4
-        fi
-
-        sudo -S touch $path
-
-        if [ ! -d "/srv/$directory" ]; then
-            sudo -S mkdir -p /srv/$directory
-            sudo -S chmod $dirperm /srv/$directory
-        fi
-        
-        sudo -S echo "/srv/$directory" | sudo -S tee -a $path > /dev/null
-        sudo -S echo "$dirperm" | sudo -S tee -a $path > /dev/null
-        sudo -S echo "$access($permission,$sync,$squash,$subtree)" | sudo -S tee -a $path > /dev/null
-        
-        ;;
-
-    append)
-
-        ./bash/shared/exist_file.sh $path
-        if [ $? -ne 0 ]; then
-            exit 1
-        fi
-
-        sudo -S echo "$access($permission,$sync,$squash,$subtree)" | sudo -S tee -a $path > /dev/null
-
-
-        ;;
-    
-    *)
-        exit 5
-        ;;
-
-esac
-
-
-
-
-
-
-
 
