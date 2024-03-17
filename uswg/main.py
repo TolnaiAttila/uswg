@@ -127,10 +127,6 @@ def nfs(current_user):
     spanarray = f.nfs_check_rowspan()
     if isinstance(configarray, int) or isinstance(spanarray, int):
         return render_template('nfs/nfs.html', status=status)
-    print(configarray)
-    print(spanarray)
-    for i in range(0, len(spanarray)):
-        spanarray[i] = int(spanarray[i])
     
     return render_template('nfs/nfs.html', status=status, configarray=configarray, spanarray=spanarray)
 
@@ -468,6 +464,28 @@ def service_modify(current_user):
         return redirect(url_for('dns'))
 
 
+    if id == "nfs-share-check":
+        if 'modify-nfs-share-button' in request.form:
+            sharename = str(request.form.get('modify-nfs-share-button'))
+            
+            configarray = f.nfs_check_configuration_modify(sharename)
+            print(configarray)
+            if isinstance(configarray, list):
+                return render_template('nfs/share_modify.html', configarray=configarray)
+            
+            else:
+                number = configarray
+                text = err.error(number)
+                return render_template('shared/error.html', text=text)
+
+
+    if id =="nfs-share-modify":
+        form_data = list(request.form.items())
+        print(form_data[1][1])
+        for i in form_data:
+            print(i)
+
+        return redirect(url_for('nfs'))
     return render_template('shared/error.html', text=text)
 
 @app.route("/service/install", methods=['POST'])
