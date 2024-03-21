@@ -16,6 +16,7 @@
         <input type="hidden" value="{{ configarray[1] }}" id="nfs-share-dir" name="nfs-share-dir" required>
         <p>Mappa jogosultsága: <input type="text" value="{{ configarray[2] }}" id="dirperm" name="dirperm" pattern="[0-7][0-7][0-7]" required></p>
         {% set saveindex = [] %}
+        {% set counter = [0] %}
         <table border="1">
             <tr>
                 <th>Elérheti</th>
@@ -34,31 +35,31 @@
                 {% endif %}
                 {% if (loop.index % 5) == 0 %}
                     <td>
-                    <input type="radio" id="rw" name="permission_{{configarray[saveindex[-1]]}}" value="rw" {% if i == "rw" %} checked {% endif %}>
-                    <label for="rw">Írás, olvasás</label>
+                    <input type="radio" id="rw_{{counter[-1]}}" name="permission_{{configarray[saveindex[-1]]}}" value="rw" {% if i == "rw" %} checked {% endif %}>
+                    <label for="rw_{{counter[-1]}}">Írás, olvasás</label>
                     <br>
-                    <input type="radio" id="ro" name="permission_{{configarray[saveindex[-1]]}}" value="ro" {% if i == "ro" %} checked {% endif %}>
-                    <label for="ro">Csak olvasás</label>
+                    <input type="radio" id="ro_{{counter[-1]}}" name="permission_{{configarray[saveindex[-1]]}}" value="ro" {% if i == "ro" %} checked {% endif %}>
+                    <label for="ro_{{counter[-1]}}">Csak olvasás</label>
                     <br>
                     </td>
                 {% endif %}
                 {% if (loop.index % 5) == 1 %}
                     <td>
-                    <input type="radio" id="sync" name="sync_{{configarray[saveindex[-1]]}}" value="sync" {% if i == "sync" %} checked {% endif %}>
-                    <label for="sync">sync</label>
+                    <input type="radio" id="sync_{{counter[-1]}}" name="sync_{{configarray[saveindex[-1]]}}" value="sync" {% if i == "sync" %} checked {% endif %}>
+                    <label for="sync_{{counter[-1]}}">sync</label>
                     <br>
-                    <input type="radio" id="async" name="sync_{{configarray[saveindex[-1]]}}" value="async" {% if i == "async" %} checked {% endif %}>
-                    <label for="async">async</label>
+                    <input type="radio" id="async_{{counter[-1]}}" name="sync_{{configarray[saveindex[-1]]}}" value="async" {% if i == "async" %} checked {% endif %}>
+                    <label for="async_{{counter[-1]}}">async</label>
                     <br>
                     </td>
                 {% endif %}
                 {% if (loop.index % 5) == 2 %}
                     <td>
-                    <input type="radio" id="squash" name="squash_{{configarray[saveindex[-1]]}}" value="root_squash" {% if i == "root_squash" %} checked {% endif %}>
-                    <label for="squash">root squash</label>
+                    <input type="radio" id="squash_{{counter[-1]}}" name="squash_{{configarray[saveindex[-1]]}}" value="root_squash" {% if i == "root_squash" %} checked {% endif %}>
+                    <label for="squash_{{counter[-1]}}">root squash</label>
                     <br>
-                    <input type="radio" id="nosquash" name="squash_{{configarray[saveindex[-1]]}}" value="no_root_squash" {% if i == "no_root_squash" %} checked {% endif %}>
-                    <label for="nosquash">no root squash</label>
+                    <input type="radio" id="nosquash_{{counter[-1]}}" name="squash_{{configarray[saveindex[-1]]}}" value="no_root_squash" {% if i == "no_root_squash" %} checked {% endif %}>
+                    <label for="nosquash_{{counter[-1]}}">no root squash</label>
                     <br>
                     </td>
                 {% endif %}
@@ -66,17 +67,18 @@
                 
                 {% if (loop.index % 5) == 3 %}
                     <td>
-                        <input type="radio" id="subtree" name="subtree_{{configarray[saveindex[-1]]}}" value="subtree_check" {% if i == "subtree_check" %} checked {% endif %}>
-                        <label for="subtree">subtree check</label>
+                        <input type="radio" id="subtree_{{counter[-1]}}" name="subtree_{{configarray[saveindex[-1]]}}" value="subtree_check" {% if i == "subtree_check" %} checked {% endif %}>
+                        <label for="subtree_{{counter[-1]}}">subtree check</label>
                         <br>
-                        <input type="radio" id="nosubtree" name="subtree_{{configarray[saveindex[-1]]}}" value="no_subtree_check" {% if i == "no_subtree_check" %} checked {% endif %}>
-                        <label for="nosubtree">no subtree check</label>
+                        <input type="radio" id="nosubtree_{{counter[-1]}}" name="subtree_{{configarray[saveindex[-1]]}}" value="no_subtree_check" {% if i == "no_subtree_check" %} checked {% endif %}>
+                        <label for="nosubtree_{{counter[-1]}}">no subtree check</label>
                         <br>
                     </td>
                     </tr>
                 {% endif %}
 
-            {% endif %} 
+            {% endif %}
+            {% set _ = counter.append(counter[-1]+1) %}
         {% endfor %}
         
     </form> 

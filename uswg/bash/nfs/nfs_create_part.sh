@@ -111,7 +111,7 @@ while true; do
 done
 
 
-if [ -z "$name" ] || [ -z "$access" ]; then
+if [ -z "$name" ] || [ -z "$access" ] || [ -z "$action" ]; then
     exit 5
 fi
 
@@ -140,6 +140,16 @@ case "$action" in
             exit 5
         fi
 
+        dirslash=`echo $directory | grep "^/srv/.\+$"`
+        if [ ! -z "$dirslash" ]; then
+            directory=`echo $directory | cut -d'/' -f3-`
+        else
+            dirslash=`echo $directory | grep "^/.\+$"`
+            if [ ! -z "$dirslash" ]; then
+                directory=`echo $directory | cut -d'/' -f2-`
+            fi
+        fi
+        
         ./bash/shared/exist_file.sh $path
         if [ $? -eq 0 ]; then
             exit 4

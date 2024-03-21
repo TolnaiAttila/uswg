@@ -125,10 +125,11 @@ def nfs(current_user):
     
     configarray = f.nfs_check_configuration()
     spanarray = f.nfs_check_rowspan()
-    if isinstance(configarray, int) or isinstance(spanarray, int):
+    sharearray = f.nfs_list_all_name() 
+    if isinstance(configarray, int) or isinstance(spanarray, int) or isinstance(sharearray, int):
         return render_template('nfs/nfs.html', status=status)
     
-    return render_template('nfs/nfs.html', status=status, configarray=configarray, spanarray=spanarray)
+    return render_template('nfs/nfs.html', status=status, configarray=configarray, spanarray=spanarray, sharearray=sharearray)
 
 
 @app.route("/service/add", methods=['POST'])
@@ -223,6 +224,48 @@ def service_add(current_user):
         
         return redirect(url_for('dns'))
 
+    if id == "nfs-share":
+        name = str(request.form.get('share-name'))
+        directory= str(request.form.get('share-dir'))
+        dirperm = str(request.form.get('dirperm'))
+        access = str(request.form.get('access'))
+        permission = str(request.form.get('permission'))
+        sync = str(request.form.get('sync'))
+        squash = str(request.form.get('squash'))
+        subtree = str(request.form.get('subtree'))
+
+        number = f.nfs_create_share(name, directory, dirperm, access, permission, sync, subtree, squash)
+        if number != 0:
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        number = f.nfs_merge()
+        if number != 0:
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        return redirect(url_for('nfs'))
+
+
+    if id == "nfs-access":
+        name = str(request.form.get('share-name'))
+        access = str(request.form.get('access'))
+        permission = str(request.form.get('permission'))
+        sync = str(request.form.get('sync'))
+        squash = str(request.form.get('squash'))
+        subtree = str(request.form.get('subtree'))
+
+        number = f.nfs_add_access(name, access, permission, sync, subtree, squash)
+        if number != 0:
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        number = f.nfs_merge()
+        if number != 0:
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        return redirect(url_for('nfs'))
 
     return render_template('shared/error.html', text=text)
 
@@ -469,7 +512,6 @@ def service_modify(current_user):
             sharename = str(request.form.get('modify-nfs-share-button'))
             
             configarray = f.nfs_check_configuration_modify(sharename)
-            print(configarray)
             if isinstance(configarray, list):
                 return render_template('nfs/share_modify.html', configarray=configarray)
             
@@ -478,13 +520,56 @@ def service_modify(current_user):
                 text = err.error(number)
                 return render_template('shared/error.html', text=text)
 
+        if 'delete-nfs-share-button' in request.form:
+            buttoninput = str(request.form.get('delete-nfs-share-button'))
+            number = f.nfs_delete_part(buttoninput)
+            if number != 0:
+                text = err.error(number)
+                return render_template('shared/error.html', text=text)
+            
+            number = f.nfs_merge()
+            if number != 0:
+                text = err.error(number)
+                return render_template('shared/error.html', text=text)
+
+            return redirect(url_for('nfs'))
+
+        if 'delete-nfs-all-share-button' in request.form:
+            part = "all"
+            sharename = str(request.form.get('delete-nfs-all-share-button'))
+            dirdel = str(request.form.get('dir-delete'))
+            print(dirdel)
+            number = f.nfs_delete_all(sharename, dirdel)
+
+            if number != 0:
+                text = err.error(number)
+                return render_template('shared/error.html', text=text)
+            return redirect(url_for('nfs'))
+
 
     if id =="nfs-share-modify":
-        form_data = list(request.form.items())
-        print(form_data[1][1])
-        for i in form_data:
-            print(i)
+        dirdel = "no"
+        part = "all"
+        
+        configarray = list(request.form.items())
 
+        number = f.nfs_delete_all(configarray[1][1], dirdel)
+        if number != 0:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        number = f.nfs_share_modify(configarray)
+
+        if number != 0:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+
+        #utánna kell a merge
+        number = f.nfs_merge()
+        if number != 0:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+        
         return redirect(url_for('nfs'))
     return render_template('shared/error.html', text=text)
 

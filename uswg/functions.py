@@ -349,3 +349,114 @@ def nfs_check_configuration_modify(sharename):
         number = check.returncode
 
         return number
+
+
+def nfs_create_share(name, directory, dirperm, access, permission, sync, subtree, squash):
+    action = "create"
+    
+    bash_path = 'bash/nfs/nfs_create_part.sh'
+    check = subprocess.run(['bash', bash_path, op.opaction, action, op.opname, name, op.opdirectory, directory, op.opdirperm, dirperm, op.opaccess, access, op.oppermission, permission, op.opsync, sync, op.opsubtree, subtree, op.opsquash, squash])
+    number = check.returncode
+
+    return number
+
+
+def nfs_add_access(name, access, permission, sync, subtree, squash):
+    action = "append"
+    
+    bash_path = 'bash/nfs/nfs_create_part.sh'
+    check = subprocess.run(['bash', bash_path, op.opaction, action, op.opname, name, op.opaccess, access, op.oppermission, permission, op.opsync, sync, op.opsubtree, subtree, op.opsquash, squash])
+    number = check.returncode
+
+    return number
+
+
+def nfs_share_modify(configarray):
+    
+    name = configarray[1][1]
+    directory = configarray[2][1]
+    dirperm = configarray[3][1]
+
+
+    configarray.pop(0)
+    configarray.pop(0)
+    configarray.pop(0)
+    configarray.pop(0)
+    
+    access = ""
+    permission = ""
+    sync = ""
+    squash = ""
+    subtree = ""
+    
+    counter = 0
+    linecounter = 0
+    created = False
+    for i in configarray:
+        if counter == 0:
+            access = configarray[linecounter][1]
+            counter = counter + 1
+        elif counter == 1:
+            permission = configarray[linecounter][1]
+            counter = counter + 1
+        elif counter == 2:
+            sync = configarray[linecounter][1]
+            counter = counter + 1
+        elif counter == 3:
+            squash = configarray[linecounter][1]
+            counter = counter + 1
+        elif counter == 4:
+            subtree = configarray[linecounter][1]
+            counter = 0
+
+            if created == False:
+                created = True
+                number = nfs_create_share(name, directory, dirperm, access, permission, sync, subtree, squash)
+                if number != 0:
+                    return number
+            else:
+                number = nfs_add_access(name, access, permission, sync, subtree, squash)
+                if number != 0:
+                    return number
+        linecounter = linecounter + 1
+    return 0
+
+
+    
+def nfs_delete_all(buttoninput, dirdel):
+    part = "all"
+    bash_path = 'bash/nfs/nfs_delete_part.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opinput, buttoninput, op.opdirdel, dirdel])
+    number = check.returncode
+
+    return number
+
+def nfs_delete_part(buttoninput):
+    part = "part"
+    buttoninput = '"' + buttoninput + '"'
+    bash_path = 'bash/nfs/nfs_delete_part.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opinput, buttoninput])
+    number = check.returncode
+
+    return number
+
+def nfs_merge():
+    bash_path = 'bash/nfs/nfs_merge_config.sh'
+    check = subprocess.run(['bash', bash_path])
+    number = check.returncode
+
+    return number
+
+def nfs_list_all_name():
+    part = "only-name"
+    try:
+        config = subprocess.check_output(["./bash/nfs/nfs_check_part.sh", op.oppart, part], universal_newlines=True)
+        array = config.split()
+        return array
+
+    except:
+        bash_path = '/bash/nfs/nfs_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number
