@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{{url_for('static', filename='scripts/nfs_javascript.js')}}"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/nfs_style.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/sidebar_style.css') }}" />
     <title>NFS</title>
@@ -70,6 +71,9 @@
                         <tr>
                             <th>Elérhető</th>
                             <th>Szabályok</th>
+                            <th colspan="2">Törlés/Módosítás</th>
+                            <th>Törlés esetén</th>
+
                         </tr>
                         <form id="modifynfsshareForm" action="/service/modify" method="post">
                             <input type="hidden" name="form_id" value="nfs-share-check">
@@ -88,8 +92,12 @@
                                             {% else %}
                                             | {{ i }}</td>
                                                 <td class="table-share-name" ><button name="modify-nfs-share-button" id="modifynfsshare{{ configarray[saveindex[-1]] }}Button" value="modify_nfs_share_{{ configarray[saveindex[-1]] }}_Button">Módosítás</button></td>
-                                                <td class="table-share-name" ><button name="delete-nfs-share-button" id="deletenfsshare{{ configarray[saveindex[-1]] }}Button" value="delete_nfs_share_{{ configarray[saveindex[-1]] }}_Button">Törlés</button></td>
-                                                </tr>
+                                                <td class="table-share-name" ><button name="delete-nfs-all-share-button" id="deletenfsshare{{ configarray[saveindex[-1]] }}Button" value="delete_nfs_share_{{ configarray[saveindex[-1]] }}_Button">Törlés</button></td>
+                                                <td>
+                                                    <input type="radio" id="nodelete_{{saveindex[-1]}}" name="dir-delete" value="no"><label for="nodelete_{{saveindex[-1]}}">Mappa megtartása</label><br>
+                                                    <input type="radio" id="delete_{{saveindex[-1]}}" name="dir-delete" value="yes"><label for="delete_{{saveindex[-1]}}">Mappa törlése</label>
+                                                </td>    
+                                            </tr>
                                             {% endif %}
                                     {% endif %}
                                 {% else %}
@@ -110,14 +118,20 @@
                                                 {% else %}
                                                     | {{ i }}</td>
                                                     <td class="table-share-name"><button name="modify-nfs-share-button" id="modifynfsshare{{ configarray[saveindex[-1]] }}Button" value="modify_nfs_share_{{ configarray[saveindex[-1]] }}_Button">Módosítás</button></td>
-                                                    <td class="table-share-name"><button name="delete-nfs-share-button" id="deletenfsshare{{ configarray[saveindex[-1]] }}Button" value="delete_nfs_share_{{ configarray[saveindex[-1]] }}_Button">Törlés</button></td>
+                                                    <td class="table-share-name">
+                                                        <button name="delete-nfs-all-share-button" id="deletenfsshare{{ configarray[saveindex[-1]] }}Button" value="delete_nfs_share_{{ configarray[saveindex[-1]] }}_Button">Törlés</button>
+                                                    </td>
+                                                    <td>
+                                                        <input type="radio" id="nodelete_{{saveindex[-1]}}" name="dir-delete" value="no"><label for="nodelete_{{saveindex[-1]}}">Mappa megtartása</label><br>
+                                                        <input type="radio" id="delete_{{saveindex[-1]}}" name="dir-delete" value="yes"><label for="delete_{{saveindex[-1]}}">Mappa törlése</label>
+                                                    </td>
                                                     </tr>
                                                     {% set _ = counter.append(counter[-1] + 1) %}
                                                 {% endif %}
                                             {% else %}
                                                 {% if counter2[-1] % 2 == 0 %}
                                                     <td>{{i}}</td>
-                                                    <td colspan="2" ><button class="delete-button" name="delete-nfs-share-button" id="deletenfsshare{{ configarray[saveindex[-1]] }}Button" value="delete_nfs_share_{{ configarray[saveindex[-1]] }}_Button">Törlés</button></td>
+                                                    <td colspan="2" ><button class="delete-button" name="delete-nfs-share-button" id="deletenfsshare{{ configarray[saveindex[-1]] }}Button" value="delete_nfs_share_{{ configarray[saveindex[-1]] }}_{{ configarray[loop.index0-1] }}_{{ i }}_Button">Törlés</button></td>
                                                     </tr>
                                                     {% set _ = counter2.append(counter2[-1]+1) %}
                                                 {% else %}
@@ -135,7 +149,92 @@
                         </form>
                     
                     </tr></table>
+                <button id="addnewshareButton">Új megosztás hozzáadása</button>
+                <form id="createnfsshareForm" action="/service/add" class="hidden" method="post">
+                    <input type="hidden" name="form_id" value="nfs-share" required>
+                    <p>Új megosztás hozzáadása:</p>
+                    <label for="share-name">Megosztás neve:</label><br>
+                    <input type="text" name="share-name" id="share-name" pattern="[a-zA-Z0-9\-\.]*" required><br>
+                    <label for="share-dir">Megosztott mappa: /srv/</label><br>
+                    <input type="text" name="share-dir" id="share-dir" pattern="[a-zA-Z0-9\-\.]*" required><br>
+                    <label for="dirperm">Mappához tartozó jogosultság (pl.: 777):</label><br>
+                    <input type="text" name="dirperm" id="dirperm" pattern="[0-7][0-7][0-7]" required><br>
+                    <label for="access">Elérheti:</label><br>
+                    <input type="text" name="access" id="access" pattern="[a-zA-Z0-9\-\./]*" required><br>
+                    <p>Elérési szabályok megadása:</p>
+                    <table>
+                        <tr>
+                            <td>
+                                <input type="radio" name="permission" id="rw" value="rw" required><label for="rw">Írás, olvasás</label>
+                                <input type="radio" name="permission" id="ro" value="ro" required><label for="ro">Csak olvasás</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="radio" id="sync" name="sync" value="sync" required><label for="sync">sync</label>
+                                <input type="radio" id="async" name="sync" value="async" required><label for="async">async</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="radio" id="squash" name="squash" value="root_squash" required><label for="squash">root squash</label>
+                                <input type="radio" id="nosquash" name="squash" value="no_root_squash" required><label for="nosquash">no root squash</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="radio" id="subtree" name="subtree" value="subtree_check" required><label for="subtree">subtree check</label>
+                                <input type="radio" id="nosubtree" name="subtree" value="no_subtree_check" required><label for="nosubtree">no subtree check</label>
+                            </td>
+                        </tr>
+                    </table>
+                    <button type="submit">Küldés</button>
+                </form>
 
+
+                <button id="addnewaccessButton">Új hozzáférés hozzáadása</button>
+                <form id="createnfsaccessForm" action="/service/add" class="hidden" method="post">
+                    <input type="hidden" name="form_id" value="nfs-access" required>
+                    <p>Új hozzáférés hozzáadása:</p>
+                    <label for="share-name">Megosztás kiválasztása:</label><br>
+                    <select name="share-name" id="share-name" required>
+                        {% for i in sharearray %}
+                            <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+
+                    <label for="access">Elérheti:</label><br>
+                    <input type="text" name="access" id="access" pattern="[a-zA-Z0-9\-\./]*" required><br>
+                    <p>Elérési szabályok megadása:</p>
+                    <table>
+                        <tr>
+                            <td>
+                                <input type="radio" name="permission" id="rw1" value="rw" required><label for="rw1">Írás, olvasás</label>
+                                <input type="radio" name="permission" id="ro1" value="ro" required><label for="ro1">Csak olvasás</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="radio" id="sync1" name="sync" value="sync" required><label for="sync1">sync</label>
+                                <input type="radio" id="async1" name="sync" value="async" required><label for="async1">async</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="radio" id="squash1" name="squash" value="root_squash" required><label for="squash1">root squash</label>
+                                <input type="radio" id="nosquash1" name="squash" value="no_root_squash" required><label for="nosquash1">no root squash</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="radio" id="subtree1" name="subtree" value="subtree_check" required><label for="subtree1">subtree check</label>
+                                <input type="radio" id="nosubtree1" name="subtree" value="no_subtree_check" required><label for="nosubtree1">no subtree check</label>
+                            </td>
+                        </tr>
+                    </table>
+                    <button type="submit">Küldés</button>
+                </form>
             {% endif %}
         </div>
     </div>

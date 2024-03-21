@@ -20,12 +20,17 @@ table, th, td {
     text-align: center;
     border-collapse: collapse;
   }
-  .table-share-name{
+
+.table-share-name{
       background-color: coral;
       text-color: white;
   }
 
-  .delete-button{
+.delete-button{
     width: 100%
 
   }
+
+.hidden {
+    display: none;
+}

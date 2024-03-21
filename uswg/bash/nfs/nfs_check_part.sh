@@ -54,7 +54,7 @@ case "$part" in
     rowspan)
         counter="0"
 
-        for i in `ls $path | grep "^nfs_.*_share\.conf$"`
+        for i in `ls $path | grep "^nfs_.\+_share\.conf$"`
             do
                 fullpath="$path$i"
                 for x in `cat $fullpath`
@@ -71,7 +71,7 @@ case "$part" in
         
         if [ "$input" == "" ]; then
 
-            for i in `ls $path | grep "^nfs_.*_share\.conf$"`
+            for i in `ls $path | grep "^nfs_.\+_share\.conf$"`
                 do
                     echo $i | cut -d'_' -f 2
                     fullpath="$path$i"
@@ -132,6 +132,13 @@ case "$part" in
                 fi
             fi
         fi
+        ;;
+
+    only-name)
+
+        path="/etc/.uswg_nfs_config/"
+        allname=`ls $path | grep "^nfs_.\+_share\.conf$" | cut -d'_' -f2`
+        echo $allname
         ;;
     
     *)
