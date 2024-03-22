@@ -58,33 +58,35 @@ fi
 
 case "$part" in
     all)
-        if [ -z "$dirdel" ] && [ "$dirdel" != "yes" ] && [ "$dirdel" != "no" ]; then
+        if [ -z "$dirdel" ]; then
             exit 5
         fi
+        if [ "$dirdel" == "yes" ] || [ "$dirdel" == "no" ]; then
+            check=`echo $input | grep "^delete_nfs_share_.\+_Button$"`
+            if [ ! -z "$check" ]; then
+                name=`echo $input | cut -d'_' -f 4`
+                path="/etc/.uswg_nfs_config/nfs_${name}_share.conf"
 
-        check=`echo $input | grep "^delete_nfs_share_.\+_Button$"`
-        if [ ! -z "$check" ]; then
-            name=`echo $input | cut -d'_' -f 4`
-            path="/etc/.uswg_nfs_config/nfs_${name}_share.conf"
+            else
+                name=$input
+                path="/etc/.uswg_nfs_config/nfs_${name}_share.conf"
+            fi
 
+        
+            ./bash/shared/exist_file.sh $path
+            if [ $? -ne 0 ]; then
+                exit 1
+            fi
+
+            dir=`cat $path | grep "^/srv/.\+$"`
+            sudo -S rm $path
+
+            if [ "$dirdel" == "yes" ]; then
+                sudo -S rm -r -d $dir
+            fi
         else
-            name=$input
-            path="/etc/.uswg_nfs_config/nfs_${name}_share.conf"
+            exit 5
         fi
-
-        
-        ./bash/shared/exist_file.sh $path
-        if [ $? -ne 0 ]; then
-            exit 1
-        fi
-
-        dir=`cat $path | grep "^/srv/.\+$"`
-        sudo -S rm $path
-
-        if [ "$dirdel" == "yes" ]; then
-            sudo -S rm -r -d $dir
-        fi
-        
         ;;
     part)
         
