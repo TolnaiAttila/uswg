@@ -544,6 +544,12 @@ def service_modify(current_user):
             if number != 0:
                 text = err.error(number)
                 return render_template('shared/error.html', text=text)
+            
+            number = f.nfs_merge()
+            if number != 0:
+                text = err.error(number)
+                return render_template('shared/error.html', text=text)
+                
             return redirect(url_for('nfs'))
 
 

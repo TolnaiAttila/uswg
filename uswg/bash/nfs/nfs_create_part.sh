@@ -164,8 +164,12 @@ case "$action" in
         
         sudo -S echo "/srv/$directory" | sudo -S tee -a $path > /dev/null
         sudo -S echo "$dirperm" | sudo -S tee -a $path > /dev/null
-        sudo -S echo "$access($permission,$sync,$squash,$subtree)" | sudo -S tee -a $path > /dev/null
-        
+        check=`grep "^$access(.\+)$" $path`
+        if [ -z "$check" ]; then
+            sudo -S echo "$access($permission,$sync,$squash,$subtree)" | sudo -S tee -a $path > /dev/null
+        else 
+            exit 5
+        fi
         ;;
 
     append)
@@ -174,9 +178,13 @@ case "$action" in
         if [ $? -ne 0 ]; then
             exit 1
         fi
-
-        sudo -S echo "$access($permission,$sync,$squash,$subtree)" | sudo -S tee -a $path > /dev/null
-
+        
+        check=`grep "^$access(.\+)$" $path`
+        if [ -z "$check" ]; then
+            sudo -S echo "$access($permission,$sync,$squash,$subtree)" | sudo -S tee -a $path > /dev/null
+        else
+            exit 5
+        fi
 
         ;;
     
