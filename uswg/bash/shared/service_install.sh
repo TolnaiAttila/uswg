@@ -46,8 +46,8 @@ case $service in
         fi
         sudo -S truncate -s 0 $path
         sudo -S mkdir /etc/.uswg_nfs_config
-        if [ ! -d /srv ]; then
-            sudo -S mkdir /srv
+        if [ ! -d /srv/nfs ]; then
+            sudo -S mkdir /srv/nfs
         fi
 
 
@@ -56,6 +56,16 @@ case $service in
     
     
     samba)
+        sudo -S apt update
+        sudo -S apt install samba -y
+        
+        if [ $? -ne 0 ]; then
+            exit 3
+        fi
+
+        if [ ! -d /srv/samba ]; then
+            sudo -S mkdir /srv/samba
+        fi
         ;;
 
 

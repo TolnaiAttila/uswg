@@ -140,7 +140,7 @@ case "$action" in
             exit 5
         fi
 
-        dirslash=`echo $directory | grep "^/srv/.\+$"`
+        dirslash=`echo $directory | grep "^/srv/nfs/.\+$"`
         if [ ! -z "$dirslash" ]; then
             directory=`echo $directory | cut -d'/' -f3-`
         else
@@ -157,12 +157,12 @@ case "$action" in
 
         sudo -S touch $path
 
-        if [ ! -d "/srv/$directory" ]; then
-            sudo -S mkdir -p /srv/$directory
-            sudo -S chmod $dirperm /srv/$directory
+        if [ ! -d "/srv/nfs/$directory" ]; then
+            sudo -S mkdir -p /srv/nfs/$directory
+            sudo -S chmod $dirperm /srv/nfs/$directory
         fi
         
-        sudo -S echo "/srv/$directory" | sudo -S tee -a $path > /dev/null
+        sudo -S echo "/srv/nfs/$directory" | sudo -S tee -a $path > /dev/null
         sudo -S echo "$dirperm" | sudo -S tee -a $path > /dev/null
         check=`grep "^$access(.\+)$" $path`
         if [ -z "$check" ]; then

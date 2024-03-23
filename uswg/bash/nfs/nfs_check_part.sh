@@ -121,7 +121,7 @@ case "$part" in
                                 if [ ! -z "$tmp" ]; then
                                     echo $i
                                 else
-                                    dir=`echo $i | grep "^/srv/.\+$"`
+                                    dir=`echo $i | grep "^/srv/nfs/.\+$"`
                                     echo $dir
                                 fi
                             fi
