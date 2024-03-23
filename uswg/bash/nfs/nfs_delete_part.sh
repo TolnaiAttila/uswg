@@ -78,7 +78,7 @@ case "$part" in
                 exit 1
             fi
 
-            dir=`cat $path | grep "^/srv/.\+$"`
+            dir=`cat $path | grep "^/srv/nfs/.\+$"`
             sudo -S rm $path
 
             if [ "$dirdel" == "yes" ]; then
