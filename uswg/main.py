@@ -132,6 +132,15 @@ def nfs(current_user):
     return render_template('nfs/nfs.html', status=status, configarray=configarray, spanarray=spanarray, sharearray=sharearray)
 
 
+@app.route("/samba")
+@token_required
+def samba(current_user):
+    service = "smbd"
+    status = f.status(service)
+
+    return render_template('samba/samba.html', status=status)
+
+
 @app.route("/service/add", methods=['POST'])
 @token_required
 def service_add(current_user):
@@ -666,6 +675,17 @@ def service_install(current_user):
         return redirect(url_for('nfs'))
 
 
+    if id == "samba":
+        service = "samba"
+        number = f.service_install(service)
+        
+        if number != 0:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        return redirect(url_for('samba'))
+
+
     return render_template('shared/error.html', text=text)
 
 @app.route("/service/remove", methods=['POST'])
@@ -707,7 +727,15 @@ def service_remove(current_user):
         
         return redirect(url_for('nfs'))
 
+    if id == "samba":
+        service = "samba"
+        number = f.service_remove(service)
 
+        if number != 0:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        return redirect(url_for('samba'))
 
     return render_template('shared/error.html')
 
@@ -753,6 +781,19 @@ def service_status(current_user):
         else:
             text = err.error(number)
             return render_template('shared/error.html', text=text)
+
+
+    if id == "samba":
+        action = str(request.form.get('startstop'))
+        service = "smbd"
+        number = f.service_startstop(service, action)
+
+        if number == 0:
+            return redirect(url_for('samba'))
+        else:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+
 
     return render_template('shared/error.html', text=text)
 

@@ -3,9 +3,8 @@
 action=$1
 service=$2
 
-#megfelelo nevre atirni a szolgaltatasokat
 
-if [ $service == "isc-dhcp-server" ] || [ $service == "bind9" ] || [ $service == "nfs-kernel-server" ] || [ $service == "samba" ]; then
+if [ $service == "isc-dhcp-server" ] || [ $service == "bind9" ] || [ $service == "nfs-kernel-server" ] || [ $service == "smbd" ]; then
 
     case $action in
         stop)
