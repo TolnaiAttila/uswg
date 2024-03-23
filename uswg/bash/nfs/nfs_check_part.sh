@@ -47,7 +47,7 @@ if [ -z "$part" ]; then
 fi
 
 
-path="/etc/.uswg_nfs_config/"
+path="/etc/.uswg_configs/nfs/"
 
 
 case "$part" in 
@@ -92,7 +92,7 @@ case "$part" in
                 exit 5
             else
                 sharename=`echo $input | cut -d'_' -f4`
-                path="/etc/.uswg_nfs_config/nfs_${sharename}_share.conf"
+                path="/etc/.uswg_configs/nfs/nfs_${sharename}_share.conf"
                 ./bash/shared/exist_file.sh $path
 
                 if [ $? -eq 0 ]; then
@@ -136,7 +136,7 @@ case "$part" in
 
     only-name)
 
-        path="/etc/.uswg_nfs_config/"
+        path="/etc/.uswg_configs/nfs/"
         allname=`ls $path | grep "^nfs_.\+_share\.conf$" | cut -d'_' -f2`
         echo $allname
         ;;

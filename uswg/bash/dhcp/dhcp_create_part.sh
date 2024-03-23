@@ -211,8 +211,8 @@ fi
 #part parameter alapjan vegrehajtas
 case "$part" in
     backup)
-        path="/etc/dhcp/.uswg_dhcp_config/"
-        oldpath="/etc/dhcp/.old_uswg_dhcp_config/"
+        path="/etc/.uswg_configs/dhcp/dhcp_config/"
+        oldpath="/etc/.uswg_configs/dhcp/old_dhcp_config/"
         dhpath="/etc/dhcp/dhcpd.conf"
         adapterpath="/etc/default/isc-dhcp-server"
 
@@ -232,7 +232,7 @@ case "$part" in
 
     global)
         
-        path="/etc/dhcp/.uswg_dhcp_config/dhcp_base_global.conf"
+        path="/etc/.uswg_configs/dhcp/dhcp_config/dhcp_base_global.conf"
 
         ./bash/shared/exist_file.sh $path
         exitcode=$?
@@ -279,7 +279,7 @@ case "$part" in
             exit 5
         fi
 
-        path="/etc/dhcp/.uswg_dhcp_config/dhcp_static_$hostname.conf"
+        path="/etc/.uswg_configs/dhcp/dhcp_config/dhcp_static_$hostname.conf"
 
         ./bash/shared/exist_file.sh $path
 
@@ -302,7 +302,7 @@ case "$part" in
             #invalid ertek, ures bemenet
             exit 5
         else
-            path="/etc/dhcp/.uswg_dhcp_config/dhcp_subnet_$subnetname.conf"
+            path="/etc/.uswg_configs/dhcp/dhcp_config/dhcp_subnet_$subnetname.conf"
             
             ./bash/shared/exist_file.sh $path
 

@@ -1,15 +1,15 @@
 #!/bin/bash
 
-path="/etc/dhcp/.uswg_dhcp_config/"
+path="/etc/.uswg_configs/dhcp/dhcp_config/"
 dhpath="/etc/dhcp/dhcpd.conf"
 adapterpath="/etc/default/isc-dhcp-server"
 
-oldpath="/etc/dhcp/.old_uswg_dhcp_config/"
-olddhpath="/etc/dhcp/.old_uswg_dhcp_config/dhcpd.conf"
-oldadapterpath="/etc/dhcp/.old_uswg_dhcp_config/isc-dhcp-server"
+oldpath="/etc/.uswg_configs/dhcp/old_dhcp_config/"
+olddhpath="/etc/.uswg_configs/dhcp/old_dhcp_config/dhcpd.conf"
+oldadapterpath="/etc/.uswg_configs/dhcp/old_dhcp_config/isc-dhcp-server"
 
-rmdhpath="/etc/dhcp/.uswg_dhcp_config/dhcpd.conf"
-rmadapterpath="/etc/dhcp/.uswg_dhcp_config/isc-dhcp-server"
+rmdhpath="/etc/.uswg_configs/dhcp/dhcp_config/dhcpd.conf"
+rmadapterpath="/etc/.uswg_configs/dhcp/dhcp_config/isc-dhcp-server"
 
 if [ -z `ls -A $path | tr -d ' ' | tr -d '\n'` ]; then
     sudo cp $oldpath* $path
