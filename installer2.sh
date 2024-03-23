@@ -13,6 +13,8 @@ pip3 install -r requirements.txt
 
 deactivate
 
+sudo mkdir /etc/.uswg_configs
+
 sudo cp uswg.service /etc/systemd/system/
 sudo cp uswglog.conf /etc/rsyslog.d/
 sudo touch /var/log/uswg.log
