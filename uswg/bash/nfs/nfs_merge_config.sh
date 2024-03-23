@@ -1,6 +1,6 @@
 #!/bin/bash
 
-path="/etc/.uswg_nfs_config/"
+path="/etc/.uswg_configs/nfs/"
 pathconfig="/etc/exports"
 
 sudo -S truncate -s 0 $pathconfig

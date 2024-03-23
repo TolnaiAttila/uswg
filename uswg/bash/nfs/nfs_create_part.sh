@@ -131,7 +131,7 @@ if [ "$subtree" != "subtree_check" ] && [ "$subtree" != "no_subtree_check" ]; th
     exit 5
 fi
 
-path="/etc/.uswg_nfs_config/nfs_${name}_share.conf"
+path="/etc/.uswg_configs/nfs/nfs_${name}_share.conf"
 
 case "$action" in
     create)

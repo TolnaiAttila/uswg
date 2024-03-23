@@ -64,7 +64,7 @@ case "$part" in
             exit 5
         fi
         
-        path="/etc/bind/.uswg_dns_config/dns_listenon.conf"
+        path="/etc/.uswg_configs/dns/dns_config/dns_listenon.conf"
 
         ./bash/shared/exist_file.sh $path
 

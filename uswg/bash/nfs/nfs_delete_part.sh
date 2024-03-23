@@ -65,11 +65,11 @@ case "$part" in
             check=`echo $input | grep "^delete_nfs_share_.\+_Button$"`
             if [ ! -z "$check" ]; then
                 name=`echo $input | cut -d'_' -f 4`
-                path="/etc/.uswg_nfs_config/nfs_${name}_share.conf"
+                path="/etc/.uswg_configs/nfs/nfs_${name}_share.conf"
 
             else
                 name=$input
-                path="/etc/.uswg_nfs_config/nfs_${name}_share.conf"
+                path="/etc/.uswg_configs/nfs/nfs_${name}_share.conf"
             fi
 
         
@@ -100,7 +100,7 @@ case "$part" in
         access=`echo $input | cut -d'_' -f 5`
         rule=`echo $input | cut -d'(' -f 2 | cut -d')' -f 1`
         
-        path="/etc/.uswg_nfs_config/nfs_${name}_share.conf"
+        path="/etc/.uswg_configs/nfs/nfs_${name}_share.conf"
         ./bash/shared/exist_file.sh $path
         if [ $? -ne 0 ]; then
             exit 1

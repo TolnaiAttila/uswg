@@ -68,7 +68,7 @@ fi
 
 case "$part" in
     static-host)
-        path="/etc/dhcp/.uswg_dhcp_config/dhcp_static_${hostname}.conf"
+        path="/etc/.uswg_configs/dhcp/dhcp_config/dhcp_static_${hostname}.conf"
 
         ./bash/shared/exist_file.sh $path
 
@@ -80,7 +80,7 @@ case "$part" in
         ;;
 
     subnet)
-        path="/etc/dhcp/.uswg_dhcp_config/dhcp_subnet_${subnetname}.conf"
+        path="/etc/.uswg_configs/dhcp/dhcp_config/dhcp_subnet_${subnetname}.conf"
 
         ./bash/shared/exist_file.sh $path
 

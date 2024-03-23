@@ -49,12 +49,12 @@ fi
 case "$part" in
     backup)
 
-        path="/etc/dhcp/.old_uswg_dhcp_config/dhcpd.conf"
+        path="/etc/.uswg_configs/dhcp/old_dhcp_config/dhcpd.conf"
 
         ./bash/shared/exist_file.sh $path
 
         if [ $? -eq 0 ]; then
-            date=`stat /etc/dhcp/.old_uswg_dhcp_config/ | grep "^Modify:.\+$" | cut -d' ' -f2- | cut -d'.' -f1`
+            date=`stat /etc/.uswg_configs/dhcp/old_dhcp_config/ | grep "^Modify:.\+$" | cut -d' ' -f2- | cut -d'.' -f1`
             echo -n $date
             exit 0
         else
@@ -66,7 +66,7 @@ case "$part" in
     subnet)
         if [ -z "$input" ]; then
             
-            path="/etc/dhcp/.uswg_dhcp_config/"
+            path="/etc/.uswg_configs/dhcp/dhcp_config/"
 
             for i in `ls $path | grep "^dhcp_subnet_.\+\.conf$"`; do
                 subnetname=`cat $path$i | grep "^#subnet_name[[:space:]].\+[[:space:]]assigned[[:space:]]network-adapter[[:space:]].\+$" | cut -d' ' -f2`
@@ -112,7 +112,7 @@ case "$part" in
                 exit 5
             else
                 subnetname=`echo $input | cut -d'_' -f3`
-                path="/etc/dhcp/.uswg_dhcp_config/dhcp_subnet_${subnetname}.conf"
+                path="/etc/.uswg_configs/dhcp/dhcp_config/dhcp_subnet_${subnetname}.conf"
                 
                 ./bash/shared/exist_file.sh $path
     
@@ -154,7 +154,7 @@ case "$part" in
 
     static-host)
         if [ -z "$input" ]; then
-            path="/etc/dhcp/.uswg_dhcp_config/"
+            path="/etc/.uswg_configs/dhcp/dhcp_config/"
 
             for i in `ls $path | grep "^dhcp_static_.\+\.conf$"`; do
                 name=`cat $path$i | grep "^host[[:space:]].\+[[:space:]]{$" | cut -d' ' -f2`
@@ -173,7 +173,7 @@ case "$part" in
                 exit 5
             else
                 name=`echo $input | cut -d'_' -f4`
-                path="/etc/dhcp/.uswg_dhcp_config/dhcp_static_${name}.conf"
+                path="/etc/.uswg_configs/dhcp/dhcp_config/dhcp_static_${name}.conf"
 
                 ./bash/shared/exist_file.sh $path
                 
@@ -199,7 +199,7 @@ case "$part" in
 
     global)
 
-        path="/etc/dhcp/.uswg_dhcp_config/dhcp_base_global.conf"
+        path="/etc/.uswg_configs/dhcp/dhcp_config/dhcp_base_global.conf"
 
         ./bash/shared/exist_file.sh $path
         

@@ -39,7 +39,7 @@ fi
 
 case "$part" in
     listen-on)
-        path="/etc/bind/.uswg_dns_config/dns_listenon.conf"
+        path="/etc/.uswg_configs/dns/dns_config/dns_listenon.conf"
         ips=`cat $path | grep "^.\+[[:space:]]port[[:space:]].\+;$" | cut -d' ' -f 1`
         ports=`cat $path | grep "^.\+[[:space:]]port[[:space:]].\+;$" | cut -d' ' -f 3 | tr -d ';'`
         
