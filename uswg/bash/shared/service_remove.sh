@@ -52,6 +52,7 @@ case $service in
         sudo -S systemctl stop $service
         service="samba"
         sudo -S apt purge $service -y
+        sudo -S apt purge samba-common -y
         
         service="smbd"
         ./bash/shared/status.sh $service
