@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kolbász Galactic Empire</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/index_style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/sidebar_style.css') }}" />
+    <title>USWG</title>
 </head>
 <body>
-    
-    
-    <h1>render_templates kolbász</h1>
-    {% for i in 1,2,3,4,5,6%}
-        <p>{{ i }}</p>
-    {% endfor %}
-
-    {% include 'navbar.html' %}
+    <div class="index_site">
+        <div class="sidebar">
+            {% include 'shared/sidebar.html' %}
+        </div>
+        <div class="main_site">
+            <h1></h1>
+        </div>
+    </div>
 </body>
 </html>
