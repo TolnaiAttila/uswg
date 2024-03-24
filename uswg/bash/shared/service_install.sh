@@ -83,6 +83,32 @@ case $service in
             sudo -S mkdir /srv/samba
         fi
         ;;
+    
+    vsftpd)
+        sudo -S apt update
+        sudo -S apt install vsftpd -y
+        
+        if [ $? -ne 0 ]; then
+            exit 153
+        fi
+
+
+        
+        path="/etc/vsftpd.conf"
+        configpath="/etc/.uswg_configs/ftp/ftp_base_config.conf"
+        sudo -S mkdir /etc/.uswg_configs/ftp
+
+        ./bash/shared/exist_file.sh $path
+        if [ $? -ne 0 ]; then
+            exit 151
+        fi
+        sudo -S cat $path | grep -v "^\(\(#\)\|\($\)\)" | sudo -S tee -a $configpath > /dev/null
+        
+        sudo -S truncate -s 0 $path
+
+        sudo -S cat $configpath | sudo -S tee -a $path > /dev/null
+
+        ;;
         
     *)
         exit 155

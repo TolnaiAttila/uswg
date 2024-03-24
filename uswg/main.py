@@ -134,6 +134,9 @@ def nfs(current_user):
     return render_template('nfs/nfs.html', status=status, configarray=configarray, spanarray=spanarray, sharearray=sharearray)
 
 
+
+
+
 @app.route("/samba")
 @token_required
 def samba(current_user):
@@ -141,6 +144,15 @@ def samba(current_user):
     status = f.status(service)
 
     return render_template('samba/samba.html', status=status)
+
+
+@app.route("/ftp")
+@token_required
+def ftp(current_user):
+    service = "vsftpd"
+    status = f.status(service)
+
+    return render_template('ftp/ftp.html', status=status)
 
 
 @app.route("/service/add", methods=['POST'])
@@ -687,6 +699,17 @@ def service_install(current_user):
         
         return redirect(url_for('samba'))
 
+    
+    if id == "ftp":
+        service = "vsftpd"
+        number = f.service_install(service)
+        
+        if number != 0:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        return redirect(url_for('ftp'))
+
 
     return render_template('shared/error.html', text=text)
 
@@ -738,6 +761,16 @@ def service_remove(current_user):
             return render_template('shared/error.html', text=text)
         
         return redirect(url_for('samba'))
+
+    if id == "ftp":
+        service = "vsftpd"
+        number = f.service_remove(service)
+
+        if number != 0:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        return redirect(url_for('ftp'))
 
     return render_template('shared/error.html')
 
@@ -792,6 +825,17 @@ def service_status(current_user):
 
         if number == 0:
             return redirect(url_for('samba'))
+        else:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+
+    if id == "ftp":
+        action = str(request.form.get('startstop'))
+        service = "vsftpd"
+        number = f.service_startstop(service, action)
+
+        if number == 0:
+            return redirect(url_for('ftp'))
         else:
             text = err.error(number)
             return render_template('shared/error.html', text=text)

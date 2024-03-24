@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/ftp_style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/sidebar_style.css') }}" />
+    <title>FTP</title>
+</head>
+<body>
+    <div class="ftp_site">
+        <div class="sidebar">
+            {% include 'shared/sidebar.html' %}
+        </div>
+
+        <div class="main_site">
+            
+            {% if status == 156 %}
+                <p>Az FTP kiszolgáló nincs telepítve.</p>
+                <form id="installftpForm" action="/service/install" method="post">
+                    <input type="hidden" name="form_id" value="ftp">
+                    <input type="submit" value="Telepítés">
+                </form>
+            {% else %}
+                <p>A FTP kiszolgáló telepítve van.</p>
+                <form action="/service/remove" method="post">
+                    <input type="hidden" name="form_id" value="ftp">
+
+                    <p>Az eltávolításhoz kattintson az "Eltávolítás" gombra!</p>
+
+                    <button type="submit">Eltávolítás</button>
+                </form>
+
+                {% if status == 157 %}
+                    <p>A FTP kiszolgáló státusza: Aktív</p>
+                {% else %}
+                    {% if status == 158 %}
+                        <p>A FTP kiszolgáló státusza: Inaktív</p>
+                    {% else %}
+                        {% if status == 159 %}
+                            <p>A FTP kiszolgáló státusza: Hiba</p>
+                        {% else %}
+                            <p>A FTP kiszolgáló státusza: Ismeretlen</p>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+
+
+                {% if status == 157 %}
+                    <form action="/service/status" method="post">
+                        <input type="hidden" name="form_id" value="ftp">
+    
+                        <input type="radio" id="restart" name="startstop" value="restart">
+                        <label for="restart">Újraindítás</label><br>
+        
+                        <input type="radio" id="stop" name="startstop" value="stop">
+                        <label for="stop">Leállítás</label><br>
+    
+                        <button type="submit">Küldés</button>
+                    </form>
+                {% else %}
+                    <form action="/service/status" method="post">
+                        <input type="hidden" name="form_id" value="ftp">
+    
+                        <input type="radio" id="restart" name="startstop" value="restart">
+                        <label for="restart">Újraindítás</label><br>
+        
+                        <button type="submit">Küldés</button>
+                    </form>
+                {% endif %}
+                <h1>Konfiguráció</h1>
+
+            {% endif %}
+</body>
+</html>
