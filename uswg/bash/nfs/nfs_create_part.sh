@@ -3,7 +3,7 @@
 ARGS=$(getopt -n "$0" -o x:n:d:a:p:s:c:r:i: --long action:,name:,directory:,access:,permission:,sync:,subtree-check:,root-squash:,directory-permission: -- "$@")
 
 if [ $? -ne 0 ]; then
-    exit 10
+    exit 161
 fi
 
 eval set -- "$ARGS"
@@ -25,7 +25,7 @@ while true; do
                 action="$2"
                 shift 2
             else
-                exit 10
+                exit 161
             fi
             ;;
 
@@ -34,7 +34,7 @@ while true; do
                 dirperm="$2"
                 shift 2
             else
-                exit 10
+                exit 161
             fi
             ;;
 
@@ -43,7 +43,7 @@ while true; do
                 name="$2"
                 shift 2
             else
-                exit 10
+                exit 161
             fi
             ;;
 
@@ -52,7 +52,7 @@ while true; do
                 directory="$2"
                 shift 2
             else
-                exit 10
+                exit 161
             fi
             ;;
         
@@ -61,7 +61,7 @@ while true; do
                 access="$2"
                 shift 2
             else
-                exit 10
+                exit 161
             fi
             ;;
         
@@ -70,7 +70,7 @@ while true; do
                 permission="$2"
                 shift 2
             else
-                exit 10
+                exit 161
             fi
             ;;
         --sync | -s)
@@ -78,7 +78,7 @@ while true; do
                 sync="$2"
                 shift 2
             else
-                exit 10
+                exit 161
             fi
             ;;
         --subtree-check | -c)
@@ -86,7 +86,7 @@ while true; do
                 subtree="$2"
                 shift 2
             else
-                exit 10
+                exit 161
             fi
             ;;
 
@@ -95,7 +95,7 @@ while true; do
                 squash="$2"
                 shift 2
             else
-                exit 10
+                exit 161
             fi
             ;;
 
@@ -105,30 +105,30 @@ while true; do
             ;;
 
         *)
-            exit 10
+            exit 161
             ;;
     esac
 done
 
 
 if [ -z "$name" ] || [ -z "$access" ] || [ -z "$action" ]; then
-    exit 5
+    exit 155
 fi
 
 if [ "$permission" != "ro" ] && [ "$permission" != "rw" ]; then
-    exit 5
+    exit 155
 fi
 
 if [ "$sync" != "sync" ] && [ "$sync" != "async" ]; then
-    exit 5
+    exit 155
 fi
 
 if [ "$squash" != "no_root_squash" ] && [ "$squash" != "root_squash" ]; then
-    exit 5
+    exit 155
 fi
 
 if [ "$subtree" != "subtree_check" ] && [ "$subtree" != "no_subtree_check" ]; then
-    exit 5
+    exit 155
 fi
 
 path="/etc/.uswg_configs/nfs/nfs_${name}_share.conf"
@@ -137,7 +137,7 @@ case "$action" in
     create)
 
         if [ -z "$directory" ] || [ -z "$dirperm" ]; then
-            exit 5
+            exit 155
         fi
 
         dirslash=`echo $directory | grep "^/srv/nfs/.\+$"`
@@ -152,7 +152,7 @@ case "$action" in
         
         ./bash/shared/exist_file.sh $path
         if [ $? -eq 0 ]; then
-            exit 4
+            exit 154
         fi
 
         sudo -S touch $path
@@ -168,7 +168,7 @@ case "$action" in
         if [ -z "$check" ]; then
             sudo -S echo "$access($permission,$sync,$squash,$subtree)" | sudo -S tee -a $path > /dev/null
         else 
-            exit 5
+            exit 155
         fi
         ;;
 
@@ -176,20 +176,20 @@ case "$action" in
 
         ./bash/shared/exist_file.sh $path
         if [ $? -ne 0 ]; then
-            exit 1
+            exit 151
         fi
         
         check=`grep "^$access(.\+)$" $path`
         if [ -z "$check" ]; then
             sudo -S echo "$access($permission,$sync,$squash,$subtree)" | sudo -S tee -a $path > /dev/null
         else
-            exit 5
+            exit 155
         fi
 
         ;;
     
     *)
-        exit 5
+        exit 155
         ;;
 
 esac

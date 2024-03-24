@@ -3,7 +3,7 @@
 service=$1
 
 if [ -z "$service" ]; then
-    exit 5
+    exit 155
 fi
 
 case $service in
@@ -12,7 +12,7 @@ case $service in
         sudo -S apt install isc-dhcp-server -y
 
         if [ $? -ne 0 ]; then
-            exit 3
+            exit 153
         else
             sudo -S mkdir /etc/.uswg_configs/dhcp
             sudo -S mkdir /etc/.uswg_configs/dhcp/dhcp_config
@@ -26,7 +26,7 @@ case $service in
         sudo -S apt install bind9 -y
 
         if [ $? -ne 0 ]; then
-            exit 3
+            exit 153
         else
 
         sudo -S mkdir /etc/.uswg_configs/dns/dns_config
@@ -43,7 +43,7 @@ case $service in
         sudo -S apt install nfs-kernel-server -y
 
         if [ $? -ne 0 ]; then
-            exit 3
+            exit 153
         fi
         sudo -S truncate -s 0 $path
         sudo -S mkdir /etc/.uswg_configs/nfs
@@ -62,13 +62,13 @@ case $service in
         sudo -S apt install samba-common -y
         
         if [ $? -ne 0 ]; then
-            exit 3
+            exit 153
         fi
         path="/etc/samba/smb.conf"
         configpath="/etc/.uswg_configs/samba/samba_base_config.conf"
         ./bash/shared/exist_file.sh $path
         if [ $? -ne 0 ]; then
-            exit 1
+            exit 151
         fi
         
         sudo -S mkdir /etc/.uswg_configs/samba
@@ -85,6 +85,6 @@ case $service in
         ;;
         
     *)
-        exit 5
+        exit 155
         ;;
 esac

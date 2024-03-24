@@ -3,7 +3,7 @@
 service=$1
 
 if [ -z "$service" ]; then
-    exit 5
+    exit 155
 fi
 
 case $service in
@@ -15,7 +15,7 @@ case $service in
         
         ./bash/shared/status.sh $service
 
-        if [ $? -eq 9 ]; then
+        if [ $? -eq 159 ]; then
             sudo systemctl reset-failed $service
         fi
         exit 0
@@ -27,7 +27,7 @@ case $service in
 
         sudo -S rm -d -r /etc/.uswg_configs/dns
         ./bash/shared/status.sh $service
-        if [ $? -eq 9 ]; then
+        if [ $? -eq 159 ]; then
             sudo systemctl reset-failed $service
         fi
 
@@ -42,7 +42,7 @@ case $service in
 
         servicestatusname="nfs-server"
         ./bash/shared/status.sh $servicestatusname
-        if [ $? -eq 9 ]; then
+        if [ $? -eq 159 ]; then
             sudo systemctl reset-failed $service
         fi
         ;;
@@ -55,13 +55,13 @@ case $service in
         
         service="smbd"
         ./bash/shared/status.sh $service
-        if [ $? -eq 9 ]; then
+        if [ $? -eq 159 ]; then
             sudo systemctl reset-failed $service
         fi
         sudo -S rm -d -r /etc/.uswg_configs/samba
         ;;
 
     *)
-        exit 5
+        exit 155
         ;;
 esac

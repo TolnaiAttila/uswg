@@ -3,7 +3,7 @@
 ARGS=$(getopt -n "$0" -o p:i --long part:,input: -- "$@")
 
 if [ $? -ne 0 ]; then
-    exit 10
+    exit 161
 fi
 
 eval set -- "$ARGS"
@@ -18,7 +18,7 @@ while true; do
                 part="$2"
                 shift 2
             else
-                exit 10
+                exit 161
             fi
             ;;
         
@@ -27,7 +27,7 @@ while true; do
                 input="$2"
                 shift 2
             else
-                exit 10
+                exit 161
             fi
             ;;
 
@@ -37,13 +37,13 @@ while true; do
             ;;
 
         *)
-            exit 10
+            exit 161
             ;;
     esac
 done
 
 if [ -z "$part" ]; then
-    exit 5
+    exit 155
 fi
 
 
@@ -89,7 +89,7 @@ case "$part" in
                 done
         else
             if [ -z `echo $input | grep "^\(\(modify\)\|\(delete\)\)_nfs_share_.\+_Button$"` ]; then
-                exit 5
+                exit 155
             else
                 sharename=`echo $input | cut -d'_' -f4`
                 path="/etc/.uswg_configs/nfs/nfs_${sharename}_share.conf"
@@ -128,7 +128,7 @@ case "$part" in
                         done
 
                 else
-                    exit 1
+                    exit 151
                 fi
             fi
         fi
@@ -142,7 +142,7 @@ case "$part" in
         ;;
     
     *)
-        exit 5
+        exit 155
         ;;
 esac
 

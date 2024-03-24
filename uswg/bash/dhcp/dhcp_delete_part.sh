@@ -3,7 +3,7 @@
 ARGS=$(getopt -n "$0" -o s:p:h:n: --long subnet-name:,part:,host-name:,network-adapter: -- "$@")
 
 if [ $? -ne 0 ]; then
-    exit 10
+    exit 161
 fi
 
 eval set -- "$ARGS"
@@ -21,7 +21,7 @@ while true; do
             part="$2"
             shift 2
         else
-            exit 10
+            exit 161
         fi
         ;;
 
@@ -30,7 +30,7 @@ while true; do
             subnetname="$2"
             shift 2
         else
-            exit 10
+            exit 161
         fi
         ;;
 
@@ -39,7 +39,7 @@ while true; do
             hostname="$2"
             shift 2
         else
-            exit 10
+            exit 161
         fi
         ;;
 
@@ -48,7 +48,7 @@ while true; do
             networkadapter="$2"
             shift 2
         else
-            exit 10
+            exit 161
         fi
         ;;
 
@@ -57,13 +57,13 @@ while true; do
         break
         ;;
     *)
-        exit 10
+        exit 161
         ;;
     esac
 done
 
 if [ -z "$part" ]; then
-    exit 5
+    exit 155
 fi
 
 case "$part" in
@@ -75,7 +75,7 @@ case "$part" in
         if [ $? -eq 0 ]; then
             sudo -S rm $path
         else
-            exit 1
+            exit 151
         fi
         ;;
 
@@ -87,7 +87,7 @@ case "$part" in
         if [ $? -eq 0 ]; then
             sudo -S rm $path
         else
-            exit 1
+            exit 151
         fi
         ;;
 
@@ -102,13 +102,13 @@ case "$part" in
             sudo sed -i "/INTERFACESv4=/s/$networkadapter//" "$path"
                     
         else
-            exit 5
+            exit 155
         fi
 
         ;;
 
     *)
-        exit 5
+        exit 155
         ;;
 esac
 

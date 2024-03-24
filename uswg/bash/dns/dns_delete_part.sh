@@ -3,7 +3,7 @@
 ARGS=$(getopt -n "$0" -o p:a: --long part:,input: -- "$@")
 
 if [ $? -ne 0 ]; then
-    exit 10
+    exit 161
 fi
 
 eval set -- "$ARGS"
@@ -18,7 +18,7 @@ while true; do
             part="$2"
             shift 2
         else
-            exit 10
+            exit 161
         fi
         ;;
 
@@ -27,7 +27,7 @@ while true; do
             input="$2"
             shift 2
         else
-            exit 10
+            exit 161
         fi
         ;;
 
@@ -37,21 +37,21 @@ while true; do
         ;;
 
     *)
-        exit 10
+        exit 161
         ;;
     esac
 done
 
 
 if [ -z "$part" ]; then
-    exit 5
+    exit 155
 fi
 
 case "$part" in
 
     listen-on)
         if [ -z "$input" ]; then
-            exit 5
+            exit 155
         fi
         path="/etc/.uswg_configs/dns/dns_config/dns_listenon.conf"
         ip=`echo $input | cut -d'_' -f 3`
@@ -62,11 +62,11 @@ case "$part" in
         if [[ -n "$linenumber" ]]; then
             sudo -S sed -i "${linenumber}d" $path
         else
-            exit 11
+            exit 162
         fi
 
         ;;
     *)
-        exit 5
+        exit 155
         ;;
 esac

@@ -7,5 +7,5 @@ if [ -f "$path" ]; then
     exit 0
 else
     #nem
-    exit 1
+    exit 151
 fi

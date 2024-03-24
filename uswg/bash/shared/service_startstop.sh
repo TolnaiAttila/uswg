@@ -17,10 +17,10 @@ if [ $service == "isc-dhcp-server" ] || [ $service == "bind9" ] || [ $service ==
             exit 0
         ;;
         *)
-            exit 5
+            exit 155
             ;;
     esac
 
 else
-    exit 5
+    exit 155
 fi

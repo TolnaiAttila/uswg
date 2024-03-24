@@ -15,7 +15,7 @@
     {% include 'shared/sidebar.html' %}
     </div>
     <div class="main_site">
-    {% if status == 6 %}
+    {% if status == 156 %}
         <p>A DHCP kiszolgáló nincs telepítve.</p>
         <button id="installdhcpButton">Telepítés</button>
         <form id="installdhcpForm" class="hidden" action="/service/install" method="post">
@@ -108,17 +108,21 @@
 
             <button type="submit">Eltávolítás</button>
         </form>
-        {% if status == 7 %}
+        {% if status == 157 %}
             <p>A DHCP kiszolgáló státusza: Aktív</p>
         {% else %}
-            {% if status == 8 %}
+            {% if status == 158 %}
                 <p>A DHCP kiszolgáló státusza: Inaktív</p>
             {% else %}
-                <p>A DHCP kiszolgáló státusza: Hiba</p>
+                {% if status == 159 %}
+                    <p>A DHCP kiszolgáló státusza: Hiba</p>
+                {% else %}
+                    <p>A DHCP kiszolgáló státusza: Ismeretlen</p>
+                {% endif %}
             {% endif %}
         {% endif %}
 
-        {% if status == 7 %}
+        {% if status == 157 %}
         <form action="/service/status" method="post">
             <input type="hidden" name="form_id" value="dhcp">
 
