@@ -72,7 +72,8 @@ def login():
 
     if check_password_hash(user.password, auth.password):
         token = jwt.encode({'public_id' : user.public_id, 'exp' : datetime.datetime.now() + datetime.timedelta(minutes=45)}, app.config['SECRET_KEY'], "HS256")
-        response = make_response('Hello World')
+        template = render_template('shared/index.html')
+        response = make_response(template)
         response.set_cookie('x-access-token', token)
         return response
 
