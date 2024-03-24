@@ -42,7 +42,8 @@ def token_required(f):
             token = request.cookies.get('x-access-token')
 
         if not token:
-            return jsonify({'message' : 'Token is missing'}), 401
+            #jsonify({'message' : 'Token is missing'}),
+            return render_template('shared/relogin.html'), 401
 
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
@@ -61,12 +62,12 @@ def login():
     auth = request.authorization
 
     if not auth or not auth.username or not auth.password:
-        return make_response('Could not verify!', 401, {'WWW-Authenticate' : 'Basic realm="Login Required!"'})
+        return make_response('Sikertelen bejelentkezés!', 401, {'WWW-Authenticate' : 'Basic realm="Login Required!"'})
 
     user = Users.query.filter_by(username=auth.username).first()
 
     if not user:
-        return make_response('Could not verify!', 401, {'WWW-Authenticate' : 'Basic realm="Login Required!"'})
+        return make_response('Sikertelen bejelentkezés!', 401, {'WWW-Authenticate' : 'Basic realm="Login Required!"'})
 
 
 
