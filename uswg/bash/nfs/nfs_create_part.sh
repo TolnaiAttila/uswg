@@ -142,11 +142,11 @@ case "$action" in
 
         dirslash=`echo $directory | grep "^/srv/nfs/.\+$"`
         if [ ! -z "$dirslash" ]; then
-            directory=`echo $directory | cut -d'/' -f3-`
+            directory=`echo $directory | cut -d'/' -f4-`
         else
             dirslash=`echo $directory | grep "^/.\+$"`
             if [ ! -z "$dirslash" ]; then
-                directory=`echo $directory | cut -d'/' -f2-`
+                directory=`echo $directory | cut -d'/' -f3-`
             fi
         fi
         
