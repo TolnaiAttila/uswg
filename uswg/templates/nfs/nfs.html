@@ -16,7 +16,7 @@
 
         <div class="main_site">
             
-            {% if status == 6 %}
+            {% if status == 156 %}
                 <p>Az NFS kiszolgáló nincs telepítve.</p>
                 <form id="installnfsForm" action="/service/install" method="post">
                     <input type="hidden" name="form_id" value="nfs">
@@ -32,18 +32,22 @@
                     <button type="submit">Eltávolítás</button>
                 </form>
 
-                {% if status == 7 %}
+                {% if status == 157 %}
                     <p>A NFS kiszolgáló státusza: Aktív</p>
                 {% else %}
-                    {% if status == 8 %}
+                    {% if status == 158 %}
                         <p>A NFS kiszolgáló státusza: Inaktív</p>
                     {% else %}
-                        <p>A NFS kiszolgáló státusza: Hiba</p>
+                        {% if status == 159 %}
+                            <p>A NFS kiszolgáló státusza: Hiba</p>
+                        {% else %}
+                            <p>A NFS kiszolgáló státusza: Ismeretlen</p>
+                        {% endif %}
                     {% endif %}
                 {% endif %}
 
 
-                {% if status == 7 %}
+                {% if status == 157 %}
                     <form action="/service/status" method="post">
                         <input type="hidden" name="form_id" value="nfs">
     

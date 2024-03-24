@@ -3,7 +3,7 @@
 ARGS=$(getopt -n "$0" -o a:b:c:d:e:f:g:h:i:j:k:l:m:n:o:p:q:r:s:t: --long authoritative:,ddns-style:,subnet-name:,ip-address:,subnet-mask:,first-address:,last-address:,dns-server:,routers:,broadcast:,dlt:,mlt:,network-adapter:,ntp-server:,domain-name:,part:,host-name:,mac-address: -- "$@")
 
 if [ $? -ne 0 ]; then
-    exit 10
+    exit 161
 fi
 
 eval set -- "$ARGS"
@@ -37,7 +37,7 @@ while true; do
             part="$2"
             shift 2
         else
-            exit 10
+            exit 161
         fi
         ;;
     --authoritative | -a)
@@ -45,7 +45,7 @@ while true; do
             author="$2"
             shift 2
         else
-            exit 10
+            exit 161
         fi
         ;;
     
@@ -54,7 +54,7 @@ while true; do
             ddns="$2"
             shift 2
         else
-            exit 10
+            exit 161
         fi
         ;;
 
@@ -63,7 +63,7 @@ while true; do
             hostname="$2"
             shift 2
         else
-            exit 10
+            exit 161
         fi
         ;;
 
@@ -72,7 +72,7 @@ while true; do
             ip="$2"
             shift 2
         else
-            exit 10
+            exit 161
         fi
         ;;
                 
@@ -81,7 +81,7 @@ while true; do
             mac="$2"
             shift 2
         else
-            exit 10
+            exit 161
         fi
         ;;
 
@@ -90,7 +90,7 @@ while true; do
             subnetname="$2"
             shift 2
         else
-            exit 10
+            exit 161
         fi
         ;;
 
@@ -99,7 +99,7 @@ while true; do
             subnetmask="$2"
             shift 2
         else
-            exit 10
+            exit 161
         fi
         ;;
 
@@ -108,7 +108,7 @@ while true; do
             firstaddress="$2"
             shift 2
         else
-            exit 10
+            exit 161
         fi
         ;;
 
@@ -117,7 +117,7 @@ while true; do
             lastaddress="$2"
             shift 2
         else
-            exit 10
+            exit 161
         fi
         ;;
 
@@ -126,7 +126,7 @@ while true; do
             dns="$2"
             shift 2
         else
-            exit 10
+            exit 161
         fi
         ;;
 
@@ -135,7 +135,7 @@ while true; do
             routers="$2"
             shift 2
         else
-            exit 10
+            exit 161
         fi
         ;;
 
@@ -144,7 +144,7 @@ while true; do
             broadcast="$2"
             shift 2
         else
-            exit 10
+            exit 161
         fi
         ;;
 
@@ -153,7 +153,7 @@ while true; do
             dlt="$2"
             shift 2
         else
-            exit 10
+            exit 161
         fi
         ;;
 
@@ -162,7 +162,7 @@ while true; do
             mlt="$2"
             shift 2
         else
-            exit 10
+            exit 161
         fi
         ;;
 
@@ -171,7 +171,7 @@ while true; do
             networkadapter="$2"
             shift 2
         else
-            exit 10
+            exit 161
         fi
         ;;
 
@@ -180,7 +180,7 @@ while true; do
             ntp="$2"
             shift 2
         else
-            exit 10
+            exit 161
         fi
         ;;
     --domain-name | -o)
@@ -188,7 +188,7 @@ while true; do
             domainname="$2"
             shift 2
         else
-            exit 10
+            exit 161
         fi
         ;;
 
@@ -198,14 +198,14 @@ while true; do
         ;;
 
     *)
-        exit 10
+        exit 161
         ;;
     esac
 done
 
 
 if [ -z "$part" ]; then
-    exit 5
+    exit 155
 fi
 
 #part parameter alapjan vegrehajtas
@@ -249,7 +249,7 @@ case "$part" in
                 echo "not authoritative;" | sudo tee -a $path > /dev/null
                 ;;
             *)
-                exit 5
+                exit 155
                 ;;
         esac
 
@@ -266,7 +266,7 @@ case "$part" in
                 sudo echo "ddns-update-style none;" | sudo tee -a $path > /dev/null
                 ;;
             *)
-                exit 5
+                exit 155
                 ;;
         esac
         
@@ -276,7 +276,7 @@ case "$part" in
 
         if [ -z "$hostname" ] || [ -z "$ip" ] || [ -z "$mac" ]; then
             #invalid ertek, ures bemenet
-            exit 5
+            exit 155
         fi
 
         path="/etc/.uswg_configs/dhcp/dhcp_config/dhcp_static_$hostname.conf"
@@ -284,7 +284,7 @@ case "$part" in
         ./bash/shared/exist_file.sh $path
 
         if [ $? -eq 0 ]; then
-            exit 4
+            exit 154
         else
             sudo touch $path
             sudo echo "#static_host $hostname" | sudo tee -a $path > /dev/null
@@ -300,7 +300,7 @@ case "$part" in
 
         if [ -z "$ip" ] || [ -z "$subnetmask" ] || [ -z "$subnetname" ] || [ -z "$firstaddress" ] || [ -z "$lastaddress" ] || [ -z "$dns" ] || [ -z "$routers" ] || [ -z "$broadcast" ] || [ -z "$dlt" ] || [ -z "$mlt" ] || [ -z "$networkadapter" ]; then
             #invalid ertek, ures bemenet
-            exit 5
+            exit 155
         else
             path="/etc/.uswg_configs/dhcp/dhcp_config/dhcp_subnet_$subnetname.conf"
             
@@ -308,7 +308,7 @@ case "$part" in
 
             if [ $? -eq 0 ]; then
                 
-                exit 4
+                exit 154
 
             else
 
@@ -347,7 +347,7 @@ case "$part" in
         exitcode=$?
 
         if [ $exitcode -ne 0 ]; then
-            exit 1
+            exit 151
         fi
 
         line=`cat $path | grep "^INTERFACESv4=\".*$networkadapter.*\"$"`
@@ -371,7 +371,7 @@ case "$part" in
                 fi
             else
                 #nem talalhato a szoveg
-                exit 11
+                exit 162
             fi
         fi
 
@@ -380,7 +380,7 @@ case "$part" in
         ;;
 
     *)
-        exit 5
+        exit 155
         ;;
 esac
 

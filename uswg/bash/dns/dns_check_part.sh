@@ -3,7 +3,7 @@
 ARGS=$(getopt -n "$0" -o p: --long part: -- "$@")
 
 if [ $? -ne 0 ]; then
-    exit 10
+    exit 161
 fi
 
 eval set -- "$ARGS"
@@ -18,7 +18,7 @@ while true; do
                 part="$2"
                 shift 2
             else
-                exit 10
+                exit 161
             fi
             ;;
         
@@ -28,13 +28,13 @@ while true; do
             ;;
 
         *)
-            exit 10
+            exit 161
             ;;
     esac
 done
 
 if [ -z "$part" ]; then
-    exit 5
+    exit 155
 fi
 
 case "$part" in
@@ -59,6 +59,6 @@ case "$part" in
         done
         ;;
     *)
-        exit 5
+        exit 155
         ;;
 esac

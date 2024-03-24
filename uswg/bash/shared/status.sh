@@ -4,19 +4,21 @@ service=$1
 
 installed=`systemctl list-units --type=service --all | grep $service.service`
 if [ -z "$installed" ]; then
-    exit 6
+    exit 156
 else
-    status=`systemctl list-units --type=service --all | grep $service.service | tr -s ' ' | cut -d' ' -f4`
+    status=`systemctl is-active $service`
     if [ $status == "active" ]; then
-        exit 7
+        exit 157
     fi
     
     if [ $status == "failed" ]; then
-        exit 9
+        exit 159
     fi
 
     if [ $status == "inactive" ]; then
-        exit 8
+        exit 158
     fi
+
+    exit 160
 fi
 

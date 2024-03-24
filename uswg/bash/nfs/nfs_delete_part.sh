@@ -3,7 +3,7 @@
 ARGS=$(getopt -n "$0" -o p:i:d: --long part:,input:,directory-delete: -- "$@")
 
 if [ $? -ne 0 ]; then
-    exit 10
+    exit 161
 fi
 
 eval set -- "$ARGS"
@@ -19,7 +19,7 @@ while true; do
                 part="$2"
                 shift 2
             else
-                exit 10
+                exit 161
             fi
             ;;
 
@@ -28,7 +28,7 @@ while true; do
                 input="$2"
                 shift 2
             else
-                exit 10
+                exit 161
             fi
             ;;
 
@@ -37,7 +37,7 @@ while true; do
                 dirdel="$2"
                 shift 2
             else
-                exit 10
+                exit 161
             fi
             ;;
 
@@ -47,19 +47,19 @@ while true; do
             ;;
 
         *)
-            exit 10
+            exit 161
             ;;
     esac
 done
 
 if [ -z "$part" ] || [ -z "$input" ]; then
-    exit 5
+    exit 155
 fi
 
 case "$part" in
     all)
         if [ -z "$dirdel" ]; then
-            exit 5
+            exit 155
         fi
         if [ "$dirdel" == "yes" ] || [ "$dirdel" == "no" ]; then
             check=`echo $input | grep "^delete_nfs_share_.\+_Button$"`
@@ -75,7 +75,7 @@ case "$part" in
         
             ./bash/shared/exist_file.sh $path
             if [ $? -ne 0 ]; then
-                exit 1
+                exit 151
             fi
 
             dir=`cat $path | grep "^/srv/nfs/.\+$"`
@@ -85,7 +85,7 @@ case "$part" in
                 sudo -S rm -r -d $dir
             fi
         else
-            exit 5
+            exit 155
         fi
         ;;
     part)
@@ -94,7 +94,7 @@ case "$part" in
         
         check=`echo $input | grep "^delete_nfs_share_.\+_.\+_(.\+,.\+,.\+,.\+)_Button$"`
         if [ -z "$check" ]; then
-            exit 5
+            exit 155
         fi
         name=`echo $input | cut -d'_' -f 4`
         access=`echo $input | cut -d'_' -f 5`
@@ -103,7 +103,7 @@ case "$part" in
         path="/etc/.uswg_configs/nfs/nfs_${name}_share.conf"
         ./bash/shared/exist_file.sh $path
         if [ $? -ne 0 ]; then
-            exit 1
+            exit 151
         fi
 
         linenumber=`grep -n "^$access($rule)$" $path| cut -d':' -f1`
@@ -112,6 +112,6 @@ case "$part" in
 
         ;;
     *)
-        exit 5
+        exit 155
         ;;
 esac
