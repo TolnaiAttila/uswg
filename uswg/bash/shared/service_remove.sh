@@ -62,6 +62,18 @@ case $service in
         sudo -S rm -d -r /etc/.uswg_configs/samba
         ;;
 
+    vsftpd)
+        service="vsftpd"
+        sudo -S systemctl stop $service
+        sudo -S apt purge $service -y
+        
+        ./bash/shared/status.sh $service
+        if [ $? -eq 159 ]; then
+            sudo systemctl reset-failed $service
+        fi
+        sudo -S rm -d -r /etc/.uswg_configs/ftp
+        ;;
+
     *)
         exit 155
         ;;

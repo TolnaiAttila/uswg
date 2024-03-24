@@ -4,7 +4,7 @@ action=$1
 service=$2
 
 
-if [ $service == "isc-dhcp-server" ] || [ $service == "bind9" ] || [ $service == "nfs-kernel-server" ] || [ $service == "smbd" ]; then
+if [ $service == "isc-dhcp-server" ] || [ $service == "bind9" ] || [ $service == "nfs-kernel-server" ] || [ $service == "smbd" ] || [ $service == "vsftpd" ]; then
 
     case $action in
         stop)
