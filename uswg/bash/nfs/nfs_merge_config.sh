@@ -12,18 +12,22 @@ for i in `ls $path | grep "^nfs_.\+_share\.conf$"`
     do
         counter="0"
         fullpath="$path$i"
-        for x in `cat $fullpath`
-            do
-                permcheck=`echo $x | grep "^[0-7][0-7][0-7]$"`
-                if [ -z "$permcheck" ]; then
-                    if [ $counter -ne 0 ]; then
-                        rule="$rule $x"
-                    else
-                        rule="$x"
+        linenumber=`wc -l $fullpath | cut -d' ' -f 1`
+        if [ $linenumber -gt 2 ]; then
+            for x in `cat $fullpath`
+                do
+                    permcheck=`echo $x | grep "^[0-7][0-7][0-7]$"`
+                    if [ -z "$permcheck" ]; then
+                        if [ $counter -ne 0 ]; then
+                            rule="$rule $x"
+                        else
+                            rule="$x"
+                        fi
                     fi
-                fi
-                counter=`expr $counter \+ 1`
-            done
-        sudo -S echo "$rule" | sudo -S tee -a $pathconfig > /dev/null
-        rule=""
+                    counter=`expr $counter \+ 1`
+                done
+       
+            sudo -S echo "$rule" | sudo -S tee -a $pathconfig > /dev/null
+            rule=""
+        fi
     done
