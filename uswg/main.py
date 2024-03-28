@@ -50,7 +50,8 @@ def token_required(f):
             current_user = Users.query.filter_by(public_id=data['public_id']).first()
             
         except:
-            return jsonify({'message' : 'Token is invalid'}), 401
+            return render_template('shared/relogin.html'), 401
+            #return jsonify({'message' : 'Token is invalid'}), 401
 
         return f(current_user, *args, **kwargs)
 
