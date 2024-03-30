@@ -3,10 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/sidebar_style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/shared_style.css') }}" />
     <title>Megosztás módosítás</title>
 </head>
 <body>
-    <form id="modifynfsshareForm" class="hidden" action="/service/modify" method="post">
+    <div class="flex_site">
+        <div class="sidebar">
+            {% include 'shared/sidebar.html' %}
+        </div>
+
+        <div class="main_site">
+    <form id="modifynfsshareForm" action="/service/modify" method="post">
         <input type="hidden" name="form_id" value="nfs-share-modify">
 
         <h1>Megosztás módosítása</h1>
@@ -17,10 +25,10 @@
         <p>Mappa jogosultsága: <input type="text" value="{{ configarray[2] }}" id="dirperm" name="dirperm" pattern="[0-7][0-7][0-7]" required></p>
         {% set saveindex = [] %}
         {% set counter = [0] %}
-        <table border="1">
-            <tr>
+        <table>
+            <tr class="table-title">
                 <th>Elérheti</th>
-                <th celspan="4">Szabályok</th>
+                <th colspan="4">Szabályok</th>
             </tr>
         {% for i in configarray %}
             
@@ -84,5 +92,7 @@
     </form> 
     </table>
     <button type="submit">Küldés</button>
+</div>
+</div>
 </body>
 </html>

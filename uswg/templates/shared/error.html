@@ -3,10 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baj van csávó</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/shared_style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/sidebar_style.css') }}" />
+    <title>Na ez baj</title>
 </head>
 <body>
-    <h1>Hmmm... Valami nem jó!</h1>
-    <p>{{ text }}</p>
+
+    <div class="flex_site">
+        <div class="sidebar">
+            {% include 'shared/sidebar.html' %}
+        </div>
+        <div class="main_site">
+            <h1>Hmmm... Valami nem jó!</h1>
+            <p>{{ text }}</p>
+        </div>
+    </div>
+
 </body>
 </html>

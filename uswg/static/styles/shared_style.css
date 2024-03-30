@@ -1,0 +1,30 @@
+body {
+    background-color: #3c3c3c;
+    color: white;
+}
+
+.main_site {
+    margin-left: 160px;
+    padding: 0px 10px;
+}
+
+.flex_site {
+    display: flex;
+    height: 100%;
+    position: relative;
+}
+
+.table-title{
+    background-color: coral;
+    text-color: white;
+}
+
+table, th, td {
+    border: 1px solid white;
+    text-align: center;
+    border-collapse: collapse;
+}
+
+.hidden {
+    display: none;
+}

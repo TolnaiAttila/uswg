@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="{{url_for('static', filename='scripts/dhcp_javascript.js')}}"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/dhcp_style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/shared_style.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/sidebar_style.css') }}" />
 
     <title>DHCP</title>
 </head>
 <body>
-    <div class="dhcp_site">
+    <div class="flex_site">
     <div class="sidebar">
     {% include 'shared/sidebar.html' %}
     </div>
@@ -169,8 +170,10 @@
         <br>
         <button type="submit">Küldés</button>
         </form>
-        <table border="1">
-            <tr>
+        <br>
+        <h2>Subnetek</h2>
+        <table>
+            <tr class="table-title">
                 <th>Név</th>
                 <th>Hálózati cím</th>
                 <th>Alhálózati maszk</th>
@@ -204,9 +207,11 @@
         
         </tr></table>
 
+        <br>
+        <h2>Statikus hosztok</h2>
 
-        <table border="1">
-            <tr>
+        <table>
+            <tr class="table-title">
                 <th>Név</th>
                 <th>MAC cím</th>
                 <th>IP cím</th>
@@ -315,14 +320,14 @@
         <input type="submit" value="Küldés">
         </form>
 
-
-        <p>Mentés / Visszaállítás</p>
+        <br>
+        <h2>Mentés / Visszaállítás</h2>
         <form id="backupForm" action="/service/add" method="post">
             <input type="hidden" name="form_id" value="backup">
             <label for="create-backup-button">Jelenlegi konfiguráció mentése</label>
             <button name="create-backup-button">Mentés</button>
             <br>
-            {% if lastbackupdate != 1 %}
+            {% if lastbackupdate != 151 %}
             <p>Az utolsó mentés dátuma: {{ lastbackupdate }}</p>
             <label for="restore-backup-button">Mentett konfiguráció visszaállítása</label>
             <button name="restore-backup-button">Visszaállítás</button>

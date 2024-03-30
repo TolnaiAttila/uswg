@@ -3,43 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/sidebar_style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/samba_users_style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/shared_style.css') }}" />
     <title>Samba users</title>
 </head>
 <body>
 
-
-<div class="users_site">
-    <div class="sys_users">
-    <table border="1">
-        <tr>
-            <th>Rendszer felhasználók</th>
-        </tr>
-        {% for i in sysusers %}
-            <tr>
-                <td>
-                    {{i}}
-                </td>
-                <td>
-                    <button>Hozzáadás</button>
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
+    <div class="flex_site">
+        <div class="sidebar">
+            {% include 'shared/sidebar.html' %}
+        </div>
+        <div class="main_site">
+                <div class="sys_users">
+                 <table>
+                    <tr class="table-title">
+                        <th>Rendszer felhasználók</th>
+                        <th>Hozzáadás</th>
+                    </tr>
+                    {% for i in sysusers %}
+                    <tr>
+                        <td>
+                            {{i}}
+                        </td>
+                        <td>
+                            <button>Hozzáadás</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+            </div>
+            <div class="samba-users">
+                <table>
+                    <tr class="table-title">
+                        <th>Samba felhasználók</th>
+                        <th>Eltávolítás</th>
+                    </tr>
+                    {% for i in sambausers %}
+                        <tr>
+                            <td>
+                                {{i}}
+                            </td>
+                            <td>
+                                <button>Eltávolítás</button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                </div>
+        </div>
     </div>
-    <div class="samba-users">
-    <table border="1">
-        <tr>
-            <th>Samba felhasználók</th>
-        </tr>
-        {% for i in sambausers %}
-            <tr>
-                <td>
-                    {{i}}
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
-    </div>
-</div>
 </body>
 </html>

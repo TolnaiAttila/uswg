@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/samba_style.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/sidebar_style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/shared_style.css') }}" />
     
     <title>Samba</title>
 </head>
 <body>
-    <div class="samba_site">
+    <div class="flex_site">
         <div class="sidebar">
             {% include 'shared/sidebar.html' %}
         </div>
@@ -72,18 +73,18 @@
                 <h2>Global Konfiguráció</h2>
                 <form id="modifysambaglobalForm" action="/service/modify" method="post">
                     <input type="hidden" name="form_id" value="samba-global">
-                    <table border="1">
+                    <table>
                         <tr>
-                            <td>Workgroup</td>
-                            <td><input type="text" value="{{globalconfig[0]}}" name="workgroup" id="workgroup" required></td>
+                            <td class="table-title">Workgroup</td>
+                            <td class="global-config-table"><input type="text" value="{{globalconfig[0]}}" name="workgroup" id="workgroup" required></td>
                         </tr>
                         <tr>
-                            <td>Netbios name</td>
-                            <td><input type="text" value="{{globalconfig[1]}}" name="netbios-name" id="netbios-name" required></td>
+                            <td class="table-title">Netbios name</td>
+                            <td class="global-config-table"><input type="text" value="{{globalconfig[1]}}" name="netbios-name" id="netbios-name" required></td>
                         </tr>
                         <tr>
-                            <td>Map to guest</td>
-                            <td>
+                            <td class="table-title">Map to guest</td>
+                            <td class="global-config-table">
                                 <input type="radio" id="bad-user" name="map-to-guest" value="bad_user" {% if globalconfig[2] == "bad user" %} checked {% endif %}>
                                 <label for="bad-user">Bad user</label>
                                 <br>
@@ -98,8 +99,8 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>Usershare allow guests</td>
-                            <td>
+                            <td class="table-title">Usershare allow guests</td>
+                            <td class="global-config-table">
                                 <input type="radio" id="yes-usershare-allow-guests" name="usershare-allow-guests" value="yes" {% if globalconfig[3] == "yes" %} checked {% endif %}>
                                 <label for="yes-usershare-allow-guests">Igen</label>
                                 <br>
@@ -111,8 +112,8 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>Security</td>
-                            <td>
+                            <td class="table-title">Security</td>
+                            <td class="global-config-table">
                                 <input type="radio" id="user" name="security" value="user" {% if globalconfig[4] == "user" %} checked {% endif %}>
                                 <label for="user">User</label>
                                 <br>
@@ -124,8 +125,8 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>Public</td>
-                            <td>
+                            <td class="table-title">Public</td>
+                            <td class="global-config-table">
                                 <input type="radio" id="yes-public" name="public" value="yes" {% if globalconfig[5] == "yes" %} checked {% endif %}>
                                 <label for="yes-public">Igen</label>
                                 <br>
