@@ -6,6 +6,10 @@
     <title>Samba users</title>
 </head>
 <body>
+
+
+<div class="users_site">
+    <div class="sys_users">
     <table border="1">
         <tr>
             <th>Rendszer felhasználók</th>
@@ -15,10 +19,14 @@
                 <td>
                     {{i}}
                 </td>
+                <td>
+                    <button>Hozzáadás</button>
+                </td>
             </tr>
         {% endfor %}
     </table>
-
+    </div>
+    <div class="samba-users">
     <table border="1">
         <tr>
             <th>Samba felhasználók</th>
@@ -31,5 +39,7 @@
             </tr>
         {% endfor %}
     </table>
+    </div>
+</div>
 </body>
 </html>
