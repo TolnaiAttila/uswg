@@ -143,8 +143,11 @@ def nfs(current_user):
 def samba(current_user):
     service = "smbd"
     status = f.status(service)
+    globalconfig = f.samba_check_global_config()
+    if isinstance(globalconfig, int):
+        return render_template('samba/samba.html', status=status)
 
-    return render_template('samba/samba.html', status=status)
+    return render_template('samba/samba.html', status=status, globalconfig=globalconfig)
 
 
 @app.route("/ftp")
@@ -594,13 +597,35 @@ def service_modify(current_user):
             text = err.error(number)
             return render_template('shared/error.html', text=text)
 
-        #utánna kell a merge
         number = f.nfs_merge()
         if number != 0:
             text = err.error(number)
             return render_template('shared/error.html', text=text)
         
         return redirect(url_for('nfs'))
+
+    if id == "samba-global":
+        workgroup = str(request.form.get('workgroup'))
+        netbios = str(request.form.get('netbios-name'))
+        mtg = str(request.form.get('map-to-guest'))
+        uag = str(request.form.get('usershare-allow-guests'))
+        security = str(request.form.get('security'))
+        public = str(request.form.get('public'))
+
+        number = f.samba_create_global_config(workgroup, netbios, mtg, uag, security, public)
+        if number != 0:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+
+        number = f.samba_merge_config()
+        if number != 0:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        return redirect(url_for('samba'))
+
+    
+    
     return render_template('shared/error.html', text=text)
 
 @app.route("/service/install", methods=['POST'])

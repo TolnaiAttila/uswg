@@ -69,7 +69,77 @@
                     </form>
                 {% endif %}
                 <h1>Konfiguráció</h1>
-                
+                <h2>Global Konfiguráció</h2>
+                <form id="modifysambaglobalForm" action="/service/modify" method="post">
+                    <input type="hidden" name="form_id" value="samba-global">
+                    <table border="1">
+                        <tr>
+                            <td>Workgroup</td>
+                            <td><input type="text" value="{{globalconfig[0]}}" name="workgroup" id="workgroup" required></td>
+                        </tr>
+                        <tr>
+                            <td>Netbios name</td>
+                            <td><input type="text" value="{{globalconfig[1]}}" name="netbios-name" id="netbios-name" required></td>
+                        </tr>
+                        <tr>
+                            <td>Map to guest</td>
+                            <td>
+                                <input type="radio" id="bad-user" name="map-to-guest" value="bad_user" {% if globalconfig[2] == "bad user" %} checked {% endif %}>
+                                <label for="bad-user">Bad user</label>
+                                <br>
+                                <input type="radio" id="never" name="map-to-guest" value="never" {% if globalconfig[2] == "never" %} checked {% endif %}>
+                                <label for="never">Never</label>
+                                <br>
+                                <input type="radio" id="bad-passwd" name="map-to-guest" value="bad_passwd" {% if globalconfig[2] == "bad password" %} checked {% endif %}>
+                                <label for="bad-passwd">Bad password</label>
+                                <br>
+                                <input type="radio" id="mtg-not-configured" name="map-to-guest" value="not_configured" {% if globalconfig[2] == "not configured" %} checked {% endif %}>
+                                <label for="mtg-not-configured">Not configured</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Usershare allow guests</td>
+                            <td>
+                                <input type="radio" id="yes-usershare-allow-guests" name="usershare-allow-guests" value="yes" {% if globalconfig[3] == "yes" %} checked {% endif %}>
+                                <label for="yes-usershare-allow-guests">Igen</label>
+                                <br>
+                                <input type="radio" id="no-usershare-allow-guests" name="usershare-allow-guests" value="no" {% if globalconfig[3] == "no" %} checked {% endif %}>
+                                <label for="no-usershare-allow-guests">Nem</label>
+                                <br>
+                                <input type="radio" id="uag-not-configured" name="usershare-allow-guests" value="not_configured" {% if globalconfig[3] == "not configured" %} checked {% endif %}>
+                                <label for="uag-not-configured">Not configured</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Security</td>
+                            <td>
+                                <input type="radio" id="user" name="security" value="user" {% if globalconfig[4] == "user" %} checked {% endif %}>
+                                <label for="user">User</label>
+                                <br>
+                                <input type="radio" id="share" name="security" value="share" {% if globalconfig[4] == "share" %} checked {% endif %}>
+                                <label for="share">Share</label>
+                                <br>
+                                <input type="radio" id="s-not-configured" name="security" value="not_configured" {% if globalconfig[4] == "not configured" %} checked {% endif %}>
+                                <label for="s-not-configured">Not configured</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Public</td>
+                            <td>
+                                <input type="radio" id="yes-public" name="public" value="yes" {% if globalconfig[5] == "yes" %} checked {% endif %}>
+                                <label for="yes-public">Igen</label>
+                                <br>
+                                <input type="radio" id="no-public" name="public" value="no" {% if globalconfig[5] == "no" %} checked {% endif %}>
+                                <label for="public">Nem</label>
+                                <br>
+                                <input type="radio" id="p-not-configured" name="public" value="not_configured" {% if globalconfig[5] == "not configured" %} checked {% endif %}>
+                                <label for="p-not-configured">Not configured</label>
+                            </td>
+                        </tr>
+                    </table>
+                    <button type="submit">Küldés</button>
+                </form>
+                <h2>Megosztások</h2>
             {% endif %}
         </div>
 

@@ -51,17 +51,55 @@ case "$part" in
         path="/etc/.uswg_configs/samba/samba_fglobal_config.conf"
         ./bash/shared/exist_file.sh $path
         if [ $? -eq 0 ]; then
-            cat $path | grep "^workgroup[[:space:]]=[[:space:]].\+$" | cut -d'=' -f 2 | tr -d ' '
-            cat $path | grep "^netbios[[:space:]]name[[:space:]]=[[:space:]].\+$" | cut -d'=' -f 2 | tr -d ' '
-            cat $path | grep "^map[[:space:]]to[[:space:]]guest[[:space:]]=[[:space:]].\+$" | cut -d'=' -f 2 | sed 's/ //'
-            cat $path | grep "^usershare[[:space:]]allow[[:space:]]guests[[:space:]]=[[:space:]].\+$" | cut -d'=' -f 2 | sed 's/ //'
-            cat $path | grep "^security[[:space:]]=[[:space:]].\+$" | cut -d'=' -f 2 | sed 's/ //'
-            cat $path | grep "^public[[:space:]]=[[:space:]].\+$" | cut -d'=' -f 2 | sed 's/ //'
+
+            workgroup=`cat $path | grep "^\(\(workgroup\)\|\(#workgroup\)\)[[:space:]]=[[:space:]].\+$" | cut -d'=' -f 2 | sed 's/ //'`
+            bname=`cat $path | grep "^\(\(netbios\)\|\(#netbios\)\)[[:space:]]name[[:space:]]=[[:space:]].\+$" | cut -d'=' -f 2 | sed 's/ //'`
+            mtg=`cat $path | grep "^\(\(map\)\|\(#map\)\)[[:space:]]to[[:space:]]guest[[:space:]]=[[:space:]].\+$" | cut -d'=' -f 2 | sed 's/ //'`
+            uag=`cat $path | grep "^\(\(usershare\)\|\(#usershare\)\)[[:space:]]allow[[:space:]]guests[[:space:]]=[[:space:]].\+$" | cut -d'=' -f 2 | sed 's/ //'`
+            security=`cat $path | grep "^\(\(security\)\|\(#security\)\)[[:space:]]=[[:space:]].\+$" | cut -d'=' -f 2 | sed 's/ //'`
+            public=`cat $path | grep "^\(\(public\)\|\(#public\)\)[[:space:]]=[[:space:]].\+$" | cut -d'=' -f 2 | sed 's/ //'`
+
+            if [ -z "$workgroup" ]; then
+                echo "empty"
+            else
+                echo $workgroup
+            fi
+
+            if [ -z "$bname" ]; then
+                echo "empty"
+            else
+                echo $bname
+            fi
+
+            if [ -z "$mtg" ]; then
+                echo "empty"
+            else
+                echo $mtg
+            fi
+
+            if [ -z "$uag" ]; then
+                echo "empty"
+            else
+                echo $uag
+            fi
+
+            if [ -z "$security" ]; then
+                echo "empty"
+            else
+                echo $security
+            fi
+
+            if [ -z "$public" ]; then
+                echo "empty"
+            else
+                echo $public
+            fi
+
         else
             exit 151
         fi
         ;;
-    
+        
     *)
         exit 155
         ;;
