@@ -1,0 +1,9 @@
+.main_site{
+    display: flex;
+    height: 100%;
+    position: relative;
+}
+.samba-users{
+    margin-left: 160px;
+    padding: 0px 10px;
+}

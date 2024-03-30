@@ -2,16 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/shared_style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/sidebar_style.css') }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statikus hoszt módosítása</title>
 </head>
 <body>
-    <form id="modifystatichostForm" class="hidden" action="/service/modify" method="post">
+    <div class="flex_site">
+        <div class="sidebar">
+        {% include 'shared/sidebar.html' %}
+        </div>
+        <div class="main_site">
+    <form id="modifystatichostForm" action="/service/modify" method="post">
         <input type="hidden" name="form_id" value="static-host-modify">
 
-        <p>Hoszt módosítása:</p>
-        <p>Hoszt neve: </p>
-        <p>{{ configarray[0] }}</p>
+        <h1>Hoszt módosítása</h1><br>
+        <h2>Hoszt neve: {{ configarray[0] }}</h2>
         <input type="hidden" value="{{ configarray[0] }}" id="static-host-name" name="static-host-name" pattern="[a-zA-Z0-9\-\.]*" required>
         <br>
 
@@ -25,6 +31,8 @@
         
 
 
-        <input type="submit" value="Küldés">   
+        <input type="submit" value="Küldés">
+    </div>
+</div> 
 </body>
 </html>
