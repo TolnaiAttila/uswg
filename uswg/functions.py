@@ -460,3 +460,35 @@ def nfs_list_all_name():
         number = check.returncode
 
         return number
+
+
+def samba_check_global_config():
+    part = "global"
+    try:
+        config = subprocess.check_output(["./bash/samba/samba_check_part.sh", op.oppart, part], universal_newlines=True)
+        array = config.split("\n")
+        return array
+
+    except:
+        bash_path = '/bash/samba/samba_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number
+
+
+def samba_create_global_config(workgroup, bname, mtg, uag, security, public):
+    part="global"
+    bash_path = 'bash/samba/samba_create_part.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opworkgroup, workgroup, op.opnetbios, bname, op.opmtg, mtg, op.opuag, uag, op.opsecurity, security, op.oppublic, public])
+    number = check.returncode
+
+    return number
+
+
+def samba_merge_config():
+    bash_path = 'bash/samba/samba_merge_config.sh'
+    check = subprocess.run(['bash', bash_path])
+    number = check.returncode
+
+    return number
