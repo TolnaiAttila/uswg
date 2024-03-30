@@ -624,6 +624,23 @@ def service_modify(current_user):
         
         return redirect(url_for('samba'))
 
+    if id == "samba-users-check":
+        sysusers = f.samba_list_system_users()
+        sambausers = f.samba_list_samba_users()
+        print(sysusers)
+        if isinstance(sysusers, int):
+            number = sysusers
+            if number != 0:
+                text = err.error(number)
+                return render_template('shared/error.html', text=text)
+        if isinstance(sambausers, int):
+            number = sambausers
+            if number != 0:
+                text = err.error(number)
+                return render_template('shared/error.html', text=text)
+
+
+        return render_template('samba/users_modify.html', sysusers=sysusers, sambausers=sambausers)
     
     
     return render_template('shared/error.html', text=text)

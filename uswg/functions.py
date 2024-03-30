@@ -492,3 +492,33 @@ def samba_merge_config():
     number = check.returncode
 
     return number
+
+
+def samba_list_system_users():
+    part = "only-system-users"
+    try:
+        config = subprocess.check_output(["./bash/samba/samba_list_users.sh", op.oppart, part], universal_newlines=True)
+        array = config.split()
+        return array
+
+    except:
+        bash_path = '/bash/samba/samba_list_users.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number
+
+
+def samba_list_samba_users():
+    part = "samba-users"
+    try:
+        config = subprocess.check_output(["./bash/samba/samba_list_users.sh", op.oppart, part], universal_newlines=True)
+        array = config.split()
+        return array
+
+    except:
+        bash_path = '/bash/samba/samba_list_users.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number

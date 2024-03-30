@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Samba users</title>
+</head>
+<body>
+
+
+<div class="users_site">
+    <div class="sys_users">
+    <table border="1">
+        <tr>
+            <th>Rendszer felhasználók</th>
+        </tr>
+        {% for i in sysusers %}
+            <tr>
+                <td>
+                    {{i}}
+                </td>
+                <td>
+                    <button>Hozzáadás</button>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    </div>
+    <div class="samba-users">
+    <table border="1">
+        <tr>
+            <th>Samba felhasználók</th>
+        </tr>
+        {% for i in sambausers %}
+            <tr>
+                <td>
+                    {{i}}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    </div>
+</div>
+</body>
+</html>
