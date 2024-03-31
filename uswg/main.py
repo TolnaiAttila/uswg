@@ -294,6 +294,16 @@ def service_add(current_user):
         
         return redirect(url_for('nfs'))
 
+
+    if id == "add-samba-user":
+        user = str(request.form.get('username'))
+        passwd1 = str(request.form.get('password1'))
+        passwd2 = str(request.form.get('password2'))
+        
+        print(user, passwd1, passwd2)
+
+        return redirect(url_for('samba'))
+
     return render_template('shared/error.html', text=text)
 
 @app.route("/service/modify", methods=['POST'])

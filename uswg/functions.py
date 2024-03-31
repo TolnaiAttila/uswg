@@ -495,14 +495,14 @@ def samba_merge_config():
 
 
 def samba_list_system_users():
-    part = "only-system-users"
+    part = "list-system-users"
     try:
-        config = subprocess.check_output(["./bash/samba/samba_list_users.sh", op.oppart, part], universal_newlines=True)
+        config = subprocess.check_output(["./bash/samba/samba_users.sh", op.oppart, part], universal_newlines=True)
         array = config.split()
         return array
 
     except:
-        bash_path = '/bash/samba/samba_list_users.sh'
+        bash_path = '/bash/samba/samba_users.sh'
         check = subprocess.run(['bash', bash_path, op.oppart, part])
         number = check.returncode
 
@@ -510,14 +510,14 @@ def samba_list_system_users():
 
 
 def samba_list_samba_users():
-    part = "samba-users"
+    part = "list-samba-users"
     try:
-        config = subprocess.check_output(["./bash/samba/samba_list_users.sh", op.oppart, part], universal_newlines=True)
+        config = subprocess.check_output(["./bash/samba/samba_users.sh", op.oppart, part], universal_newlines=True)
         array = config.split()
         return array
 
     except:
-        bash_path = '/bash/samba/samba_list_users.sh'
+        bash_path = '/bash/samba/samba_users.sh'
         check = subprocess.run(['bash', bash_path, op.oppart, part])
         number = check.returncode
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ARGS=$(getopt -n "$0" -o p: --long part: -- "$@")
+ARGS=$(getopt -n "$0" -o p:u:P --long part:,username:,password: -- "$@")
 
 if [ $? -ne 0 ]; then
     exit 161
@@ -9,12 +9,32 @@ fi
 eval set -- "$ARGS"
 
 part=""
+uname=""
+password=""
 
 while true; do
     case "$1" in
         --part | -p)
             if [[ -n "$2" && "$2" != -* ]]; then
                 part="$2"
+                shift 2
+            else
+                exit 161
+            fi
+            ;;
+
+        --username | -u)
+            if [[ -n "$2" && "$2" != -* ]]; then
+                uname="$2"
+                shift 2
+            else
+                exit 161
+            fi
+            ;;
+        
+        --password | -P)
+            if [[ -n "$2" && "$2" != -* ]]; then
+                password="$2"
                 shift 2
             else
                 exit 161
@@ -37,7 +57,7 @@ if [ -z "$part" ]; then
 fi
 tf=0
 case "$part" in 
-    only-system-users)
+    list-system-users)
 
         for i in `cat /etc/passwd | cut -d':' -f 1-3 | grep -v "^nobody:.\+" | grep "[0-9]\{4\}$" | cut -d':' -f 1`
             do
@@ -57,11 +77,21 @@ case "$part" in
         ;;
         
 
-    samba-users)
+    list-samba-users)
         sudo pdbedit -L | cut -d':' -f 1
         
         ;;
+    
+    add-samba-user)
+        if [ -z "$uname" ]; then
+            exit 155
+        fi
+        (echo "$password"; echo "$password") | sudo smbpasswd -a $uname -s
+        
+        ;;
+
     *)
+
         exit 155
         ;;
 esac
