@@ -116,7 +116,12 @@ case "$part" in
 
         ;;
 
-    
+    add-system-user)
+        if [ -z "$uname" ]; then
+            exit 155
+        fi
+        sudo adduser --gecos "" --gid 100 --disabled-password --no-create-home --shell /usr/sbin/nologin $uname
+        ;;
 
     *)
 

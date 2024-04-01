@@ -68,7 +68,27 @@
                     </table>
                 </form>
             </div>
+            
+            <h2>Rendszer felhasználó létrehozása</h2>
+            <p>A rendszerben létrehozott felhasználók is megjelennek és használhatók.</p>
+            <p>Az itt létrehozott felhasználó tulajdonságai:</p>
+            <ul>
+                <li>A nevén kívül más információ nem lesz eltárolva a felhasználóról</li>
+                <li>A users csoport (id: 100) tagja lesz</li>
+                <li>Nem fog rendelkezni home könyvtárral</li>
+                <li>Nem lesz jelszava</li>
+                <li>A bejelentkezés le lesz tiltva a létrehozott felhasználóval</li>
+                <li>Alapértelmezetten nem lesz hozzárendelve a samba-hoz</li>
+                
+            </ul>
 
+            <br>
+            <p>Új felhasználó hozzáadása:</p>
+            <form id="addsystemuserForm" action="/service/add" method="post">
+                <input type="hidden" name="form_id" value="add-system-user">
+                <input type="text" name="system-user" placeholder="Új felhasználó neve" pattern="[a-zA-Z0-9\-\.]*" required>
+                <button type="submit">Küldés</button>
+            </form>
         </div>
         
         

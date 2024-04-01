@@ -332,6 +332,20 @@ def service_add(current_user):
 
         return redirect(url_for('samba_users'), code=307)
 
+
+
+    if id == "add-system-user":
+        user = str(request.form.get('system-user'))
+
+        number = f.add_system_user(user)
+        
+        if number != 0:
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        return redirect(url_for('samba_users'), code=307)
+
+
     return render_template('shared/error.html', text=text)
 
 @app.route("/service/modify", methods=['POST'])
