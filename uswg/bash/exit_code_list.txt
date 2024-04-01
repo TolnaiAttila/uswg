@@ -10,3 +10,4 @@ service_error=159
 service_unknown_status=160
 invalid_option=161 /10
 text_not_found_in_file=162 /11
+passwords_not_same=163

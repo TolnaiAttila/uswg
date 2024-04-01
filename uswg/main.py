@@ -159,6 +159,31 @@ def ftp(current_user):
     return render_template('ftp/ftp.html', status=status)
 
 
+
+@app.route("/samba/users", methods=['POST'])
+@token_required
+def samba_users(current_user):
+    #if id == "samba-users-check":
+    sysusers = f.samba_list_system_users()
+    sambausers = f.samba_list_samba_users()
+
+    if isinstance(sysusers, int):
+        number = sysusers
+        if number != 0:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+    if isinstance(sambausers, int):
+        number = sambausers
+        if number != 0:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+
+
+    return render_template('samba/users_modify.html', sysusers=sysusers, sambausers=sambausers)
+
+
+
+
 @app.route("/service/add", methods=['POST'])
 @token_required
 def service_add(current_user):
@@ -300,9 +325,12 @@ def service_add(current_user):
         passwd1 = str(request.form.get('password1'))
         passwd2 = str(request.form.get('password2'))
         
-        print(user, passwd1, passwd2)
+        number = f.add_samba_user(user, passwd1, passwd2)
+        if number != 0:
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
 
-        return redirect(url_for('samba'))
+        return redirect(url_for('samba_users'), code=307)
 
     return render_template('shared/error.html', text=text)
 
@@ -634,23 +662,6 @@ def service_modify(current_user):
         
         return redirect(url_for('samba'))
 
-    if id == "samba-users-check":
-        sysusers = f.samba_list_system_users()
-        sambausers = f.samba_list_samba_users()
-
-        if isinstance(sysusers, int):
-            number = sysusers
-            if number != 0:
-                text = err.error(number)
-                return render_template('shared/error.html', text=text)
-        if isinstance(sambausers, int):
-            number = sambausers
-            if number != 0:
-                text = err.error(number)
-                return render_template('shared/error.html', text=text)
-
-
-        return render_template('samba/users_modify.html', sysusers=sysusers, sambausers=sambausers)
     
     
     return render_template('shared/error.html', text=text)

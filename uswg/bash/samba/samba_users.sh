@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ARGS=$(getopt -n "$0" -o p:u:P --long part:,username:,password: -- "$@")
+ARGS=$(getopt -n "$0" -o e:u:P:p --long part:,username:,password1:,password2: -- "$@")
 
 if [ $? -ne 0 ]; then
     exit 161
@@ -10,11 +10,12 @@ eval set -- "$ARGS"
 
 part=""
 uname=""
-password=""
+passwd1=""
+passwd2=""
 
 while true; do
     case "$1" in
-        --part | -p)
+        --part | -e)
             if [[ -n "$2" && "$2" != -* ]]; then
                 part="$2"
                 shift 2
@@ -32,9 +33,18 @@ while true; do
             fi
             ;;
         
-        --password | -P)
+        --password1 | -P)
             if [[ -n "$2" && "$2" != -* ]]; then
-                password="$2"
+                passwd1="$2"
+                shift 2
+            else
+                exit 161
+            fi
+            ;;
+
+        --password2 | -p)
+            if [[ -n "$2" && "$2" != -* ]]; then
+                passwd2="$2"
                 shift 2
             else
                 exit 161
@@ -83,10 +93,16 @@ case "$part" in
         ;;
     
     add-samba-user)
-        if [ -z "$uname" ]; then
+        if [ -z "$uname" ] || [ -z "$passwd1" ] || [ -z "$passwd2" ]; then
             exit 155
         fi
-        (echo "$password"; echo "$password") | sudo smbpasswd -a $uname -s
+
+        if [ "$passwd1" != "$passwd2" ]; then
+            exit 163
+        fi
+
+
+        (echo "$passwd1"; echo "$passwd1") | sudo smbpasswd -a $uname -s
         
         ;;
 
