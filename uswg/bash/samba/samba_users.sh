@@ -102,9 +102,21 @@ case "$part" in
         fi
 
 
-        (echo "$passwd1"; echo "$passwd1") | sudo smbpasswd -a $uname -s
+        (echo "$passwd1"; echo "$passwd1") | sudo -S smbpasswd -a $uname -s
         
         ;;
+    
+    remove-samba-user)
+        
+        if [ -z "$uname" ]; then
+            exit 155
+        fi
+        
+        sudo -S smbpasswd -x $uname
+
+        ;;
+
+    
 
     *)
 

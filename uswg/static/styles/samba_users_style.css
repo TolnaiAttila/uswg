@@ -1,7 +1,8 @@
 .sys-user-flex-div{
     display: flex;
-    height: 100%;
+    /*height: 50%;*/
     position: relative;
+    padding-bottom: 30px;
 }
 
 .hidden-form-user{
