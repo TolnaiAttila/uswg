@@ -522,3 +522,12 @@ def samba_list_samba_users():
         number = check.returncode
 
         return number
+
+
+def add_samba_user(user, passwd1, passwd2):
+    part = "add-samba-user"
+    bash_path = 'bash/samba/samba_users.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opuser, user, op.oppasswd1, passwd1, op.oppasswd2, passwd2])
+    number = check.returncode
+
+    return number

@@ -17,3 +17,8 @@ def error(x):
     elif x == 162 :
         text = "Sérült a szükséges fájl struktúrája!"
         return text
+    elif x == 163 :
+        text = "A két jelszó nem azonos!"
+        return text
+    else:
+        return "Ismeretlen hiba! Ez hatalmas probléma!"
