@@ -531,3 +531,12 @@ def add_samba_user(user, passwd1, passwd2):
     number = check.returncode
 
     return number
+
+
+def remove_samba_user(user):
+    part="remove-samba-user"
+    bash_path = 'bash/samba/samba_users.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opuser, user])
+    number = check.returncode
+
+    return number

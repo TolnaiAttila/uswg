@@ -663,6 +663,18 @@ def service_modify(current_user):
         return redirect(url_for('samba'))
 
     
+
+    if id == "remove-samba-user" :
+        user = str(request.form.get('remove-user-samba-button'))
+        
+        number = f.remove_samba_user(user)
+
+        if number != 0:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+
+        return redirect(url_for('samba_users'), code=307)
+
     
     return render_template('shared/error.html', text=text)
 
