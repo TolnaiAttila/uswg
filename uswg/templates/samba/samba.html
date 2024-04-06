@@ -14,7 +14,7 @@
         <div class="sidebar">
             {% include 'shared/sidebar.html' %}
         </div>
-        <div class="main_site">
+        <div class="main_site" style="overflow-x: auto;">
 
             {% if status == 156 %}
                 <p>A Samba kiszolgáló nincs telepítve.</p>
@@ -131,7 +131,7 @@
                                 <label for="yes-public">Igen</label>
                                 <br>
                                 <input type="radio" id="no-public" name="public" value="no" {% if globalconfig[5] == "no" %} checked {% endif %}>
-                                <label for="public">Nem</label>
+                                <label for="no-public">Nem</label>
                                 <br>
                                 <input type="radio" id="p-not-configured" name="public" value="not_configured" {% if globalconfig[5] == "not configured" %} checked {% endif %}>
                                 <label for="p-not-configured">Not configured</label>
@@ -141,7 +141,60 @@
                     <button type="submit">Küldés</button>
                 </form>
 
-                <h2>Felhasználók</h2>
+                <h2>Megosztások</h2>
+                <h3>Felhasználó nélküli megosztások</h3>
+
+                <form id="modifysambashareForm" action="/service/modify" method="post">
+                <input type="hidden" name="form_id" value="samba-nobody-share-check">
+                <table>
+                    <tr class="table-title">
+                        <th>Megosztás neve</th>
+                        <th>Mappa</th>
+                        <th>Mappa jog</th>
+                        <th>Mappa tulaj</th>
+                        <th>Mappa csoport</th>
+                        <th>Komment</th>
+                        <th>Read only</th>
+                        <th>Writable</th>
+                        <th>Guest ok</th>
+                        <th>Guest only</th>
+                        <th>Browsable</th>
+                        <th>Public</th>
+                        <th>Create mask</th>
+                        <th>Directory mask</th>
+                        <th>Force user</th>
+                        <th>Force group</th>
+                        <th>Hide dot files</th>
+                
+                {% for i in nobodyconfig %}
+                    {% if (loop.index0) % 17 == 0 %}
+                        </tr><tr>
+                            <td>{{ i }}</td>
+                    {% else %}
+                            <td>{{ i }}</td>
+                    {% endif %}
+
+                    {% if loop.index % 17 == 0 or loop.last %}
+                        <td><button name="modify-samba-share-button" id="modifysambashare{{ nobodyconfig[loop.index0 - (loop.index % 17) - 16] }}Button" value="modify_samba_share_{{ nobodyconfig[loop.index0 - (loop.index % 17) - 16] }}_Button">Módosítás</button></td>
+                        <td><button name="delete-samba-share-button" id="deletesambashare{{ nobodyconfig[loop.index0 - (loop.index % 17) - 16] }}Button" value="delete_samba_share_{{ nobodyconfig[loop.index0 - (loop.index % 17) - 16] }}_Button">Törlés</button></td>
+                        <td>
+                            <input type="radio" id="nodelete_{{ nobodyconfig[loop.index0 - (loop.index % 17) - 16] }}" name="dir-delete" value="no"><label for="nodelete_{{ nobodyconfig[loop.index0 - (loop.index % 17) - 16] }}">Mappa megtartása</label><br>
+                            <input type="radio" id="delete_{{ nobodyconfig[loop.index0 - (loop.index % 17) - 16] }}" name="dir-delete" value="yes"><label for="delete_{{ nobodyconfig[loop.index0 - (loop.index % 17) - 16] }}">Mappa törlése</label>
+                        </td> 
+                    {% endif %}
+                {% endfor %}
+                </form>
+                </table>
+
+                <form id="addsambanobodyshareForm" action="/service/add" method="post">
+                    <input type="hidden" name="form_id" value="samba-nobody-share-redirect">
+                    <button type="submit">Új megosztás</button>
+                </form>
+
+                <h3>Egy felhasználós megosztások</h3>
+                <h3>Több felhasználós megosztások</h3>
+
+                <h2>Felhasználók kezelése</h2>
                 <form id="modifysambausersForm" action="/samba/users" method="post">
                     <!--<input type="hidden" name="form_id" value="samba-users-check">-->
                     <p>A felhasználók megjelenítéséhez kattintson a "Megnyitás" gombra.</p>

@@ -20,5 +20,8 @@ def error(x):
     elif x == 163 :
         text = "A két jelszó nem azonos!"
         return text
+    elif x == 164 :
+        text = "Hiba történ egy vagy több szkript futásában!"
+        return text
     else:
         return "Ismeretlen hiba! Ez hatalmas probléma!"
