@@ -67,9 +67,9 @@ if [ -z "$part" ]; then
 fi
 tf=0
 case "$part" in 
-    list-system-users)
+    list-leftover-system-users)
 
-        for i in `cat /etc/passwd | cut -d':' -f 1-3 | grep -v "^nobody:.\+" | grep "[0-9]\{4\}$" | cut -d':' -f 1`
+        for i in `cat /etc/passwd | cut -d':' -f 1-3 | grep -v "^nobody:.\+" | grep "[0-9]\{4,5\}$" | cut -d':' -f 1`
             do
                 for x in `sudo pdbedit -L | cut -d':' -f 1`
                     do
@@ -85,7 +85,10 @@ case "$part" in
             done
         
         ;;
-        
+    
+    list-all-system-users)
+        cat /etc/passwd | cut -d':' -f 1-3 | grep -v "^nobody:.\+" | grep "[0-9]\{4,5\}$" | cut -d':' -f 1
+        ;;
 
     list-samba-users)
         sudo pdbedit -L | cut -d':' -f 1
@@ -121,6 +124,10 @@ case "$part" in
             exit 155
         fi
         sudo adduser --gecos "" --gid 100 --disabled-password --no-create-home --shell /usr/sbin/nologin $uname
+        ;;
+
+    list-all-system-groups)
+        cat /etc/group | cut -d':' -f 1
         ;;
 
     *)

@@ -1,0 +1,5 @@
+.global-config-table{
+    border: 1px solid white;
+    text-align: left;
+    border-collapse: collapse;
+}
