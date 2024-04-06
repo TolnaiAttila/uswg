@@ -629,3 +629,21 @@ def samba_delete_nobody_share(button, dirdel):
     number = check.returncode
 
     return number
+
+
+
+def samba_check_selected_nobody_share(button):
+    part="nobody-share"
+    try:
+        config = subprocess.check_output(["./bash/samba/samba_check_part.sh", op.oppart, part, op.opinput, button], universal_newlines=True)
+        array = config.split("\n")
+        if array[-1] == "":
+            array.pop(-1)
+        return array
+
+    except:
+        bash_path = '/bash/samba/samba_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part, op.opinput, button])
+        number = check.returncode
+
+        return number

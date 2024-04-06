@@ -418,10 +418,15 @@ case "$part" in
         fi
         outsharename="[$sharename]"
 
-        
-        dirslash=`echo $sharepath | grep "^/.\+$"`
+
+        dirslash=`echo $sharepath | grep "^/srv/samba/.\+$"`
         if [ ! -z "$dirslash" ]; then
+            sharepath=`echo $sharepath| cut -d'/' -f4-`
+        else
+            dirslash=`echo $sharepath | grep "^/.\+$"`
+            if [ ! -z "$dirslash" ]; then
                 sharepath=`echo $sharepath | cut -d'/' -f3-`
+            fi
         fi
 
 
