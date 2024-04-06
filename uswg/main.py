@@ -745,6 +745,31 @@ def service_modify(current_user):
     
 
     if id == "samba-nobody-share-check":
+
+        if "modify-samba-share-button" in request.form:
+            button = str(request.form.get('modify-samba-share-button'))
+            configarray = f.samba_check_selected_nobody_share(button)
+            
+            if isinstance(configarray, int):
+                number = configarray
+                text = err.error(number)
+                return render_template('shared/error.html', text=text)
+            
+            userarray = f.samba_list_all_system_users()
+            if isinstance(userarray, int):
+                number = userarray
+                text=err.error(number)
+                return render_template('shared/error.html', text=text)
+        
+            grouparray = f.samba_list_all_system_groups()
+            if isinstance(grouparray, int):
+                number = grouparray
+                text=err.error(number)
+                return render_template('shared/error.html', text=text)
+
+            return render_template('samba/modify_nobody_share.html', configarray=configarray, userarray=userarray, grouparray=grouparray)
+            
+
         if "delete-samba-share-button" in request.form:
             button = str(request.form.get('delete-samba-share-button'))
             dirdel = str(request.form.get('dir-delete'))
@@ -757,8 +782,46 @@ def service_modify(current_user):
             if number != 0:
                 text = err.error(number)
                 return render_template('shared/error.html', text=text)
-        return redirect(url_for("samba"))
+            return redirect(url_for("samba"))
 
+
+    if id == "samba-modify-nobody-share":
+        sharename = str(request.form.get('share-name'))
+        sharepath = str(request.form.get('share-path'))
+        dirperm = str(request.form.get('dir-perm'))
+        owneru = str(request.form.get('owner-user'))
+        ownerg = str(request.form.get('owner-group'))
+        comment = str(request.form.get('comment'))
+        readonly = str(request.form.get('read-only'))
+        writable = str(request.form.get('writable'))
+        guestok = str(request.form.get('guest-ok'))
+        guestonly = str(request.form.get('guest-only'))
+        browsable = str(request.form.get('browsable'))
+        public = str(request.form.get('public'))
+        createmask = str(request.form.get('create-mask'))
+        dirmask = str(request.form.get('directory-mask'))
+        forceuser = str(request.form.get('force-user'))
+        forcegroup = str(request.form.get('force-group'))
+        dotfiles = str(request.form.get('hide-dot-files'))
+
+        dirdel="no"
+        button = ("delete_samba_share_" + sharename + "_Button")
+        number = f.samba_delete_nobody_share(button, dirdel)
+        if number != 0:
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+
+        number = f.samba_add_nobody_share(sharename, sharepath, dirperm, owneru, ownerg, comment, readonly, writable, guestok, guestonly, browsable, public, createmask, dirmask, forceuser, forcegroup, dotfiles)
+        if number != 0:
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        number = f.samba_merge_config()
+        if number != 0:
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        return redirect(url_for("samba"))
 
     return render_template('shared/error.html', text=text)
 
