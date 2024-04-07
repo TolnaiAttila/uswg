@@ -55,41 +55,54 @@ if [ -z "$part" ]; then
     exit 155
 fi
 
+if [ -z "$input" ]; then
+    exit 155
+fi
+        
+check=""
+check=`echo $input | grep "^delete_samba_share_.\+_Button$"`
+
+if [ -z "$check" ]; then
+    exit 155
+fi
+
+
 case "$part" in
 
     nobody-share)
-        if [ -z "$input" ]; then
-            exit 155
-        fi
-        
-        check=""
-        check=`echo $input | grep "^delete_samba_share_.\+_Button$"`
-
-        if [ -z "$check" ]; then
-            exit 155
-        fi
-
+       
         name=`echo $input | grep "^delete_samba_share_.\+_Button$" | cut -d'_' -f 4`
         path="/etc/.uswg_configs/samba/samba_nobody_${name}_share.conf"
-        
-        ./bash/shared/exist_file.sh $path
-        if [ $? -ne 0 ]; then
-            exit 151
-        fi
+        ;;
 
-        if [ "$dirdel" == "no" ] || [ "$dirdel" == "yes" ]; then
-            if [ "$dirdel" == "yes" ]; then
-                sharepath=`cat $path | grep "^\(\(path\)\|\(#path\)\)[[:space:]]=[[:space:]].\+$" |  cut -d'=' -f 2- | sed 's/ //'`
-                sudo -S rm -r -d $sharepath
-            fi
-        else
-            exit 155
-        fi
-        sudo -S rm $path
 
+    single-user-share)
+        name=`echo $input | grep "^delete_samba_share_.\+_Button$" | cut -d'_' -f 4`
+        path="/etc/.uswg_configs/samba/samba_user_${name}_share.conf"
         ;;
 
     *)
         exit 155
         ;;
 esac
+
+
+
+
+
+
+
+./bash/shared/exist_file.sh $path
+if [ $? -ne 0 ]; then
+    exit 151
+fi
+
+if [ "$dirdel" == "no" ] || [ "$dirdel" == "yes" ]; then
+    if [ "$dirdel" == "yes" ]; then
+        sharepath=`cat $path | grep "^\(\(path\)\|\(#path\)\)[[:space:]]=[[:space:]].\+$" |  cut -d'=' -f 2- | sed 's/ //'`
+        sudo -S rm -r -d $sharepath
+    fi
+else
+    exit 155
+fi
+sudo -S rm $path

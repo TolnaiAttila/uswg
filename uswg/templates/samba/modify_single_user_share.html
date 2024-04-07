@@ -14,8 +14,8 @@
         </div>
         <div class="main_site">
             <h1>Modify {{configarray[0]}} share</h1>
-            <form id="modifysambanobodyshareForm" action="/service/modify" method="post">
-                <input type="hidden" name="form_id" value="samba-modify-nobody-share">
+            <form id="modifysambasingleusershareForm" action="/service/modify" method="post">
+                <input type="hidden" name="form_id" value="samba-modify-single-user-share">
                 <input type="hidden" name="share-name" value="{{configarray[0]}}" >
                 <input type="hidden" name="share-path" value="{{configarray[1]}}" >
                 <table>
@@ -58,57 +58,53 @@
                     <td class="table-title">Komment</td>
                     <td class="global-config-table"><input type="text" name="comment" {% if configarray[5] == "not configured" %} value="" {% else %} value="{{configarray[5]}}" {% endif %} id="comment"></td>
                 </tr>
-                
+                <tr>
+                    <td class="table-title">Valid user</td>
+                    <td class="global-config-table">
+                        <select name="valid-users" id="valid-users" required>
+                            {% for i in sambausersarray %}
+                            <option value="{{ i }}">{{ i }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
                 <tr>
                     <td class="table-title">Read only</td>
                     <td class="global-config-table">
-                        <input type="radio" id="yes-read-only" name="read-only" value="yes" {% if configarray[6] == "yes" %} checked {% endif %}>
+                        <input type="radio" id="yes-read-only" name="read-only" value="yes" {% if configarray[7] == "yes" %} checked {% endif %}>
                         <label for="yes-read-only">Igen</label>
                         <br>
-                        <input type="radio" id="no-read-only" name="read-only" value="no" {% if configarray[6] == "no" %} checked {% endif %}>
+                        <input type="radio" id="no-read-only" name="read-only" value="no" {% if configarray[7] == "no" %} checked {% endif %}>
                         <label for="no-read-only">Nem</label>
                         <br>
-                        <input type="radio" id="not-configured-read-only" name="read-only" value="not_configured" required {% if configarray[6] == "not configured" %} checked {% endif %}>
+                        <input type="radio" id="not-configured-read-only" name="read-only" value="not_configured" required {% if configarray[7] == "not configured" %} checked {% endif %}>
                         <label for="not-configured-read-only">Not configured</label>
                     </td>
                 </tr>
                 <tr>
                     <td class="table-title">Writable</td>
                     <td class="global-config-table">
-                        <input type="radio" id="yes-writable" name="writable" value="yes" {% if configarray[7] == "yes" %} checked {% endif %}>
+                        <input type="radio" id="yes-writable" name="writable" value="yes" {% if configarray[8] == "yes" %} checked {% endif %}>
                         <label for="yes-writable">Igen</label>
                         <br>
-                        <input type="radio" id="no-writable" name="writable" value="no" {% if configarray[7] == "no" %} checked {% endif %}>
+                        <input type="radio" id="no-writable" name="writable" value="no" {% if configarray[8] == "no" %} checked {% endif %}>
                         <label for="no-writable">Nem</label>
                         <br>
-                        <input type="radio" id="not-configured-writable" name="writable" value="not_configured" required {% if configarray[7] == "not configured" %} checked {% endif %}>
+                        <input type="radio" id="not-configured-writable" name="writable" value="not_configured" required {% if configarray[8] == "not configured" %} checked {% endif %}>
                         <label for="not-configured-writable">Not configured</label>
                     </td>
                 </tr>
                 <tr>
                     <td class="table-title">Guest ok</td>
                     <td class="global-config-table">
-                        <input type="radio" id="yes-guest-ok" name="guest-ok" value="yes" {% if configarray[8] == "yes" %} checked {% endif %}>
+                        <input type="radio" id="yes-guest-ok" name="guest-ok" value="yes" {% if configarray[9] == "yes" %} checked {% endif %}>
                         <label for="yes-guest-ok">Igen</label>
                         <br>
-                        <input type="radio" id="no-guest-ok" name="guest-ok" value="no" {% if configarray[8] == "no" %} checked {% endif %}>
+                        <input type="radio" id="no-guest-ok" name="guest-ok" value="no" {% if configarray[9] == "no" %} checked {% endif %}>
                         <label for="no-guest-ok">Nem</label>
                         <br>
-                        <input type="radio" id="not-configured-guest-ok" name="guest-ok" value="not_configured" {% if configarray[8] == "not configured" %} checked {% endif %} required>
+                        <input type="radio" id="not-configured-guest-ok" name="guest-ok" value="not_configured" {% if configarray[9] == "not configured" %} checked {% endif %} required>
                         <label for="not-configured-guest-ok">Not configured</label>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="table-title">Guest only</td>
-                    <td class="global-config-table">
-                        <input type="radio" id="yes-guest-only" name="guest-only" value="yes" {% if configarray[9] == "yes" %} checked {% endif %}>
-                        <label for="yes-guest-only">Igen</label>
-                        <br>
-                        <input type="radio" id="no-guest-only" name="guest-only" value="no" {% if configarray[9] == "no" %} checked {% endif %}>
-                        <label for="no-guest-only">Nem</label>
-                        <br>
-                        <input type="radio" id="not-configured-guest-only" name="guest-only" value="not_configured" {% if configarray[9] == "not configured" %} checked {% endif %} required >
-                        <label for="not-configured-guest-only">Not configured</label>
                     </td>
                 </tr>
                 <tr>

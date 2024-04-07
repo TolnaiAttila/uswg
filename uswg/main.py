@@ -145,14 +145,17 @@ def samba(current_user):
     status = f.status(service)
     globalconfig = f.samba_check_global_config()
     nobodyconfig = f.samba_check_all_nobody_share()
+    singleconfig = f.samba_check_all_single_user_share()
     if isinstance(globalconfig, int):
         return render_template('samba/samba.html', status=status)
 
     if isinstance(nobodyconfig, int):
         return render_template('samba/samba.html', status=status, globalconfig=globalconfig)
 
+    if isinstance(singleconfig, int):
+        return render_template('samba/samba.html', status=status, globalconfig=globalconfig, nobodyconfig=nobodyconfig)
 
-    return render_template('samba/samba.html', status=status, globalconfig=globalconfig, nobodyconfig=nobodyconfig)
+    return render_template('samba/samba.html', status=status, globalconfig=globalconfig, nobodyconfig=nobodyconfig, singleconfig=singleconfig)
 
 
 @app.route("/ftp")
@@ -353,7 +356,7 @@ def service_add(current_user):
 
 
     if id == "samba-nobody-share-redirect":
-        userarray = f.samba_list_all_system_users()
+        userarray = f.samba_list_all_users()
         if isinstance(userarray, int):
             number = userarray
             text=err.error(number)
@@ -398,6 +401,62 @@ def service_add(current_user):
             return render_template('shared/error.html', text=text)
         
         return redirect(url_for("samba"))
+
+
+
+    if id == "samba-single-user-share-redirect":
+        userarray = f.samba_list_all_users()
+        if isinstance(userarray, int):
+            number = userarray
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        grouparray = f.samba_list_all_system_groups()
+        if isinstance(grouparray, int):
+            number = grouparray
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+
+        sambausersarray = f.samba_list_samba_users()
+        if isinstance(sambausersarray, int):
+            number = sambausersarray
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+
+        return render_template('samba/add_single_user_share.html', sambausersarray=sambausersarray, userarray=userarray, grouparray=grouparray)
+
+
+    if id == "samba-add-single-user-share":
+        sharename = str(request.form.get('share-name'))
+        sharepath = str(request.form.get('share-path'))
+        dirperm = str(request.form.get('dir-perm'))
+        owneru = str(request.form.get('owner-user'))
+        ownerg = str(request.form.get('owner-group'))
+        comment = str(request.form.get('comment'))
+        validusers = str(request.form.get('valid-users'))
+        readonly = str(request.form.get('read-only'))
+        writable = str(request.form.get('writable'))
+        guestok = str(request.form.get('guest-ok'))
+        browsable = str(request.form.get('browsable'))
+        public = str(request.form.get('public'))
+        createmask = str(request.form.get('create-mask'))
+        dirmask = str(request.form.get('directory-mask'))
+        forceuser = str(request.form.get('force-user'))
+        forcegroup = str(request.form.get('force-group'))
+        dotfiles = str(request.form.get('hide-dot-files'))
+
+        number = f.samba_add_singl_user_share(sharename, sharepath, dirperm, owneru, ownerg, comment, validusers, readonly, writable, guestok, browsable, public, createmask, dirmask, forceuser, forcegroup, dotfiles)
+        if number != 0:
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        number = f.samba_merge_config()
+        if number != 0:
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        return redirect(url_for("samba"))
+
 
     return render_template('shared/error.html', text=text)
 
@@ -755,7 +814,7 @@ def service_modify(current_user):
                 text = err.error(number)
                 return render_template('shared/error.html', text=text)
             
-            userarray = f.samba_list_all_system_users()
+            userarray = f.samba_list_all_users()
             if isinstance(userarray, int):
                 number = userarray
                 text=err.error(number)
@@ -822,6 +881,99 @@ def service_modify(current_user):
             return render_template('shared/error.html', text=text)
         
         return redirect(url_for("samba"))
+
+
+    if id == "samba-single-user-share-check":
+        if "delete-samba-share-button" in request.form:
+            button = str(request.form.get('delete-samba-share-button'))
+            dirdel = str(request.form.get('dir-delete'))
+
+            number = f.samba_delete_single_user_share(button, dirdel)
+            if number != 0:
+                text = err.error(number)
+                return render_template('shared/error.html', text=text)
+            
+            number = f.samba_merge_config()
+            if number != 0:
+                text = err.error(number)
+                return render_template('shared/error.html', text=text)
+            return redirect(url_for("samba"))
+        
+        if "modify-samba-share-button" in request.form:
+            button = str(request.form.get('modify-samba-share-button'))
+            configarray = f.samba_check_selected_single_user_share(button)
+            
+            if isinstance(configarray, int):
+                number = configarray
+                text = err.error(number)
+                return render_template('shared/error.html', text=text)
+
+            userarray = f.samba_list_all_users()
+            if isinstance(userarray, int):
+                number = userarray
+                text=err.error(number)
+                return render_template('shared/error.html', text=text)
+        
+            grouparray = f.samba_list_all_system_groups()
+            if isinstance(grouparray, int):
+                number = grouparray
+                text=err.error(number)
+                return render_template('shared/error.html', text=text)
+
+            sambausersarray = f.samba_list_samba_users()
+            if isinstance(sambausersarray, int):
+                number = sambausersarray
+                text=err.error(number)
+                return render_template('shared/error.html', text=text)
+
+            return render_template('samba/modify_single_user_share.html', sambausersarray=sambausersarray, configarray=configarray, userarray=userarray, grouparray=grouparray)
+        
+
+    if id == "samba-modify-single-user-share":
+        sharename = str(request.form.get('share-name'))
+        sharepath = str(request.form.get('share-path'))
+        dirperm = str(request.form.get('dir-perm'))
+        owneru = str(request.form.get('owner-user'))
+        ownerg = str(request.form.get('owner-group'))
+        comment = str(request.form.get('comment'))
+        readonly = str(request.form.get('read-only'))
+        writable = str(request.form.get('writable'))
+        guestok = str(request.form.get('guest-ok'))
+        validusers = str(request.form.get('valid-users'))
+        browsable = str(request.form.get('browsable'))
+        public = str(request.form.get('public'))
+        createmask = str(request.form.get('create-mask'))
+        dirmask = str(request.form.get('directory-mask'))
+        forceuser = str(request.form.get('force-user'))
+        forcegroup = str(request.form.get('force-group'))
+        dotfiles = str(request.form.get('hide-dot-files'))
+
+        dirdel="no"
+        button = ("delete_samba_share_" + sharename + "_Button")
+        number = f.samba_delete_single_user_share(button, dirdel)
+
+        if number != 0:
+            print("del utan ifben")
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+
+        number = f.samba_add_singl_user_share(sharename, sharepath, dirperm, owneru, ownerg, comment, validusers, readonly, writable, guestok, browsable, public, createmask, dirmask, forceuser, forcegroup, dotfiles)
+        if number != 0:
+            print("add utan ifben")
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        number = f.samba_merge_config()
+        if number != 0:
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        return redirect(url_for("samba"))
+
+
+
+
+        
 
     return render_template('shared/error.html', text=text)
 
