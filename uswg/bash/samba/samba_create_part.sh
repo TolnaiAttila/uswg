@@ -633,7 +633,6 @@ fi
         esac
 
         ok=""
-        echo $createmask
         if [ -z "$createmask" ] || [ "$createmask" == "not_configured" ]; then
             outcreatemask="#create mask = not configured"
         else

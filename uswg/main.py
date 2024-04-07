@@ -167,6 +167,26 @@ def ftp(current_user):
     return render_template('ftp/ftp.html', status=status)
 
 
+@app.route("/samba/groups", methods=['POST'])
+@token_required
+def samba_groups(current_user):
+    
+    grouparray = f.samba_list_all_samba_group()
+    if isinstance(grouparray, int):
+        number = grouparray
+        if number != 0:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+
+    usersarray = f.samba_list_samba_users()
+    if isinstance(usersarray, int):
+        number = usersarray
+        if number != 0:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+
+    return render_template('samba/samba_groups.html', grouparray=grouparray, usersarray=usersarray, code=307)
+
 
 @app.route("/samba/users", methods=['POST'])
 @token_required
@@ -458,6 +478,17 @@ def service_add(current_user):
         return redirect(url_for("samba"))
 
 
+
+    if id == "samba-add-group":
+        form_data = list(request.form.items())
+        print(form_data)
+        for i in form_data:
+            for x in i:
+                print(x)
+        
+        return redirect(url_for('samba_groups'), code=307)
+
+
     return render_template('shared/error.html', text=text)
 
 @app.route("/service/modify", methods=['POST'])
@@ -729,7 +760,6 @@ def service_modify(current_user):
             part = "all"
             sharename = str(request.form.get('delete-nfs-all-share-button'))
             dirdel = str(request.form.get('dir-delete'))
-            print(dirdel)
             number = f.nfs_delete_all(sharename, dirdel)
 
             if number != 0:
@@ -953,13 +983,11 @@ def service_modify(current_user):
         number = f.samba_delete_single_user_share(button, dirdel)
 
         if number != 0:
-            print("del utan ifben")
             text=err.error(number)
             return render_template('shared/error.html', text=text)
 
         number = f.samba_add_singl_user_share(sharename, sharepath, dirperm, owneru, ownerg, comment, validusers, readonly, writable, guestok, browsable, public, createmask, dirmask, forceuser, forcegroup, dotfiles)
         if number != 0:
-            print("add utan ifben")
             text=err.error(number)
             return render_template('shared/error.html', text=text)
         
