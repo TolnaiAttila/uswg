@@ -568,8 +568,8 @@ def samba_check_all_nobody_share():
         return number
 
 
-def samba_list_all_system_users():
-    part="list-all-system-users"
+def samba_list_all_users():
+    part="list-all-users"
     try:
         config = subprocess.check_output(["./bash/samba/samba_users.sh", op.oppart, part], universal_newlines=True)
         array = config.split("\n")
@@ -647,3 +647,70 @@ def samba_check_selected_nobody_share(button):
         number = check.returncode
 
         return number
+
+
+
+def samba_check_all_single_user_share():
+    part="single-user-share"
+    try:
+        config = subprocess.check_output(["./bash/samba/samba_check_part.sh", op.oppart, part], universal_newlines=True)
+        array = config.split("\n")
+        if array[-1] == "":
+            array.pop(-1)
+        return array
+
+    except:
+        bash_path = '/bash/samba/samba_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number
+
+
+
+def samba_add_singl_user_share(sharename, sharepath, dirperm, owneru, ownerg, comment, validusers, readonly, writable, guestok, browsable, public, createmask, dirmask, forceuser, forcegroup, dotfiles):
+    part="single-user-share"
+    if createmask == "":
+        createmask = "not_configured"
+    if dirmask == "":
+        dirmask = "not_configured"
+    if dirperm == "":
+        dirperm = "not_configured"
+    if comment == "":
+        comment = "not_configured"
+    print(sharename, sharepath, dirperm, owneru, ownerg, comment, validusers, readonly, writable, guestok, browsable, public, createmask, dirmask, forceuser, forcegroup, dotfiles)
+    bash_path = 'bash/samba/samba_create_part.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opsharename, sharename, op.oppath, sharepath, op.opdirperm, dirperm, op.opowneruser, owneru, op.opownergroup, ownerg, op.opcomment, comment, op.opvalidusers, validusers, op.opreadonly, readonly, op.opwritable, writable, op.opguestok, guestok, op.opbrowsable, browsable, op.oppublic, public, op.opcreatemask, createmask, op.opdirmask, dirmask, op.opforceuser, forceuser, op.opforcegroup, forcegroup, op.opdotfiles, dotfiles])
+    number = check.returncode
+
+    return number
+
+
+
+def samba_delete_single_user_share(button, dirdel):
+    part="single-user-share"
+    bash_path = 'bash/samba/samba_delete_part.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opinput, button, op.opdirdel, dirdel])
+    number = check.returncode
+
+    return number
+
+
+
+def samba_check_selected_single_user_share(button):
+    part="single-user-share"
+    try:
+        config = subprocess.check_output(["./bash/samba/samba_check_part.sh", op.oppart, part, op.opinput, button], universal_newlines=True)
+        array = config.split("\n")
+        if array[-1] == "":
+            array.pop(-1)
+        return array
+
+    except:
+        bash_path = '/bash/samba/samba_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part, op.opinput, button])
+        number = check.returncode
+
+        return number
+
+

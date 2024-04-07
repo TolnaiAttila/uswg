@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/shared_style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/sidebar_style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/samba_add_nobody_share_style.css') }}" />
+    <title>New single user share</title>
+</head>
+<body>
+    <div class="flex_site">
+        <div class="sidebar">
+        {% include 'shared/sidebar.html' %}
+        </div>
+        <div class="main_site">
+            <h1>Új felhasználó nélküli megosztás</h1>
+            <form id="addsambasingleusershareForm" action="/service/add" method="post">
+                <input type="hidden" name="form_id" value="samba-add-single-user-share">
+                
+                <table>
+                <tr>
+                    <td class="table-title">Megosztás neve</td>
+                    <td class="global-config-table"><input type="text" name="share-name" id="share-name" pattern="[a-zA-Z0-9\-\.]*" required></td>
+                </tr>
+                <tr>
+                    <td class="table-title">Mappa</td>
+                    <td class="global-config-table">
+                        <label for="share-path">/srv/samba/</label>
+                        <input type="text" name="share-path" id="share-path" required>
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td class="table-title">Mappa jog</td>
+                    <td class="global-config-table"><input type="text" name="dir-perm" id="dir-perm" pattern="[0-7][0-7][0-7]"></td>
+                </tr>
+                <tr>
+                    <td class="table-title">Mappa tulaj</td>
+                    <td class="global-config-table">
+                        <select name="owner-user" id="owner-user" required>
+                            <option value="not_configured">Not configured</option>
+                            {% for i in userarray %}
+                            <option value="{{ i }}">{{ i }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="table-title">Mappa csoport</td>
+                    <td class="global-config-table">
+                        <select name="owner-group" id="owner-group" required>
+                            <option value="not_configured">Not configured</option>
+                            {% for i in grouparray %}
+                            <option value="{{ i }}">{{ i }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="table-title">Komment</td>
+                    <td class="global-config-table"><input type="text" name="comment" id="comment"></td>
+                </tr>
+                <tr>
+                    <td class="table-title">Valid user</td>
+                    <td class="global-config-table">
+                        <select name="valid-users" id="valid-users" required>
+                            {% for i in sambausersarray %}
+                            <option value="{{ i }}">{{ i }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="table-title">Read only</td>
+                    <td class="global-config-table">
+                        <input type="radio" id="yes-read-only" name="read-only" value="yes" >
+                        <label for="yes-read-only">Igen</label>
+                        <br>
+                        <input type="radio" id="no-read-only" name="read-only" value="no" >
+                        <label for="no-read-only">Nem</label>
+                        <br>
+                        <input type="radio" id="not-configured-read-only" name="read-only" value="not_configured" checked required>
+                        <label for="not-configured-read-only">Not configured</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="table-title">Writable</td>
+                    <td class="global-config-table">
+                        <input type="radio" id="yes-writable" name="writable" value="yes" >
+                        <label for="yes-writable">Igen</label>
+                        <br>
+                        <input type="radio" id="no-writable" name="writable" value="no" >
+                        <label for="no-writable">Nem</label>
+                        <br>
+                        <input type="radio" id="not-configured-writable" name="writable" value="not_configured" checked required>
+                        <label for="not-configured-writable">Not configured</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="table-title">Guest ok</td>
+                    <td class="global-config-table">
+                        <input type="radio" id="yes-guest-ok" name="guest-ok" value="yes" >
+                        <label for="yes-guest-ok">Igen</label>
+                        <br>
+                        <input type="radio" id="no-guest-ok" name="guest-ok" value="no" >
+                        <label for="no-guest-ok">Nem</label>
+                        <br>
+                        <input type="radio" id="not-configured-guest-ok" name="guest-ok" value="not_configured" checked required>
+                        <label for="not-configured-guest-ok">Not configured</label>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="table-title">Browsable</td>
+                    <td class="global-config-table">
+                        <input type="radio" id="yes-browsable" name="browsable" value="yes" >
+                        <label for="yes-browsable">Igen</label>
+                        <br>
+                        <input type="radio" id="no-browsable" name="browsable" value="no" >
+                        <label for="no-browsable">Nem</label>
+                        <br>
+                        <input type="radio" id="not-configured-browsable" name="browsable" value="not_configured" checked required >
+                        <label for="not-configured-browsable">Not configured</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="table-title">Public</td>
+                    <td class="global-config-table">
+                        <input type="radio" id="yes-public" name="public" value="yes">
+                        <label for="yes-public">Igen</label>
+                        <br>
+                        <input type="radio" id="no-public" name="public" value="no">
+                        <label for="no-public">Nem</label>
+                        <br>
+                        <input type="radio" id="not-configured-public" name="public" value="not_configured" checked required>
+                        <label for="not-configured-public">Not configured</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="table-title">Create mask</td>
+                    <td class="global-config-table"><input type="text" name="create-mask" id="create-mask" pattern="[0-7][0-7][0-7][0-7]"></td>
+                </tr>
+                <tr>
+                    <td class="table-title">Directory mask</td>
+                    <td class="global-config-table"><input type="text" name="directory-mask" id="create-mask" pattern="[0-7][0-7][0-7][0-7]"></td>
+                </tr>
+                <tr>
+                    <td class="table-title">Force user</td>
+                    <td class="global-config-table">
+                        <select name="force-user" id="force-user" required>
+                            <option value="not_configured">Not configured</option>
+                            {% for i in userarray %}
+                            <option value="{{ i }}">{{ i }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="table-title">Force group</td>
+                    <td class="global-config-table">
+                        <select name="force-group" id="force-group" required>
+                            <option value="not_configured">Not configured</option>
+                            {% for i in grouparray %}
+                            <option value="{{ i }}">{{ i }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="table-title">Hide dot files</td>
+                    <td class="global-config-table">
+                        <input type="radio" id="yes-hide-dot-files" name="hide-dot-files" value="yes">
+                        <label for="yes-hide-dot-files">Igen</label>
+                        <br>
+                        <input type="radio" id="no-hide-dot-files" name="hide-dot-files" value="no">
+                        <label for="no-hide-dot-files">Nem</label>
+                        <br>
+                        <input type="radio" id="not-configured-hide-dot-files" name="hide-dot-files" value="not_configured" checked required>
+                        <label for="not-configured-hide-dot-files">Not configured</label>
+                    </td>
+                </tr>
+                
+            </table>
+            <button type="submit">Küldés</button>
+
+            </form>
+        </div>
+    </div>
+</body>
+</html>

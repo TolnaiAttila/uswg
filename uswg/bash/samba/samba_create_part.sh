@@ -296,6 +296,23 @@ if [ -z "$part" ]; then
     exit 155
 fi
 
+allowpart=1
+outsharename=""
+outsharepath=""
+outcomment=""
+outreadonly=""
+outwritable=""
+outguestok=""
+outguestonly=""
+outbrowsable=""
+outpublic=""
+outcreatemask=""
+outdirectorymask=""
+outforceuser=""
+outforcegroup=""
+outhidedotfiles=""
+outvalidusers=""
+outinvalidusers=""
 
 case "$part" in
     global)
@@ -390,30 +407,79 @@ case "$part" in
 
 
     single-user-share)
+        allowpart=0
+
+        if [ -z "$validusers" ]; then
+            exit 155
+        fi
+
+        check=""
+        kk=1
+        for i in `sudo -S pdbedit -L | cut -d':' -f 1`
+            do
+                check=`echo $i | grep "^$validusers$"`
+                if [ ! -z "$check" ]; then
+                    kk=0
+                    break
+                fi
+            done
+        
+        if [ $kk -ne 0 ]; then
+            exit 155
+        fi
+
+        outvalidusers="valid users = $validusers"
 
         ;;
     multi-user-share)
+        allowpart=0
         ;;
     nobody-share)
-        outsharename=""
-        outsharepath=""
-        outcomment=""
-        outreadonly=""
-        outwritable=""
-        outguestok=""
-        outguestonly=""
-        outbrowsable=""
-        outpublic=""
-        outcreatemask=""
-        outdirectorymask=""
-        outforceuser=""
-        outforcegroup=""
-        outhidedotfiles=""
-        
+        allowpart=0
+
+        case "$guestonly" in
+            yes)
+                outguestonly="guest only = yes"
+                ;;
+            no)
+                outguestonly="guest only = no"
+                ;;
+            not_configured)
+                outguestonly="#guest only = not configured"
+                ;;
+            *)
+            
+                exit 155
+                ;;
+        esac
+
+        ;;
+    create-user-list)
+ # lehet atrakni a usersbe
+        exit 0
+        ;;
+
+    append-user-list)
+        # lehet atrakni a usersbe
+        exit 0
+        ;;
+
+    *)
+        exit 155
+        ;;
+
+esac
+
+
+
+
+if [ $allowpart -ne 0 ]; then
+    exit 0
+fi
+
+
         if [ -z "$sharename" ] || [ -z "$sharepath" ]; then
-        echo "gec sharename sharepath"
-        echo "nev $sharename"
-        echo "path $sharepath"
+        
             exit 155
         fi
         outsharename="[$sharename]"
@@ -442,15 +508,15 @@ case "$part" in
                 sudo -S chmod $dirperm /srv/samba/$sharepath
             fi
         fi
-
+        
         check=""
         if [ "$owneru" != "not_configured" ]; then
-            check=`cat /etc/passwd | cut -d':' -f 1-3 | grep -v "^nobody:.\+" | grep "[0-9]\{4,5\}$" | cut -d':' -f 1 | grep "^$owneru$"`
+            check=`cat /etc/passwd | cut -d':' -f 1 | grep "^$owneru$"`
             if [ ! -z "$check" ]; then
                 sudo -S chown $owneru /srv/samba/$sharepath
             fi
         fi
-
+        
         check=""
         if [ "$ownerg" != "not_configured" ]; then
             check=`cat /etc/group | cut -d':' -f 1 | grep "^$ownerg$"`
@@ -479,7 +545,7 @@ case "$part" in
                 outreadonly="#read only = not configured"
                 ;;
             *)
-            echo "gec readonly"
+            
                 exit 155
                 ;;
         esac
@@ -495,7 +561,7 @@ case "$part" in
                 outwritable="#writable = not configured"
                 ;;
             *)
-            echo "gec writable"
+            
                 exit 155
                 ;;
         esac
@@ -511,26 +577,12 @@ case "$part" in
                 outguestok="#guest ok = not configured"
                 ;;
             *)
-            echo "gec guestok"
+            
                 exit 155
                 ;;
         esac
 
-        case "$guestonly" in
-            yes)
-                outguestonly="guest only = yes"
-                ;;
-            no)
-                outguestonly="guest only = no"
-                ;;
-            not_configured)
-                outguestonly="#guest only = not configured"
-                ;;
-            *)
-            echo "gec guest only"
-                exit 155
-                ;;
-        esac
+
 
         case "$browsable" in
             yes)
@@ -543,7 +595,7 @@ case "$part" in
                 outbrowsable="#browsable = not configured"
                 ;;
             *)
-            echo "gec browesable"
+            
                 exit 155
                 ;;
         esac
@@ -559,7 +611,7 @@ case "$part" in
                 outpublic="#public = not configured"
                 ;;
             *)
-            echo "gec public"
+            
                 exit 155
                 ;;
         esac
@@ -575,7 +627,7 @@ case "$part" in
                 outhidedotfiles="#hide dot files = not configured"
                 ;;
             *)
-            echo "gec dotfile"
+            
                 exit 155
                 ;;
         esac
@@ -587,7 +639,7 @@ case "$part" in
         else
             ok=`echo $createmask | grep "^[0-7]\{4\}$"`
             if [ -z "$ok" ]; then
-            echo "gec createmask"
+            
                 exit 155
             else
                 outcreatemask="create mask = $createmask"
@@ -601,7 +653,7 @@ case "$part" in
         else
             ok=`echo $directorymask | grep "^[0-7]\{4\}$"`
             if [ -z "$ok" ]; then
-            echo "gec dirmask"
+            
                 exit 155
             else
                 outdirectorymask="directory mask = $directorymask"
@@ -614,7 +666,7 @@ case "$part" in
 
             kk=1
             check=""
-            for i in `cat /etc/passwd | cut -d':' -f 1-3 | grep -v "^nobody:.\+" | grep "[0-9]\{4,5\}$" | cut -d':' -f 1`
+            for i in `cat /etc/passwd | cut -d':' -f 1`
                 do
                     check=`echo $i | grep "^$forceuser$"`
                     if [ ! -z "$check" ]; then
@@ -624,22 +676,22 @@ case "$part" in
                 done
 
             if [ $kk -ne 0 ]; then
-            echo "gec frceuser"
                 exit 155
             else
                 outforceuser="force user = $forceuser"
             fi
 
         fi
-
-
+        
         check=""
         if [ -z "$forcegroup" ] || [ "$forcegroup" == "not_configured" ]; then
+        
             outforcegroup="#force group = not configured"
         else
             kk=1
-            for i in `cat /etc/group | cut -d":" -f 1`
+            for i in `cat /etc/group | cut -d':' -f 1`
                 do
+                    
                     check=`echo $i | grep "^$forcegroup$"`
                     if [ ! -z "$check" ]; then
                         kk=0
@@ -649,7 +701,7 @@ case "$part" in
 
 
             if [ $kk -ne 0 ]; then
-                echo "gec forcegroup $forcegroup"
+                
                 exit 155
             else
                 outforcegroup="force group = $forcegroup"
@@ -661,21 +713,57 @@ case "$part" in
 
 
         path="/etc/.uswg_configs/samba/samba_nobody_${sharename}_share.conf"
-
+        path2="/etc/.uswg_configs/samba/samba_user_${sharename}_share.conf"
+        path3="/etc/.uswg_configs/samba/samba_group_${sharename}_share.conf"
         ./bash/shared/exist_file.sh $path
         if [ $? -eq 0 ]; then
             exit 154
         fi
 
-        sudo -S touch $path
+        ./bash/shared/exist_file.sh $path2
+        if [ $? -eq 0 ]; then
+            exit 154
+        fi
+
+        ./bash/shared/exist_file.sh $path3
+        if [ $? -eq 0 ]; then
+            exit 154
+        fi
+
+        case "$part" in
+        single-user-share)
+            sudo -S touch $path2
+            path=$path2
+            ;;
+        multi-user-share)
+            sudo -S touch $path3
+            path=$path3
+            ;;
+        nobody-share)
+            sudo -S touch $path
+            ;;
+        *)
+            exit 155
+            ;;
+        esac
+        
 
         sudo -S echo $outsharename | sudo -S tee -a $path > /dev/null
         sudo -S echo $outsharepath | sudo -S tee -a $path > /dev/null
         sudo -S echo $outcomment | sudo -S tee -a $path > /dev/null
+        
+        if [ "$part" == "single-user-share" ]; then
+            sudo -S echo $outvalidusers | sudo -S tee -a $path > /dev/null
+        fi
+
         sudo -S echo $outreadonly | sudo -S tee -a $path > /dev/null
         sudo -S echo $outwritable | sudo -S tee -a $path > /dev/null
         sudo -S echo $outguestok | sudo -S tee -a $path > /dev/null
-        sudo -S echo $outguestonly | sudo -S tee -a $path > /dev/null
+
+        if [ "$part" == "nobody-share" ]; then
+            sudo -S echo $outguestonly | sudo -S tee -a $path > /dev/null
+        fi
+        
         sudo -S echo $outbrowsable | sudo -S tee -a $path > /dev/null
         sudo -S echo $outpublic | sudo -S tee -a $path > /dev/null
         sudo -S echo $outcreatemask | sudo -S tee -a $path > /dev/null
@@ -683,19 +771,3 @@ case "$part" in
         sudo -S echo $outforceuser | sudo -S tee -a $path > /dev/null
         sudo -S echo $outforcegroup | sudo -S tee -a $path > /dev/null
         sudo -S echo $outhidedotfiles | sudo -S tee -a $path > /dev/null
-
-
-
-        ;;
-    create-user-list)
-
-        ;;
-
-    append-user-list)
-        ;;
-
-    *)
-        exit 155
-        ;;
-
-esac
