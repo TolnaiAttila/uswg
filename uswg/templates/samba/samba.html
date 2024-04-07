@@ -239,11 +239,16 @@
                         <button type="submit">Új megosztás</button>
                     </form>
                 <h3>Több felhasználós megosztások</h3>
-
+                <hr>
                 <h2>Felhasználók kezelése</h2>
                 <form id="modifysambausersForm" action="/samba/users" method="post">
                     <!--<input type="hidden" name="form_id" value="samba-users-check">-->
                     <p>A felhasználók megjelenítéséhez kattintson a "Megnyitás" gombra.</p>
+                    <button type="submit">Megnyitás</button>
+                </form>
+                <h2>Csoportok kezelése</h2>
+                <form id="modifysambagroupsForm" action="/samba/groups" method="post">
+                    <p>A csoportok megjelenítéséhez kattintson a "Megnyitás" gombra.</p>
                     <button type="submit">Megnyitás</button>
                 </form>
             {% endif %}

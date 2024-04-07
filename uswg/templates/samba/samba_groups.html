@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/sidebar_style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/shared_style.css') }}" />
+    <title>Samba groups</title>
+</head>
+<body>
+    <div class="flex_site">
+        <div class="sidebar">
+            {% include 'shared/sidebar.html' %}
+        </div>
+        <div class="main_site">
+            
+            <h2>Csoportok</h2>
+            <table>
+                <tr class="table-title">
+                    <th>Név</th>
+                    <th>Módosítás</th>
+                    <th>Eltávolítás</th>
+                </tr>
+                {% for i in grouparray %}
+                    </tr><tr>
+                        <td>{{ i }}</td>
+                        <td><button name="modify-samba-group-button" id="modifysambashare{{ i }}Button" value="modify_samba_share_{{ i }}_Button">Módosítás</button></td>
+                        <td><button name="delete-samba-group-button" id="deletesambashare{{ i }}Button" value="delete_samba_share_{{ i }}_Button">Törlés</button></td>
+                {% endfor %}
+            </table>
+            
+            
+            
+            <h2>Új csoport létrehozása</h2>
+            
+            <form id="addsambagroupForm" action="/service/add" method="post">
+                <input type="hidden" name="form_id" value="samba-add-group">
+                <label for="group-name">Csoport neve: </label>
+                <input type="text" name="group-name" id="group-name" pattern="[a-zA-Z0-9\-\.]*" required>
+                <p>Felhasználók hozzáadása</p>
+                {% for i in usersarray %}
+                    <input type="checkbox" name="user-{{i}}" id="user-{{i}}" value="{{ i }}">
+                    <label for="user-{{ i }}">{{ i }}</label>
+                    <br>
+                {% endfor %}
+                <button type="submit">Küldés</button>
+            </form>
+        </div>
+    
+
+    </div>
+</body>
+</html>

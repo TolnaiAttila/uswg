@@ -146,6 +146,34 @@ case "$part" in
         ;;
 
 
+    samba-groups)
+        if [ -z "$input" ]; then
+            path="/etc/.uswg_configs/samba/"
+
+            for i in `ls $path | grep "^samba_list_.\+\.conf"`
+                do
+                    outname=`echo $i | cut -d'_' -f 3 | cut -d'.' -f 1`
+                    echo $outname
+                done
+            
+        else
+
+            path="/etc/.uswg_configs/samba/samba_list_${input}.conf"
+            ./bash/shared/exist_file.sh $path
+            if [ $? -ne 0 ]; then
+                exit 151
+            fi
+            
+            for i in `cat $path`
+                do
+                    echo $i
+                done
+        fi
+
+        exit 0
+        ;;
+
+
     *)
         exit 155
         ;;

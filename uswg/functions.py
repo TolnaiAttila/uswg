@@ -678,7 +678,6 @@ def samba_add_singl_user_share(sharename, sharepath, dirperm, owneru, ownerg, co
         dirperm = "not_configured"
     if comment == "":
         comment = "not_configured"
-    print(sharename, sharepath, dirperm, owneru, ownerg, comment, validusers, readonly, writable, guestok, browsable, public, createmask, dirmask, forceuser, forcegroup, dotfiles)
     bash_path = 'bash/samba/samba_create_part.sh'
     check = subprocess.run(['bash', bash_path, op.oppart, part, op.opsharename, sharename, op.oppath, sharepath, op.opdirperm, dirperm, op.opowneruser, owneru, op.opownergroup, ownerg, op.opcomment, comment, op.opvalidusers, validusers, op.opreadonly, readonly, op.opwritable, writable, op.opguestok, guestok, op.opbrowsable, browsable, op.oppublic, public, op.opcreatemask, createmask, op.opdirmask, dirmask, op.opforceuser, forceuser, op.opforcegroup, forcegroup, op.opdotfiles, dotfiles])
     number = check.returncode
@@ -714,3 +713,18 @@ def samba_check_selected_single_user_share(button):
         return number
 
 
+def samba_list_all_samba_group():
+    part="samba-groups"
+    try:
+        config = subprocess.check_output(["./bash/samba/samba_check_part.sh", op.oppart, part], universal_newlines=True)
+        array = config.split("\n")
+        if array[-1] == "":
+            array.pop(-1)
+        return array
+
+    except:
+        bash_path = '/bash/samba/samba_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number
