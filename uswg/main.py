@@ -886,11 +886,11 @@ def service_modify(current_user):
 
     if id =="nfs-share-modify":
         dirdel = "no"
-        part = "all"
         
-        configarray = list(request.form.items())
-
-        number = f.nfs_delete_all(configarray[1][1], dirdel)
+        configarray = [value for _, value in request.form.items()]
+        
+        
+        number = f.nfs_delete_all(configarray[1], dirdel)
         if number != 0:
             text = err.error(number)
             return render_template('shared/error.html', text=text)
