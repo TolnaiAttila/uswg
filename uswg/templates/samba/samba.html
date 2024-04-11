@@ -239,6 +239,54 @@
                         <button type="submit">Új megosztás</button>
                     </form>
                 <h3>Több felhasználós megosztások</h3>
+
+                <form id="modifysambashareForm" action="/service/modify" method="post">
+                    <input type="hidden" name="form_id" value="samba-group-share-check">
+                    <table>
+                        <tr class="table-title">
+                            <th>Megosztás neve</th>
+                            <th>Mappa</th>
+                            <th>Mappa jog</th>
+                            <th>Mappa tulaj</th>
+                            <th>Mappa csoport</th>
+                            <th>Komment</th>
+                            <th>Group status</th>
+                            <th>Group</th>
+                            <th>Read only</th>
+                            <th>Writable</th>
+                            <th>Guest ok</th>
+                            <th>Browsable</th>
+                            <th>Public</th>
+                            <th>Create mask</th>
+                            <th>Directory mask</th>
+                            <th>Force user</th>
+                            <th>Force group</th>
+                            <th>Hide dot files</th>
+                    
+                    {% for i in groupconfig %}
+                        {% if (loop.index0) % 18 == 0 %}
+                            </tr><tr>
+                                <td>{{ i }}</td>
+                        {% else %}
+                                <td>{{ i }}</td>
+                        {% endif %}
+    
+                        {% if loop.index % 18 == 0 or loop.last %}
+                            <td><button name="modify-samba-share-button" id="modifysambashare{{ groupconfig[loop.index0 - (loop.index % 18) - 17] }}Button" value="modify_samba_share_{{ groupconfig[loop.index0 - (loop.index % 18) - 17] }}_Button">Módosítás</button></td>
+                            <td><button name="delete-samba-share-button" id="deletesambashare{{ groupconfig[loop.index0 - (loop.index % 18) - 17] }}Button" value="delete_samba_share_{{ groupconfig[loop.index0 - (loop.index % 18) - 17] }}_Button">Törlés</button></td>
+                            <td>
+                                <input type="radio" id="nodelete_{{ groupconfig[loop.index0 - (loop.index % 18) - 17] }}" name="dir-delete" value="no"><label for="nodelete_{{ groupconfig[loop.index0 - (loop.index % 18) - 17] }}">Mappa megtartása</label><br>
+                                <input type="radio" id="delete_{{ groupconfig[loop.index0 - (loop.index % 18) - 17] }}" name="dir-delete" value="yes"><label for="delete_{{ groupconfig[loop.index0 - (loop.index % 18) - 17] }}">Mappa törlése</label>
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+                    </form>
+                    </table>
+                    <form id="addsambagroupshareForm" action="/service/add" method="post">
+                        <input type="hidden" name="form_id" value="samba-group-share-redirect">
+                        <button type="submit">Új megosztás</button>
+                    </form>
+
                 <hr>
                 <h2>Felhasználók kezelése</h2>
                 <form id="modifysambausersForm" action="/samba/users" method="post">

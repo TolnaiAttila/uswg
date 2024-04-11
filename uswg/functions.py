@@ -728,3 +728,120 @@ def samba_list_all_samba_group():
         number = check.returncode
 
         return number
+
+
+
+def samba_create_user_group(userlist):
+    part="create-user-list"
+    bash_path = 'bash/samba/samba_create_part.sh'
+    number = 0
+    if len(userlist) < 3:
+        groupname = userlist[1]
+        check = subprocess.run(['bash', bash_path, op.oppart, part, op.opgroupname, groupname])
+    else:
+        userlist.pop(0)
+        groupname = userlist[0]
+        userlist.pop(0)
+        check = subprocess.run(['bash', bash_path, op.oppart, part, op.opgroupname, groupname, op.opuser, userlist[0]])
+        userlist.pop(0)
+        number = check.returncode
+
+        if number != 0:
+            return number
+    
+        for i in userlist:
+            part="append-user-list"
+            check = subprocess.run(['bash', bash_path, op.oppart, part, op.opgroupname, groupname, op.opuser, i])
+            number = check.returncode
+
+    return number
+
+def samba_delete_user_group(button, forcedel="no"):
+    part="delete-user-list"
+    
+    bash_path = 'bash/samba/samba_delete_part.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opinput, button, op.opforcedelete, forcedel])
+    number = check.returncode
+
+    return number
+
+
+
+def samba_list_users_in_group(button):
+    part="samba-groups"
+    try:
+        config = subprocess.check_output(["./bash/samba/samba_check_part.sh", op.oppart, part, op.opinput, button], universal_newlines=True)
+        array = config.split("\n")
+        if array[-1] == "":
+            array.pop(-1)
+        return array
+
+    except:
+        bash_path = '/bash/samba/samba_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part, op.opinput, button])
+        number = check.returncode
+
+        return number
+
+
+
+def samba_check_all_group_share():
+    part="group-share"
+    try:
+        config = subprocess.check_output(["./bash/samba/samba_check_part.sh", op.oppart, part], universal_newlines=True)
+        array = config.split("\n")
+        if array[-1] == "":
+            array.pop(-1)
+        return array
+
+    except:
+        bash_path = '/bash/samba/samba_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number
+
+
+def samba_add_group_share(sharename, sharepath, dirperm, owneru, ownerg, comment, validtype, groupname, readonly, writable, guestok, browsable, public, createmask, dirmask, forceuser, forcegroup, dotfiles):
+    part="group-share"
+    if createmask == "":
+        createmask = "not_configured"
+    if dirmask == "":
+        dirmask = "not_configured"
+    if dirperm == "":
+        dirperm = "not_configured"
+    if comment == "":
+        comment = "not_configured"
+    bash_path = 'bash/samba/samba_create_part.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opsharename, sharename, op.oppath, sharepath, op.opdirperm, dirperm, op.opowneruser, owneru, op.opownergroup, ownerg, op.opcomment, comment, op.opvalidtype, validtype, op.opgroupname, groupname, op.opreadonly, readonly, op.opwritable, writable, op.opguestok, guestok, op.opbrowsable, browsable, op.oppublic, public, op.opcreatemask, createmask, op.opdirmask, dirmask, op.opforceuser, forceuser, op.opforcegroup, forcegroup, op.opdotfiles, dotfiles])
+    number = check.returncode
+
+    return number
+
+
+
+def samba_delete_group_share(button, dirdel):
+    part="group-share"
+    bash_path = 'bash/samba/samba_delete_part.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opinput, button, op.opdirdel, dirdel])
+    number = check.returncode
+
+    return number
+
+
+
+def samba_check_selected_group_share(button):
+    part="group-share"
+    try:
+        config = subprocess.check_output(["./bash/samba/samba_check_part.sh", op.oppart, part, op.opinput, button], universal_newlines=True)
+        array = config.split("\n")
+        if array[-1] == "":
+            array.pop(-1)
+        return array
+
+    except:
+        bash_path = '/bash/samba/samba_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part, op.opinput, button])
+        number = check.returncode
+
+        return number

@@ -23,5 +23,11 @@ def error(x):
     elif x == 164 :
         text = "Hiba történ egy vagy több szkript futásában!"
         return text
+    elif x == 165 :
+        text = "A megadott érték már szerepel a listában!"
+        return text
+    elif x == 166 :
+        text = "A megadott érték még használatban van!"
+        return text
     else:
         return "Ismeretlen hiba! Ez hatalmas probléma!"
