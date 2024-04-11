@@ -373,9 +373,9 @@ def nfs_add_access(name, access, permission, sync, subtree, squash):
 
 def nfs_share_modify(configarray):
     
-    name = configarray[1][1]
-    directory = configarray[2][1]
-    dirperm = configarray[3][1]
+    name = configarray[1]
+    directory = configarray[2]
+    dirperm = configarray[3]
 
 
     configarray.pop(0)
@@ -394,19 +394,19 @@ def nfs_share_modify(configarray):
     created = False
     for i in configarray:
         if counter == 0:
-            access = configarray[linecounter][1]
+            access = configarray[linecounter]
             counter = counter + 1
         elif counter == 1:
-            permission = configarray[linecounter][1]
+            permission = configarray[linecounter]
             counter = counter + 1
         elif counter == 2:
-            sync = configarray[linecounter][1]
+            sync = configarray[linecounter]
             counter = counter + 1
         elif counter == 3:
-            squash = configarray[linecounter][1]
+            squash = configarray[linecounter]
             counter = counter + 1
         elif counter == 4:
-            subtree = configarray[linecounter][1]
+            subtree = configarray[linecounter]
             counter = 0
 
             if created == False:
