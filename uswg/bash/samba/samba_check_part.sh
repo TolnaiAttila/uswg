@@ -145,6 +145,27 @@ case "$part" in
         fi
         ;;
 
+    group-share)
+        if [ -z "$input" ]; then
+            path="/etc/.uswg_configs/samba/"
+            filetype="group"
+        else
+            check=""
+            check=`echo $input | grep "^modify_samba_share_.\+_Button$"`
+            if [ -z "$check" ]; then
+                exit 155
+            fi
+            name=`echo $input | cut -d'_' -f 4`
+            path="/etc/.uswg_configs/samba/samba_group_${name}_share.conf"
+            
+            ./bash/shared/exist_file.sh $path
+            if [ $? -ne 0 ]; then
+                exit 151
+            fi
+        fi
+
+        ;;
+
 
     samba-groups)
         if [ -z "$input" ]; then
@@ -157,6 +178,11 @@ case "$part" in
                 done
             
         else
+            check=""
+            check=`echo $input | grep "^modify_samba_group_.\+_Button$"`
+            if [ ! -z "$check" ]; then
+                input=`echo $input | cut -d '_' -f 4`
+            fi
 
             path="/etc/.uswg_configs/samba/samba_list_${input}.conf"
             ./bash/shared/exist_file.sh $path
@@ -173,14 +199,14 @@ case "$part" in
         exit 0
         ;;
 
-
+        
     *)
         exit 155
         ;;
 esac
 
 
-
+validstatus=""
 
 if [ -z "$input" ]; then
     check=""
@@ -191,6 +217,10 @@ if [ -z "$input" ]; then
             comment=`cat $path$i | grep "^\(\(comment\)\|\(#comment\)\)[[:space:]]=[[:space:]].\+$" |  cut -d'=' -f 2- | sed 's/ //'`
             if [ "$part" == "single-user-share" ]; then
                 validusers=`cat $path$i | grep "^\(\(valid[[:space:]]users\)\|\(#valid[[:space:]]users\)\)[[:space:]]=[[:space:]].\+$" |  cut -d'=' -f 2- | sed 's/ //'`
+            fi
+            if [ "$part" == "group-share" ]; then                
+                validstatus=`cat $path$i | grep "^\(\(valid[[:space:]]users\)\|\(#valid[[:space:]]users\)\|\(#invalid[[:space:]]users\)\|\(invalid[[:space:]]users\)\)[[:space:]]=[[:space:]].\+$" |  cut -d' ' -f 1 | tr -d "#"`
+                validusers=`cat $path$i | grep "^\(\(valid[[:space:]]users\)\|\(#valid[[:space:]]users\)\|\(#invalid[[:space:]]users\)\|\(invalid[[:space:]]users\)\)[[:space:]]=[[:space:]].\+$" |  cut -d'@' -f 2`
             fi
             readonly=`cat $path$i | grep "^\(\(read[[:space:]]only\)\|\(#read[[:space:]]only\)\)[[:space:]]=[[:space:]].\+$" |  cut -d'=' -f 2- | sed 's/ //'`
             writable=`cat $path$i | grep "^\(\(writable\)\|\(#writable\)\)[[:space:]]=[[:space:]].\+$" |  cut -d'=' -f 2- | sed 's/ //'`
@@ -231,6 +261,19 @@ if [ -z "$input" ]; then
             fi
            
             if [ "$part" == "single-user-share" ]; then
+                if [ -z "$validusers" ]; then
+                    echo "empty"
+                else
+                    echo $validusers
+                fi
+            fi
+
+            if [ "$part" == "group-share" ]; then
+                if [ -z "$validstatus" ]; then
+                    echo "empty"
+                else
+                    echo $validstatus
+                fi
                 if [ -z "$validusers" ]; then
                     echo "empty"
                 else
@@ -318,6 +361,10 @@ else
     if [ "$part" == "single-user-share" ]; then
         validusers=`cat $path$i | grep "^\(\(valid[[:space:]]users\)\|\(#valid[[:space:]]users\)\)[[:space:]]=[[:space:]].\+$" |  cut -d'=' -f 2- | sed 's/ //'`
     fi
+    if [ "$part" == "group-share" ]; then
+        validstatus=`cat $path$i | grep "^\(\(valid[[:space:]]users\)\|\(#valid[[:space:]]users\)\|\(#invalid[[:space:]]users\)\|\(invalid[[:space:]]users\)\)[[:space:]]=[[:space:]].\+$" |  cut -d' ' -f 1 | tr -d "#"`
+        validusers=`cat $path$i | grep "^\(\(valid[[:space:]]users\)\|\(#valid[[:space:]]users\)\|\(#invalid[[:space:]]users\)\|\(invalid[[:space:]]users\)\)[[:space:]]=[[:space:]].\+$" |  cut -d'@' -f 2`
+    fi
     readonly=`cat $path | grep "^\(\(read[[:space:]]only\)\|\(#read[[:space:]]only\)\)[[:space:]]=[[:space:]].\+$" |  cut -d'=' -f 2- | sed 's/ //'`
     writable=`cat $path | grep "^\(\(writable\)\|\(#writable\)\)[[:space:]]=[[:space:]].\+$" |  cut -d'=' -f 2- | sed 's/ //'`
     guestok=`cat $path | grep "^\(\(guest[[:space:]]ok\)\|\(#guest[[:space:]]ok\)\)[[:space:]]=[[:space:]].\+$" |  cut -d'=' -f 2- | sed 's/ //'`
@@ -357,6 +404,19 @@ else
     fi
 
     if [ "$part" == "single-user-share" ]; then
+        if [ -z "$validusers" ]; then
+            echo "empty"
+        else
+            echo $validusers
+        fi
+    fi
+
+    if [ "$part" == "group-share" ]; then
+        if [ -z "$validstatus" ]; then
+            echo "empty"
+        else
+            echo $validstatus
+        fi
         if [ -z "$validusers" ]; then
             echo "empty"
         else

@@ -15,19 +15,24 @@
         <div class="main_site">
             
             <h2>Csoportok</h2>
-            <table>
-                <tr class="table-title">
-                    <th>Név</th>
-                    <th>Módosítás</th>
-                    <th>Eltávolítás</th>
-                </tr>
-                {% for i in grouparray %}
-                    </tr><tr>
-                        <td>{{ i }}</td>
-                        <td><button name="modify-samba-group-button" id="modifysambashare{{ i }}Button" value="modify_samba_share_{{ i }}_Button">Módosítás</button></td>
-                        <td><button name="delete-samba-group-button" id="deletesambashare{{ i }}Button" value="delete_samba_share_{{ i }}_Button">Törlés</button></td>
-                {% endfor %}
-            </table>
+            
+            <form id="modifysambagroupForm" action="/service/modify" method="post">
+                <input type="hidden" name="form_id" value="samba-check-group">
+                <table>
+                    <tr class="table-title">
+                        <th>Név</th>
+                        <th>Módosítás</th>
+                        <th>Eltávolítás</th>
+                    </tr>
+
+                    {% for i in grouparray %}
+                        </tr><tr>
+                            <td>{{ i }}</td>
+                            <td><button name="modify-samba-group-button" id="modifysambagroup{{ i }}Button" value="modify_samba_group_{{ i }}_Button">Módosítás</button></td>
+                            <td><button name="delete-samba-group-button" id="deletesambagroup{{ i }}Button" value="delete_samba_group_{{ i }}_Button">Törlés</button></td>
+                    {% endfor %}
+                </table>
+            </form>
             
             
             

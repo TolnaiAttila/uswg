@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ARGS=$(getopt -n "$0" -o p:w:n:m:u:s:b:a:c:v:i:r:t:g:d:e:f:h:j:k:l:o:q:x:A:B:C: --long part:,workgroup:,netbios-name:,map-to-guest:,usershare-allow-guests:,security:,public:,path:,comment:,valid-users:,invalid-users:,read-only:,writable:,guest-ok:,guest-only:,browsable:,create-mask:,directory-mask:,force-user:,force-group:,hide-dot-files:,share-name:,group-name:,username:,directory-permission:,owner-user:,owner-group: -- "$@")
+ARGS=$(getopt -n "$0" -o p:w:n:m:u:s:b:a:c:v:i:r:t:g:d:e:f:h:j:k:l:o:q:x:A:B:C:D: --long part:,workgroup:,netbios-name:,map-to-guest:,usershare-allow-guests:,security:,public:,path:,comment:,valid-users:,invalid-users:,read-only:,writable:,guest-ok:,guest-only:,browsable:,create-mask:,directory-mask:,force-user:,force-group:,hide-dot-files:,share-name:,group-name:,username:,directory-permission:,owner-user:,owner-group:,valid-type: -- "$@")
 
 if [ $? -ne 0 ]; then
     exit 161
@@ -35,6 +35,7 @@ username=""
 dirperm=""
 owneru=""
 ownerg=""
+validtype=""
 
 while true; do
     case "$1" in
@@ -280,6 +281,15 @@ while true; do
                 exit 161
             fi
             ;;
+        
+        --valid-type | -D)
+            if [[ -n "$2" && "$2" != -* ]]; then
+                validtype="$2"
+                shift 2
+            else
+                exit 161
+            fi
+            ;;
 
         --)
             shift
@@ -296,7 +306,6 @@ if [ -z "$part" ]; then
     exit 155
 fi
 
-allowpart=1
 outsharename=""
 outsharepath=""
 outcomment=""
@@ -403,11 +412,11 @@ case "$part" in
         sudo -S echo $outuag | sudo -S tee -a $path > /dev/null
         sudo -S echo $outsecurity | sudo -S tee -a $path > /dev/null
         sudo -S echo $outpublic | sudo -S tee -a $path > /dev/null
+        exit 0
         ;;
 
 
     single-user-share)
-        allowpart=0
 
         if [ -z "$validusers" ]; then
             exit 155
@@ -431,11 +440,33 @@ case "$part" in
         outvalidusers="valid users = $validusers"
 
         ;;
-    multi-user-share)
-        allowpart=0
+    group-share)
+        
+        if [ -z "$groupname" ]; then
+            exit 155
+        fi
+
+        path="/etc/.uswg_configs/samba/samba_list_${groupname}.conf"
+        
+        ./bash/shared/exist_file.sh $path
+        if [ $? -ne 0 ]; then
+            exit 151
+        fi
+
+        case "$validtype" in
+            valid)
+                outvalidusers="valid users = @${groupname}"
+                ;;
+            invalid)
+                outvalidusers="invalid users = @${groupname}"
+                ;;
+            *)
+                exit 155
+                ;;
+        esac
         ;;
+
     nobody-share)
-        allowpart=0
 
         case "$guestonly" in
             yes)
@@ -454,13 +485,67 @@ case "$part" in
         esac
 
         ;;
+
+
     create-user-list)
- # lehet atrakni a usersbe
+        if [ -z "$groupname" ]; then
+            exit 155
+        fi
+        path="/etc/.uswg_configs/samba/samba_list_$groupname.conf"
+
+        ./bash/shared/exist_file.sh $path
+        if [ $? -eq 0 ]; then
+            exit 154
+        fi
+
+
+        check=""
+        if [ ! -z "$username" ]; then
+            check=`sudo pdbedit -L | cut -d':' -f 1 | grep "^$username$"`
+            if [ -z "$check" ]; then
+                exit 155
+            fi
+
+            sudo -S touch $path
+            sudo -S echo $username | sudo -S tee -a $path > /dev/null
+        else
+            sudo -S touch $path
+        fi
+
+        
         exit 0
         ;;
 
     append-user-list)
-        # lehet atrakni a usersbe
+        if [ -z "$groupname" ] || [ -z "$username" ]; then
+            exit 155
+        fi
+        path="/etc/.uswg_configs/samba/samba_list_$groupname.conf"
+        
+        ./bash/shared/exist_file.sh $path
+        if [ $? -ne 0 ]; then
+            exit 151
+        fi
+        
+        check=""
+        if [ ! -z "$username" ]; then
+
+            check=`cat $path | grep "^$username$"`
+            if [ ! -z "$check" ]; then
+                exit 165
+            fi
+            
+            
+            check=""
+
+
+            check=`sudo pdbedit -L | cut -d':' -f 1 | grep "^$username$"`
+            if [ -z "$check" ]; then
+                exit 155
+            fi
+
+            sudo -S echo $username | sudo -S tee -a $path > /dev/null
+        fi
         exit 0
         ;;
 
@@ -471,11 +556,6 @@ case "$part" in
 esac
 
 
-
-
-if [ $allowpart -ne 0 ]; then
-    exit 0
-fi
 
 
         if [ -z "$sharename" ] || [ -z "$sharepath" ]; then
@@ -734,7 +814,7 @@ fi
             sudo -S touch $path2
             path=$path2
             ;;
-        multi-user-share)
+        group-share)
             sudo -S touch $path3
             path=$path3
             ;;
@@ -751,7 +831,7 @@ fi
         sudo -S echo $outsharepath | sudo -S tee -a $path > /dev/null
         sudo -S echo $outcomment | sudo -S tee -a $path > /dev/null
         
-        if [ "$part" == "single-user-share" ]; then
+        if [ "$part" == "single-user-share" ] || [ "$part" == "group-share" ]; then
             sudo -S echo $outvalidusers | sudo -S tee -a $path > /dev/null
         fi
 
