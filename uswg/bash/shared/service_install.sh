@@ -154,18 +154,98 @@ case $service in
 
         
         path="/etc/vsftpd.conf"
-        configpath="/etc/.uswg_configs/ftp/ftp_base_config.conf"
+        configpath="/etc/.uswg_configs/ftp/ftp_fglobal_config.conf"
+        configpath2="/etc/.uswg_configs/ftp/ftp_sglobal_config.conf"
         sudo -S mkdir /etc/.uswg_configs/ftp
 
         ./bash/shared/exist_file.sh $path
         if [ $? -ne 0 ]; then
             exit 151
         fi
-        sudo -S cat $path | grep -v "^\(\(#\)\|\($\)\)" | sudo -S tee -a $configpath > /dev/null
+        sudo -S cat $path | grep -v "^\(\(#\)\|\($\)\)" | grep -v "^\(\(listen=\)\|\(listen_ipv6=\)\|\(anonymous_enable=\)\|\(local_enable=\)\|\(dirmessage_enable=\)\|\(message_file=\)\|\(write_enable=\)\|\(chroot_local_user=\)\|\(chroot_list_enable=\)\|\(allow_writeable_chroot=\)\|\(chroot_list_file=\)\|\(userlist_deny=\)\|\(userlist_file=\)\|\(userlist_enable=\)\|\(force_dot_files=\)\|\(hide_ids=\)\|\(max_per_ip=\)\|\(max_clients=\)\|\(user_sub_token=\)\|\(local_root=\)\)" | sudo -S tee -a $configpath > /dev/null
         
+        sudo -S echo "listen=YES" | sudo -S tee -a $configpath2 > /dev/null
+        sudo -S echo "listen_ipv6=NO" | sudo -S tee -a $configpath2 > /dev/null
+        sudo -S echo "anonymous_enable=NO" | sudo -S tee -a $configpath2 > /dev/null
+        sudo -S echo "local_enable=NO" | sudo -S tee -a $configpath2 > /dev/null
+        sudo -S echo "dirmessage_enable=NO" | sudo -S tee -a $configpath2 > /dev/null
+        sudo -S echo "write_enable=YES" | sudo -S tee -a $configpath2 > /dev/null
+        sudo -S echo "anon_upload_enable=NO" | sudo -S tee -a $configpath2 > /dev/null
+        sudo -S echo "anon_mkdir_write_enable=NO" | sudo -S tee -a $configpath2 > /dev/null
+        sudo -S echo "anon_other_write_enable=NO" | sudo -S tee -a $configpath2 > /dev/null
+        sudo -S echo "anon_world_readable_only=YES" | sudo -S tee -a $configpath2 > /dev/null
+        sudo -S echo "force_dot_files=NO" | sudo -S tee -a $configpath2 > /dev/null
+        sudo -S echo "hide_ids=YES" | sudo -S tee -a $configpath2 > /dev/null
+        sudo -S echo "max_per_ip=5" | sudo -S tee -a $configpath2 > /dev/null
+        sudo -S echo "max_clients=20" | sudo -S tee -a $configpath2 > /dev/null
+        
+
+        chrootlistpath="/etc/ftp_chroot_list"
+        userlistpath="/etc/ftp_allowed_users"
+
+        sudo -S echo "user_sub_token=\$USER" | sudo -S tee -a $configpath > /dev/null
+        sudo -S echo "local_root=/srv/ftp/\$USER" | sudo -S tee -a $configpath > /dev/null
+        sudo -S echo "userlist_deny=NO" | sudo -S tee -a $configpath > /dev/null
+        sudo -S echo "userlist_enable=YES" | sudo -S tee -a $configpath > /dev/null
+        sudo -S echo "userlist_file=${userlistpath}" | sudo -S tee -a $configpath > /dev/null
+        sudo -S echo "chroot_local_user=YES" | sudo -S tee -a $configpath > /dev/null
+        sudo -S echo "chroot_list_enable=YES" | sudo -S tee -a $configpath > /dev/null
+        sudo -S echo "allow_writeable_chroot=YES" | sudo -S tee -a $configpath > /dev/null
+        sudo -S echo "chroot_list_file=${chrootlistpath}" | sudo -S tee -a $configpath > /dev/null
+        sudo -S echo "message_file=/etc/ftp_message" | sudo -S tee -a $configpath > /dev/null
+        sudo -S echo "anon_root=/srv/ftp/anonymous_share" | sudo -S tee -a $configpath > /dev/null
+
+
+
+
         sudo -S truncate -s 0 $path
 
         sudo -S cat $configpath | sudo -S tee -a $path > /dev/null
+        sudo -S cat $configpath2 | sudo -S tee -a $path > /dev/null
+
+
+        messagepath="/etc/ftp_message"
+        ./bash/shared/exist_file.sh $messagepath
+        if [ $? -ne 0 ]; then
+            sudo -S touch $messagepath
+        fi
+        ./bash/shared/exist_file.sh $chrootlistpath
+        if [ $? -ne 0 ]; then
+            sudo -S touch $chrootlistpath
+        fi
+
+        ./bash/shared/exist_file.sh $userlistpath
+        if [ $? -ne 0 ]; then
+            sudo -S touch $userlistpath
+        fi
+        sudo -S cp $chrootlistpath /etc/.uswg_configs/ftp/
+        sudo -S cp $userlistpath /etc/.uswg_configs/ftp/
+        sudo -S cp $messagepath /etc/.uswg_configs/ftp/
+
+        shellpath="/etc/shells"
+        ./bash/shared/exist_file.sh $shellpath
+
+        if [ $? -ne 0 ]; then
+            exit 151
+        fi
+        
+        check=""
+        check=`cat $shellpath | grep "^/usr/sbin/nologin$"`
+        if [ -z "$check" ]; then
+            sudo -S echo "/usr/sbin/nologin" | sudo -S tee -a $shellpath > /dev/null
+        fi
+        
+        if [ ! -d /srv/ftp ]; then
+            sudo -S mkdir /srv/ftp
+        fi
+
+
+        if [ ! -d /srv/ftp/anonymous_share ]; then
+            sudo -S mkdir /srv/ftp/anonymous_share
+        fi
+
+        sudo -S chmod 777 /srv/ftp/anonymous_share
+        
 
         ;;
         
