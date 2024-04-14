@@ -70,7 +70,62 @@
                     </form>
                 {% endif %}
                 <h1>Konfiguráció</h1>
+                
+                <h3>Globális beállítások</h3>
+                <table>
+                    <tr class="table-title">
+                        <th>Listen IPv4</th>
+                        <th>Listen IPv6</th>
+                        <th>Local user enable</th>
+                        <th>Message enable</th>
+                        <th>Write enable</th>
+                        <th>Force dot files</th>
+                        <th>Hide IDs</th>
+                        <th>Max client / IP</th>
+                        <th>Max clients</th>
+                    </tr>
+                    <tr>
+                        <td>{{ globalconfig[0] }}</td>
+                        <td>{{ globalconfig[1] }}</td>
+                        <td>{{ globalconfig[2] }}</td>
+                        <td>{{ globalconfig[3] }}</td>
+                        <td>{{ globalconfig[4] }}</td>
+                        <td>{{ globalconfig[5] }}</td>
+                        <td>{{ globalconfig[6] }}</td>
+                        <td>{{ globalconfig[7] }}</td>
+                        <td>{{ globalconfig[8] }}</td>
+                        
+                    </tr>
+                </table>
 
+                <h3>Anonymous megosztás beállítások</h3>
+                <table>
+                    <tr class="table-title">
+                        <th>Anonymous enable</th>
+                        <th>Anonim upload enable</th>
+                        <th>Anonim mkdir enable</th>
+                        <th>Anonim other write enable</th>
+                        <th>Anonim world readonly</th>
+                    </tr>
+                    <tr>
+                        <td>{{ globalconfig[9] }}</td>
+                        <td>{{ globalconfig[10] }}</td>
+                        <td>{{ globalconfig[11] }}</td>
+                        <td>{{ globalconfig[12] }}</td>
+                        <td>{{ globalconfig[13] }}</td>
+
+
+                    </tr>
+                </table>
+                <form action="/service/modify" method="post">
+                    <input type="hidden" name="form_id" value="ftp-global-modify-redirect">
+                    <button type="submit">Módosítás</button>
+                </form>
+                <h2>Felhasználók kezelése</h2>
+                <form id="modifyftpusersForm" action="/ftp/users" method="post">
+                    <p>A felhasználók megjelenítéséhez kattintson a "Megnyitás" gombra.</p>
+                    <button type="submit">Megnyitás</button>
+                </form>
             {% endif %}
 </body>
 </html>

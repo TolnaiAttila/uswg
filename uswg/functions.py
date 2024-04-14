@@ -845,3 +845,64 @@ def samba_check_selected_group_share(button):
         number = check.returncode
 
         return number
+
+
+
+def ftp_check_global_config():
+    part="global"
+    try:
+        config = subprocess.check_output(["./bash/ftp/ftp_check_part.sh", op.oppart, part], universal_newlines=True)
+        array = config.split("\n")
+        if array[-1] == "":
+            array.pop(-1)
+        return array
+
+    except:
+        bash_path = '/bash/ftp/ftp_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number
+
+
+def ftp_check_message():
+    part="message"
+    try:
+        config = subprocess.check_output(["./bash/ftp/ftp_check_part.sh", op.oppart, part], universal_newlines=True)
+        return config
+
+    except:
+        bash_path = '/bash/ftp/ftp_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number
+
+
+def ftp_modify_global_config(ipv4, ipv6, localen, messageen, writeen, dotfiles, hideids, maxpip, maxclients, anonimen, anonimupen, anonimmkdiren, anonimotherwriteen, anonimworldreadonly):
+    part="global"
+    bash_path = 'bash/ftp/ftp_modify_part.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opipv4, ipv4, op.opipv6, ipv6, op.oplocalen, localen, op.opmessageen, messageen, op.opwriteen, writeen, op.opforcedotfiles, dotfiles, op.ophideids, hideids, op.opmaxpip, maxpip, op.opmaxclients, maxclients, op.opanonen, anonimen, op.opanonupen, anonimupen, op.opanonmkdiren, anonimmkdiren, op.opanonotherwriteen, anonimotherwriteen, op.opanonworldro, anonimworldreadonly])
+    number = check.returncode
+
+    return number
+
+
+def ftp_modify_message(messagetext):
+    part="message"
+    if messagetext == "" :
+        messagetext = "empty"
+
+    bash_path = 'bash/ftp/ftp_modify_part.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opmessage, messagetext])
+    number = check.returncode
+
+    return number
+
+
+def ftp_merge_config():
+    bash_path = 'bash/ftp/ftp_merge_config.sh'
+    check = subprocess.run(['bash', bash_path])
+    number = check.returncode
+
+    return number

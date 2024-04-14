@@ -207,8 +207,18 @@ def samba(current_user):
 def ftp(current_user):
     service = "vsftpd"
     status = f.status(service)
+    globalconfig = f.ftp_check_global_config()
+    if isinstance(globalconfig, int):
+        return render_template('ftp/ftp.html', status=status)
+    return render_template('ftp/ftp.html', status=status, globalconfig=globalconfig)
 
-    return render_template('ftp/ftp.html', status=status)
+
+
+@app.route("/ftp/users", methods=['POST'])
+@token_required
+def ftp_users(current_user):
+
+    return render_template('ftp/ftp_users.html')
 
 
 @app.route("/samba/groups", methods=['GET', 'POST'])
@@ -1253,6 +1263,57 @@ def service_modify(current_user):
         return redirect(url_for("samba"))
 
 
+    if id == "ftp-global-modify-redirect":
+        globalconfig = f.ftp_check_global_config()
+        
+        if isinstance(globalconfig, int):
+            number = globalconfig
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+
+        message = f.ftp_check_message()
+        if isinstance(message, int):
+            number = message
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+
+        return render_template('ftp/modify_global_config.html', message=message, globalconfig=globalconfig)
+
+
+    if id == "ftp-global-modify":
+        ipv4 = str(request.form.get('ipv4'))
+        ipv6 = str(request.form.get('ipv6'))
+        localen = str(request.form.get('local-enable'))
+        messageen = str(request.form.get('dir-message'))
+        writeen = str(request.form.get('write-enable'))
+        dotfiles = str(request.form.get('force-dot-files'))
+        hideids = str(request.form.get('hide-ids'))
+        maxpip = str(request.form.get('max-p-ip'))
+        maxclients = str(request.form.get('max-clients'))
+        anonimen = str(request.form.get('anonim-enable'))
+        anonimupen = str(request.form.get('anonim-upload-enable'))
+        anonimmkdiren = str(request.form.get('anonim-mkdir-enable'))
+        anonimotherwriteen = str(request.form.get('anonim-other-write-enable'))
+        anonimworldreadonly = str(request.form.get('anonim-world-readonly'))
+        messagetext = str(request.form.get('message'))
+
+        number = f.ftp_modify_global_config(ipv4, ipv6, localen, messageen, writeen, dotfiles, hideids, maxpip, maxclients, anonimen, anonimupen, anonimmkdiren, anonimotherwriteen, anonimworldreadonly)
+        if number != 0:  
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+
+        number = f.ftp_modify_message(messagetext)
+        if number != 0:
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+
+        number = f.ftp_merge_config()
+        if number != 0:
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+
+        return redirect(url_for('ftp'))
+        
     return render_template('shared/error.html', text=text)
 
 @app.route("/service/install", methods=['POST'])
