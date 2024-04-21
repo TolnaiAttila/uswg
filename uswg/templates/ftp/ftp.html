@@ -121,7 +121,73 @@
                     <input type="hidden" name="form_id" value="ftp-global-modify-redirect">
                     <button type="submit">Módosítás</button>
                 </form>
-                <h2>Felhasználók kezelése</h2>
+
+                <h2>Megosztás és felhasználó kezelése</h2>
+                    <h3>Engedélyezett felhasználók</h3>
+
+                    <form action="/service/modify" method="post">
+                        <input type="hidden" name="form_id" value="ftp-deny-user">
+                    <table>
+
+                        <tr class="table-title">
+                            <th>Felhasználó</th>
+                            <th>Kiléphet a mappájából</th>
+                            <th>Módosítás</th>
+                            <th>Tiltás</th>
+                            <th>Tiltás esetén</th>
+                            
+                        </tr>
+
+                        {% for i in allowedusers %}
+                            <tr>
+                                <td>
+                                    {{i}}
+                                </td>
+                                <td>
+                                    {% if i in chrootusers %} 
+                                        <input type="radio" id="allowchroot_{{ i }}" name="chroot_{{ i }}" value="allow" checked ><label for="allowchroot_{{ i }}">Igen</label>
+                                        <input type="radio" id="denychroot_{{ i }}" name="chroot_{{ i }}" value="deny"><label for="denychroot_{{ i }}">Nem</label><br>
+                                    {% else %}
+                                        <input type="radio" id="allowchroot_{{ i }}" name="chroot_{{ i }}" value="allow" ><label for="allowchroot_{{ i }}">Igen</label>
+                                        <input type="radio" id="denychroot_{{ i }}" name="chroot_{{ i }}" value="deny" checked ><label for="denychroot_{{ i }}">Nem</label><br>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button type="submit" name="modify-user-ftp-button" id="modifyuserftp{{ i }}Button" value="{{i}}">Módosítás</button>
+                                </td>
+                                <td>
+                                    <button type="submit" name="deny-user-ftp-button" id="denyuserftp{{ i }}Button" value="{{i}}">Tiltás</button>
+                                </td>
+                                <td>
+                                    <input type="radio" id="nodelete_{{ i }}" name="dir-delete" value="no"><label for="nodelete_{{ i }}">Mappa megtartása</label><br>
+                                    <input type="radio" id="delete_{{ i }}" name="dir-delete" value="yes"><label for="delete_{{ i }}">Mappa törlése</label>
+                                </td>
+                                
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    </form>
+                    <h3>Tiltott felhasználók</h3>
+                    <form action="/service/modify" method="post">
+                        <input type="hidden" name="form_id" value="ftp-allow-user">
+                    <table>
+                        <tr class="table-title">
+                            <th>Felhasználó</th>
+                            <th>Engedélyez</th>
+                        </tr>
+                        {% for i in denyiedusers %}
+                        <tr>
+                            <td>
+                                {{ i }}
+                            </td>
+                            <td>
+                                <button type="submit" name="allow-user-ftp-button" id="allowuserftp{{ i }}Button" value="{{i}}">Engedélyez</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    </form>
+                <h2>Egyéb felhasználó kezelés</h2>
                 <form id="modifyftpusersForm" action="/ftp/users" method="post">
                     <p>A felhasználók megjelenítéséhez kattintson a "Megnyitás" gombra.</p>
                     <button type="submit">Megnyitás</button>

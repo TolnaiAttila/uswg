@@ -60,29 +60,46 @@ def token_required(f):
 
 @app.route('/login')
 def login():
-    auth = request.authorization
+    err_text = request.args.get('text')
+    return render_template('shared/login.html', err_text = err_text)
 
-    if not auth or not auth.username or not auth.password:
-        return make_response('Sikertelen bejelentkezés!', 401, {'WWW-Authenticate' : 'Basic realm="Login Required!"'})
+@app.route('/login/check', methods=['POST'])
+def login_check():
+    #auth = request.authorization
+    passwd = None
+    uname = None
+    passwd = str(request.form.get('passwd'))
+    uname = str(request.form.get('username'))
 
-    user = Users.query.filter_by(username=auth.username).first()
+    if passwd == None or uname == None:
+        text = "Sikertelen bejelentkezés"
+        return redirect(url_for('login', text=text))
+
+    #if not auth or not auth.username or not auth.password:
+     #   return make_response('Sikertelen bejelentkezés!', 401, {'WWW-Authenticate' : 'Basic realm="Login Required!"'})
+
+    user = Users.query.filter_by(username=uname).first()
 
     if not user:
-        return make_response('Sikertelen bejelentkezés!', 401, {'WWW-Authenticate' : 'Basic realm="Login Required!"'})
+        text = "Sikertelen bejelentkezés"
+        return redirect(url_for('login', text=text))
+        #return make_response('Sikertelen bejelentkezés!', 401, {'WWW-Authenticate' : 'Basic realm="Login Required!"'})
 
 
 
-    if check_password_hash(user.password, auth.password):
-        token = jwt.encode({'public_id' : user.public_id, 'exp' : datetime.datetime.now() + datetime.timedelta(minutes=45)}, app.config['SECRET_KEY'], "HS256")
+    if check_password_hash(user.password, passwd):
+        exp_time = datetime.datetime.now() + datetime.timedelta(minutes=60)
+        exp_timestamp = int(exp_time.timestamp())
+        token = jwt.encode({'public_id' : user.public_id, 'exp' : exp_timestamp}, app.config['SECRET_KEY'], "HS256")
         template = render_template('shared/index.html')
         response = make_response(template)
         response.set_cookie('x-access-token', token)
         return response
 
+    text = "Sikertelen bejelentkezés"
+    return redirect(url_for('login', text=text))
 
-    return make_response('Could not verify!', 401, {'WWW-Authenticate' : 'Basic realm="Login Required!"'})
-
-
+    #return make_response('Could not verify!', 401, {'WWW-Authenticate' : 'Basic realm="Login Required!"'})
 
 @app.route("/dhcp")
 @token_required
@@ -210,15 +227,36 @@ def ftp(current_user):
     globalconfig = f.ftp_check_global_config()
     if isinstance(globalconfig, int):
         return render_template('ftp/ftp.html', status=status)
-    return render_template('ftp/ftp.html', status=status, globalconfig=globalconfig)
+    
+    allowedusers = f.ftp_list_allowed_users()
+    if isinstance(allowedusers, int):
+        return render_template('ftp/ftp.html', status=status)
+
+    denyiedusers = f.ftp_list_denied_users()
+    if isinstance(denyiedusers, int):
+        return render_template('ftp/ftp.html', status=status)
+
+
+
+    chrootusers = f.ftp_list_chroot_users()
+    if isinstance(chrootusers, int):
+        return render_template('ftp/ftp.html', status=status)
+
+    return render_template('ftp/ftp.html', status=status, globalconfig=globalconfig, allowedusers=allowedusers, denyiedusers=denyiedusers, chrootusers=chrootusers)
 
 
 
 @app.route("/ftp/users", methods=['POST'])
 @token_required
 def ftp_users(current_user):
+    passwdlessusers = f.ftp_list_passwdless_users()
+    if isinstance(passwdlessusers, int):
+        number = passwdlessusers
+        if number != 0:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
 
-    return render_template('ftp/ftp_users.html')
+    return render_template('ftp/ftp_users.html', passwdlessusers=passwdlessusers)
 
 
 @app.route("/samba/groups", methods=['GET', 'POST'])
@@ -607,7 +645,27 @@ def service_add(current_user):
         
         return redirect(url_for("samba"))
 
+    if id == "ftp-add-passwd-user":
+        uname = str(request.form.get('username'))
+        passwd1 = str(request.form.get('password1'))
+        passwd2 = str(request.form.get('password2'))
 
+        number = f.ftp_modify_user_passwd(uname, passwd1, passwd2)
+        if number != 0:
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+
+        return redirect(url_for("ftp_users"), code=307)
+
+
+    if id == "add-ftp-system-user":
+        uname = str(request.form.get('system-user'))
+        number = f.ftp_add_system_user(uname)
+        if number != 0:
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+
+        return redirect(url_for("ftp_users"), code=307)
 
     return render_template('shared/error.html', text=text)
 
@@ -1313,6 +1371,57 @@ def service_modify(current_user):
             return render_template('shared/error.html', text=text)
 
         return redirect(url_for('ftp'))
+
+
+    if id == "ftp-allow-user":
+        uname = str(request.form.get('allow-user-ftp-button'))
+        number = f.ftp_allow_user(uname)
+        if number != 0:
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+
+        number = f.ftp_merge_config()
+        if number != 0:
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+
+        return redirect(url_for('ftp'))
+
+
+    if id == "ftp-deny-user":
+        if 'deny-user-ftp-button' in request.form:
+            uname = str(request.form.get('deny-user-ftp-button'))
+            dirdel = str(request.form.get('dir-delete'))
+
+            number = f.ftp_deny_user(uname, dirdel)
+            if number != 0:
+                text=err.error(number)
+                return render_template('shared/error.html', text=text)
+
+            number = f.ftp_merge_config()
+            if number != 0:
+                text=err.error(number)
+                return render_template('shared/error.html', text=text)
+
+            return redirect(url_for('ftp'))
+
+        if 'modify-user-ftp-button' in request.form:
+            uname = str(request.form.get('modify-user-ftp-button'))
+            radioname = ("chroot_"+uname)
+            chroot = str(request.form.get(radioname))
+            
+            number = f.ftp_modify_chroot(uname, chroot)
+            if number != 0:
+                text=err.error(number)
+                return render_template('shared/error.html', text=text)
+            
+            number = f.ftp_merge_config()
+            if number != 0:
+                text=err.error(number)
+                return render_template('shared/error.html', text=text)
+
+            return redirect(url_for('ftp'))
+
         
     return render_template('shared/error.html', text=text)
 

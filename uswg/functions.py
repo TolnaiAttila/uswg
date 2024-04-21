@@ -906,3 +906,118 @@ def ftp_merge_config():
     number = check.returncode
 
     return number
+
+
+def ftp_list_allowed_users():
+    part="list-allowed-ftp-users"
+    try:
+        config = subprocess.check_output(["./bash/ftp/ftp_users.sh", op.oppart, part], universal_newlines=True)
+        array = config.split("\n")
+        if array[-1] == "":
+            array.pop(-1)
+        return array
+
+    except:
+        bash_path = '/bash/ftp/ftp_users.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number
+
+
+def ftp_list_denied_users():
+    part="list-denied-ftp-users"
+    try:
+        config = subprocess.check_output(["./bash/ftp/ftp_users.sh", op.oppart, part], universal_newlines=True)
+        array = config.split("\n")
+        if array[-1] == "":
+            array.pop(-1)
+        return array
+
+    except:
+        bash_path = '/bash/ftp/ftp_users.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number
+
+    
+def ftp_list_chroot_users():
+    part="list-chroot-ftp-users"
+    try:
+        config = subprocess.check_output(["./bash/ftp/ftp_users.sh", op.oppart, part], universal_newlines=True)
+        array = config.split("\n")
+        if array[-1] == "":
+            array.pop(-1)
+        return array
+
+    except:
+        bash_path = '/bash/ftp/ftp_users.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number
+
+
+def ftp_allow_user(uname):
+    part = "allow-ftp-share"
+    bash_path = 'bash/ftp/ftp_users.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opuser, uname])
+    number = check.returncode
+
+    return number
+
+
+
+def ftp_deny_user(uname, dirdel):
+    part = "deny-ftp-share"
+    bash_path = 'bash/ftp/ftp_users.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opuser, uname, op.opdirdel, dirdel])
+    number = check.returncode
+
+    return number
+
+
+def ftp_modify_chroot(uname, chroot):
+    part = "chroot-modify"
+    bash_path = 'bash/ftp/ftp_users.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opuser, uname, op.opchroot, chroot])
+    number = check.returncode
+
+    return number
+
+
+def ftp_list_passwdless_users():
+    part="list-passwdless-users"
+    try:
+        config = subprocess.check_output(["./bash/ftp/ftp_users.sh", op.oppart, part], universal_newlines=True)
+        array = config.split("\n")
+        if array[-1] == "":
+            array.pop(-1)
+        return array
+
+    except:
+        bash_path = '/bash/ftp/ftp_users.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number
+
+
+
+def ftp_modify_user_passwd(uname, passwd1, passwd2):
+    part = "add-passwd"
+    bash_path = 'bash/ftp/ftp_users.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opuser, uname, op.oppasswd1, passwd1, op.oppasswd2, passwd2])
+    number = check.returncode
+
+    return number
+
+
+def ftp_add_system_user(uname):
+    part = "add-system-user"
+    bash_path = 'bash/ftp/ftp_users.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opuser, uname])
+    number = check.returncode
+
+    return number
