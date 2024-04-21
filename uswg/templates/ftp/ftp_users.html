@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/shared_style.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/sidebar_style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/ftp_users_style.css') }}" />
+    <script src="{{url_for('static', filename='scripts/ftp_users_javascript.js')}}"></script>
+
     <title>FTP users</title>
 </head>
 <body>
@@ -13,7 +16,58 @@
             {% include 'shared/sidebar.html' %}
         </div>
         <div class="main_site">
-            
+            <h1>Felhasználók kezelése</h1>
+            <h2>Jelszó nélküli felhasználók kezelése</h2>
+            <div class="sys-user-flex-div">
+                <div class="sys_users">
+                    
+                    <table>
+                        <tr class="table-title">
+                            <th>Felhasználó</th>
+                            <th>Jelszó módosítás</th>
+                        </tr>
+                        {% for i in passwdlessusers %}
+                        <tr>
+                            <td>{{ i }}</td>
+                            <td>
+                                <button type="submit" name="modify-user-passwd-button" class="add-passwd-user-button" onclick="toggleTextboxes()" value="{{i}}">Módosítás</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div class="hidden-form-user">
+                    <p id="displayElement"></p>
+                    <form id="addftppasswduserForm" action="/service/add" method="post">
+                        <input type="hidden" name="form_id" value="ftp-add-passwd-user">
+                
+                        <input type="password" class="hidden-textbox" name="password1" placeholder="Jelszó megadása" required><br>
+                        <input type="password" class="hidden-textbox" name="password2" placeholder="Jelszó ismétlése" required><br>
+                        <input type="submit" id="submit-button" value="Küldés">
+                        <input type="hidden" name="username" id="hidden-input-user">
+                    </form>
+                </div>
+            </div>
+
+            <h2>Rendszer felhasználó létrehozása</h2>
+            <p>A rendszerben létrehozott felhasználók is megjelennek és használhatók.</p>
+            <p>Az itt létrehozott felhasználó tulajdonságai:</p>
+            <ul>
+                <li>A nevén kívül más információ nem lesz eltárolva a felhasználóról</li>
+                <li>A users csoport (id: 100) tagja lesz</li>
+                <li>Rendelkezni fog home könyvtárral</li>
+                <li>Nem lesz jelszava</li>
+                <li>A bejelentkezés le lesz tiltva a létrehozott felhasználóval</li>
+            </ul>
+
+            <br>
+            <p>Új felhasználó hozzáadása:</p>
+            <form id="addsystemuserForm" action="/service/add" method="post">
+                <input type="hidden" name="form_id" value="add-ftp-system-user">
+                <input type="text" name="system-user" placeholder="Új felhasználó neve" pattern="[a-zA-Z0-9\-\.]*" required>
+                <button type="submit">Küldés</button>
+            </form>
+
         </div>
 </body>
 </html>

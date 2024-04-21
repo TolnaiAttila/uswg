@@ -1,0 +1,19 @@
+.sys-user-flex-div{
+    display: flex;
+    /*height: 50%;*/
+    position: relative;
+    padding-bottom: 30px;
+}
+
+.hidden-form-user{
+    margin-left: 100px;
+    padding: 0px 10px;
+}
+
+.hidden-textbox{
+    display: none;
+}
+
+#submit-button{
+    display: none;
+}
