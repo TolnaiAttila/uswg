@@ -125,6 +125,9 @@ case "$part" in
         if [ -z "$uname" ]; then
             exit 155
         fi
+        if [ `cat /etc/passwd | cut -d':' -f 1 | grep "^${uname}$"` ]; then
+            exit 165
+        fi
         sudo adduser --gecos "" --gid 100 --disabled-password --home /home/$uname --shell /usr/sbin/nologin $uname
         ;;
 
