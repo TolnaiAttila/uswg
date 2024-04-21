@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/sidebar_style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/shared_style.css') }}" />
+    <script src="{{url_for('static', filename='scripts/adapter_javascript.js')}}"></script>
+    <title>Hálózati adapter</title>
+</head>
+<body>
+    <div class="flex_site">
+        <div class="sidebar">
+            {% include 'shared/sidebar.html' %}
+        </div>
+        <div class="main_site">
+            {% if allowed == 156 %}
+                <p>A hálózati adapter konfigurálása nincs engedélyezve!</p>
+                <input type="submit" id="allowadapterButton" value="Engedélyezés"><br><br>
+                <form id="allowadapterForm" class="hidden" action="/service/install" method="post">
+                    <input type="hidden" name="form_id" value="adapter">
+                    <label for="ip-address">IP-cím / maszk: </label><br>
+                    <input type="text" name="ip-address" id="ip-address" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/[0-9]{1,2}" required><br>
+                    <label for="gateway">Alapértelmezett átjáró: </label><br>
+                    <input type="text" name="gateway" id="gateway" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" required><br>
+                    <label for="nameserver">DNS szerver: </label><br>
+                    <input type="text" name="nameserver" id="nameserver" pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" required><br>
+                    <label for="network-adapter">Hálózati adapter kiválasztása:</label><br>
+                    <select name="network-adapter" id="network-adapter" required>
+                        {% for i in adapterarray %}
+                        <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <input type="submit" value="Küldés">
+                </form>
+            {% else %}
+            
+            <p>A hálózati adapter konfigurálása engedélyezve van!</p>
+            <p>Az letiltáshoz kattintson a "Tiltás" gombra!</p>
+            <p>Amennyiben az engedélyezés során probléma adódott a konfigurációval, a "Visszaállítás" gomb segítségével az engedélyezés elötti állapot visszaállítható!</p>
+                <form id="denyadapterForm" action="/service/remove" method="post">
+                    <input type="hidden" name="form_id" value="adapter">
+                    <input type="submit" name="deny" value="Tiltás">
+                    <input type="submit" name="deny-and-backup" value="Visszaállítás">
+                </form>
+            {% endif %}
+
+        </div>
+    </div>
+</body>
+</html>

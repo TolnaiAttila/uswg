@@ -303,6 +303,14 @@ def samba_users(current_user):
 
 
 
+@app.route("/adapter")
+@token_required
+def adapter(current_user):
+    adapterarray = f.list_all_network_adapter()
+    allowed = f.adapter_status()
+    return render_template('adapter/adapter.html', allowed=allowed, adapterarray=adapterarray)
+
+
 
 @app.route("/service/add", methods=['POST'])
 @token_required
@@ -1533,6 +1541,31 @@ def service_install(current_user):
         
         return redirect(url_for('ftp'))
 
+
+    if id == "adapter":
+        service = "network-adapter"
+        ip = str(request.form.get('ip-address'))
+        gateway = str(request.form.get('gateway'))
+        dns = str(request.form.get('nameserver'))
+        adapter = str(request.form.get('network-adapter'))
+
+        number = f.adapter_install(service, ip, gateway, dns, adapter)
+        if number != 0:
+            
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+
+        number = f.adapter_create_adapter_config(adapter, ip, gateway, dns)
+        if number != 0:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+
+        number = f.adapter_merge_config()
+        if number != 0:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+
+        return redirect(url_for('adapter'))
 
     return render_template('shared/error.html', text=text)
 
