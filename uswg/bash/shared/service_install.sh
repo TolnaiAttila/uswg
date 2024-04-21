@@ -248,6 +248,72 @@ case $service in
         
 
         ;;
+
+    network-adapter)
+        path="/etc/.uswg_configs/adapter/"
+        pathback="/etc/.uswg_configs/adapter/backup/"
+        pathorig="/etc/.uswg_configs/adapter/original/"
+        pathglobal="/etc/.uswg_configs/adapter/adapter_global.conf"
+        pathnetplan="/etc/netplan/network_adapter.yaml"
+
+        
+        ip=$2
+        gateway=$3
+        dns=$4
+        a=$5
+
+        if [ ! `echo "$ip" | grep "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/[0-9]\{2\}$"` ]; then
+            exit 155
+        fi
+        
+        if [ ! `echo "$gateway" | grep "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}$"` ]; then
+            exit 155
+        fi
+
+        if [ ! `echo "$dns" | grep "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}$"` ]; then
+            exit 155
+        fi
+        
+        if [ ! `ip address | grep "^[0-9]\+:[[:space:]].*$" | cut -d' ' -f2 | tr -d ':' | grep -v "^lo$" | grep "^${a}$"` ]; then
+            exit 155
+        fi
+
+        if [ ! -d $path ]; then
+            sudo -S mkdir $path
+        fi
+        if [ ! -d $pathorig ]; then
+            sudo -S mkdir $pathorig
+        fi
+        if [ ! -d $pathback ]; then
+            sudo -S mkdir $pathback
+        fi
+        
+
+        
+        if [ `ls /etc/netplan | grep ".\+\.yaml$" | wc -l` -gt 0 ]; then
+            sudo -S cp -r /etc/netplan/* $pathorig
+        fi
+
+
+        
+        sudo -S touch $pathglobal
+        sudo -S echo "network:" | sudo -S tee -a $pathglobal > /dev/null
+        sudo -S echo " version: 2" | sudo -S tee -a $pathglobal > /dev/null
+        sudo -S echo " renderer: networkd" | sudo -S tee -a $pathglobal > /dev/null
+        sudo -S echo " ethernets:" | sudo -S tee -a $pathglobal > /dev/null
+
+        sudo -S rm -r -d /etc/netplan/*
+
+        sudo -S touch $pathnetplan
+        sudo -S chmod 644 $pathnetplan
+        for i in `ip address | grep "^[0-9]\+:[[:space:]].*$" | cut -d' ' -f2 | tr -d ':' | grep -v "^lo$"`
+            do
+                pathconfig="${path}adapter_${i}.conf"
+                sudo -S touch $pathconfig
+            done
+
+
+        ;;
         
     *)
         exit 155

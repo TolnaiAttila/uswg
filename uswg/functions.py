@@ -1021,3 +1021,40 @@ def ftp_add_system_user(uname):
     number = check.returncode
 
     return number
+
+
+
+def adapter_status():
+    part = "status"
+    bash_path = 'bash/adapter/adapter_check_part.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part])
+    number = check.returncode
+
+    return number
+
+
+
+def adapter_install(service, ip, gateway, dns, adapter):
+    bash_path = 'bash/shared/service_install.sh'
+    check = subprocess.run(['bash', bash_path, service, ip, gateway, dns, adapter])
+    number = check.returncode
+
+    return number
+
+
+def adapter_create_adapter_config(adapter, ip, gateway, dns):
+    part = "adapter-configuration"
+    bash_path = 'bash/adapter/adapter_create_part.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opnetworkadapter, adapter, op.opip, ip, op.opgateway, gateway, op.opdns, dns])
+    number = check.returncode
+
+    return number
+
+
+
+def adapter_merge_config():
+    bash_path = 'bash/adapter/adapter_merge_config.sh'
+    check = subprocess.run(['bash', bash_path])
+    number = check.returncode
+
+    return number
