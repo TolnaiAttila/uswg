@@ -77,12 +77,12 @@ case "$part" in
                     fullpath="$path$i"
                     for x in `cat $fullpath`
                         do
-                            line=`echo $x | grep ".*(.*).*"`
+                            line=`echo "$x" | grep ".*(.*).*"`
                             if [ ! -z "$line" ]; then
-                                echo $x | cut -d'(' -f 1
-                                echo "(`echo $x | cut -d'(' -f 2`"
+                                echo "$x" | cut -d'(' -f 1
+                                echo "(`echo "$x" | cut -d'(' -f 2`"
                             else
-                                echo $x
+                                echo "$x"
                             fi
                         
                         done
@@ -105,23 +105,23 @@ case "$part" in
                         do
                             tmp=`echo $i | grep "^.\+(.\+,.\+,.\+)$"`
                             if [ ! -z "$tmp" ]; then
-                                access=`echo $i | grep "^.\+(.\+,.\+,.\+)$" | cut -d'(' -f 1`
-                                rwro=`echo $i | grep "^.\+(.\+,.\+,.\+)$" | cut -d'(' -f 2 | cut -d',' -f 1`
-                                sync=`echo $i | grep "^.\+(.\+,.\+,.\+)$" | cut -d'(' -f 2 | cut -d',' -f 2`
-                                squash=`echo $i | grep "^.\+(.\+,.\+,.\+)$" | cut -d'(' -f 2 | cut -d',' -f 3`
-                                subtree=`echo $i | grep "^.\+(.\+,.\+,.\+)$" | cut -d'(' -f 2 | cut -d',' -f 4 | tr -d ')'`
+                                access=`echo "$i" | grep "^.\+(.\+,.\+,.\+)$" | cut -d'(' -f 1`
+                                rwro=`echo "$i" | grep "^.\+(.\+,.\+,.\+)$" | cut -d'(' -f 2 | cut -d',' -f 1`
+                                sync=`echo "$i" | grep "^.\+(.\+,.\+,.\+)$" | cut -d'(' -f 2 | cut -d',' -f 2`
+                                squash=`echo "$i" | grep "^.\+(.\+,.\+,.\+)$" | cut -d'(' -f 2 | cut -d',' -f 3`
+                                subtree=`echo "$i" | grep "^.\+(.\+,.\+,.\+)$" | cut -d'(' -f 2 | cut -d',' -f 4 | tr -d ')'`
 
-                                echo $access
-                                echo $rwro
-                                echo $sync
-                                echo $squash
-                                echo $subtree
+                                echo "$access"
+                                echo "$rwro"
+                                echo "$sync"
+                                echo "$squash"
+                                echo "$subtree"
                             else
                                 tmp=`echo $i | grep "^[0-7][0-7][0-7]$"`
                                 if [ ! -z "$tmp" ]; then
-                                    echo $i
+                                    echo "$i"
                                 else
-                                    dir=`echo $i | grep "^/srv/nfs/.\+$"`
+                                    dir=`echo "$i" | grep "^/srv/nfs/.\+$"`
                                     echo $dir
                                 fi
                             fi
