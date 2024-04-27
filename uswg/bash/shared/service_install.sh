@@ -80,7 +80,7 @@ case $service in
         
         sudo -S truncate -s 0 $path
 
-        linenumber=`grep -n "\[.\+\]" $tmppath | grep -v "\[global\]" | head -n 1 | cut -d':' -f 1`
+        linenumber=`sudo -S grep -n "\[.\+\]" $tmppath | grep -v "\[global\]" | head -n 1 | cut -d':' -f 1`
         linenumber=`expr $linenumber \- 1`
         sudo -S sed -i 's/^[[:space:]]*//' $tmppath
         tmppath2="/etc/.uswg_configs/samba/sambatmp2.conf"
@@ -336,7 +336,7 @@ case $service in
 
         if [ "$nginx" == "yes"  ]; then
             ip=`echo "$ip" | cut -d '/' -f 1`
-            linenumber=`grep -n "server_name[[:space:]].*;$" /etc/nginx/sites-available/uswg.conf | cut -d':' -f1`
+            linenumber=`sudo -S grep -n "server_name[[:space:]].*;$" /etc/nginx/sites-available/uswg.conf | cut -d':' -f1`
             newcontent="	server_name $ip;"
             sudo -S sed -i "${linenumber}s/.*/${newcontent}/" "/etc/nginx/sites-available/uswg.conf"
             sudo -S systemctl restart nginx

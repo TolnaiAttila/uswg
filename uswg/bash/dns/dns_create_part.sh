@@ -74,7 +74,7 @@ case "$part" in
             sudo -S echo "};" | sudo -S tee -a $path > /dev/null
         fi
         
-        linenumber=`grep -n "^};$" $path | cut -d':' -f 1`
+        linenumber=`sudo -S grep -n "^};$" $path | cut -d':' -f 1`
         if [[ -n "$linenumber" ]]; then
             sudo -S sed -i "${linenumber}d" $path
         else

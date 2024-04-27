@@ -48,7 +48,7 @@ sudo apt install nginx -y
 sudo cp uswg.conf /etc/nginx/sites-available/
 sudo ln -s /etc/nginx/sites-available/uswg.conf /etc/nginx/sites-enabled/
 
-linenumber=`grep -n "^user[[:space:]].*;$" /etc/nginx/nginx.conf | cut -d':' -f1`
+linenumber=`sudo -S grep -n "^user[[:space:]].*;$" /etc/nginx/nginx.conf | cut -d':' -f1`
 newcontent="user uswguser sudo;"
 sudo -S sed -i "${linenumber}s/.*/${newcontent}/" "/etc/nginx/nginx.conf"
 sudo systemctl restart nginx
@@ -56,7 +56,7 @@ sudo systemctl restart nginx
 
 
 read -p "Enter server IP or domain name: " input
-linenumber=`grep -n "server_name[[:space:]].*;$" /etc/nginx/sites-available/uswg.conf | cut -d':' -f1`
+linenumber=`sudo -S grep -n "server_name[[:space:]].*;$" /etc/nginx/sites-available/uswg.conf | cut -d':' -f1`
 newcontent="	server_name $input;"
 sudo -S sed -i "${linenumber}s/.*/${newcontent}/" "/etc/nginx/sites-available/uswg.conf"
 

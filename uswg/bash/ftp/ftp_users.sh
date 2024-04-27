@@ -204,12 +204,12 @@ case "$part" in
             fi
         fi
 
-        linenumber=`grep -n "^${uname}$" $path | cut -d':' -f 1`
+        linenumber=`sudo -S grep -n "^${uname}$" $path | cut -d':' -f 1`
         sudo -S sed -i "${linenumber}d" $path
 
 
         if [ `grep "^${uname}$" $path2` ]; then
-            linenumber=`grep -n "^${uname}$" $path2 | cut -d':' -f 1`
+            linenumber=`sudo -S grep -n "^${uname}$" $path2 | cut -d':' -f 1`
             sudo -S sed -i "${linenumber}d" $path2
         fi
 
@@ -246,7 +246,7 @@ case "$part" in
         else
             if [ "$chroot" == "deny" ]; then
                 if [ `cat $path2 | grep "^${uname}$"` ]; then
-                    linenumber=`grep -n "^${uname}$" $path2 | cut -d':' -f 1`
+                    linenumber=`sudo -S grep -n "^${uname}$" $path2 | cut -d':' -f 1`
                     sudo -S sed -i "${linenumber}d" $path2
                 fi
             else

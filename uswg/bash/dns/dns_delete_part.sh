@@ -57,7 +57,7 @@ case "$part" in
         ip=`echo $input | cut -d'_' -f 3`
         port=`echo $input | cut -d'_' -f 4`
         line="$ip port $port;"
-        linenumber=`grep -n "^$line$" $path | cut -d':' -f 1`
+        linenumber=`sudo -S grep -n "^$line$" $path | cut -d':' -f 1`
         
         if [[ -n "$linenumber" ]]; then
             sudo -S sed -i "${linenumber}d" $path

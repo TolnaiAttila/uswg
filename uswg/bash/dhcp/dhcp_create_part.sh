@@ -358,7 +358,7 @@ case "$part" in
             existadapters=`grep -n "^INTERFACESv4=\".*\"$" $path | cut -d'"' -f2`
             endcharacter="\""
 
-            linenumber=`grep -n "^INTERFACESv4=\".*\"$" $path | cut -d':' -f1`
+            linenumber=`sudo -S grep -n "^INTERFACESv4=\".*\"$" $path | cut -d':' -f1`
 
 
             if [[ -n "$linenumber" ]]; then
