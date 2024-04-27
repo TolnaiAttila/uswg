@@ -339,8 +339,7 @@ case $service in
             linenumber=`sudo -S grep -n "server_name[[:space:]].*;$" /etc/nginx/sites-available/uswg.conf | cut -d':' -f1`
             newcontent="	server_name $ip;"
             sudo -S sed -i "${linenumber}s/.*/${newcontent}/" "/etc/nginx/sites-available/uswg.conf"
-            sudo -S systemctl restart nginx
-            sudo -S systemctl restart uswg
+            sudo -S nginx -s reload
         fi
         ;;
         
