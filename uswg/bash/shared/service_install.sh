@@ -251,16 +251,16 @@ case $service in
 
     network-adapter)
         path="/etc/.uswg_configs/adapter/"
-        pathback="/etc/.uswg_configs/adapter/backup/"
         pathorig="/etc/.uswg_configs/adapter/original/"
         pathglobal="/etc/.uswg_configs/adapter/adapter_global.conf"
         pathnetplan="/etc/netplan/network_adapter.yaml"
-
+        pathnginx="/etc/.uswg_configs/adapter/original_nginx/"
         
         ip=$2
         gateway=$3
         dns=$4
         a=$5
+        nginx=$6
 
         if [ ! `echo "$ip" | grep "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/[0-9]\{2\}$"` ]; then
             exit 155
@@ -278,17 +278,39 @@ case $service in
             exit 155
         fi
 
+        if [ -z "$nginx" ]; then
+            exit 155
+        else
+            if [ "$nginx" != "yes" ]; then
+                if [ "$nginx" != "no" ]; then
+                    exit 155
+                fi
+            fi
+        fi
+
+        networkdstatus=`systemctl is-active systemd-networkd`
+
+        if [ "$networkdstatus" != "active" ]; then
+            if [ "$networkdstatus" == "inactive" ]; then
+                sudo -S systemctl restart systemd-networkd
+            else
+                exit 156
+            fi
+        fi
+
+        networkdstatus=""
+        networkdstatus=`systemctl is-active systemd-networkd`
+        if [ "$networkdstatus" != "active" ]; then
+            exit 164
+        fi
+
         if [ ! -d $path ]; then
             sudo -S mkdir $path
         fi
         if [ ! -d $pathorig ]; then
             sudo -S mkdir $pathorig
         fi
-        if [ ! -d $pathback ]; then
-            sudo -S mkdir $pathback
-        fi
         
-
         
         if [ `ls /etc/netplan | grep ".\+\.yaml$" | wc -l` -gt 0 ]; then
             sudo -S cp -r /etc/netplan/* $pathorig
@@ -306,13 +328,20 @@ case $service in
 
         sudo -S touch $pathnetplan
         sudo -S chmod 644 $pathnetplan
-        for i in `ip address | grep "^[0-9]\+:[[:space:]].*$" | cut -d' ' -f2 | tr -d ':' | grep -v "^lo$"`
-            do
-                pathconfig="${path}adapter_${i}.conf"
-                sudo -S touch $pathconfig
-            done
+        
 
 
+        sudo -S mkdir $pathnginx
+        sudo -S cp /etc/nginx/sites-available/uswg.conf $pathnginx
+
+        if [ "$nginx" == "yes"  ]; then
+            ip=`echo "$ip" | cut -d '/' -f 1`
+            linenumber=`grep -n "server_name[[:space:]].*;$" /etc/nginx/sites-available/uswg.conf | cut -d':' -f1`
+            newcontent="	server_name $ip;"
+            sudo -S sed -i "${linenumber}s/.*/${newcontent}/" "/etc/nginx/sites-available/uswg.conf"
+            sudo -S systemctl restart nginx
+            sudo -S systemctl restart uswg
+        fi
         ;;
         
     *)

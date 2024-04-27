@@ -1034,18 +1034,25 @@ def adapter_status():
 
 
 
-def adapter_install(service, ip, gateway, dns, adapter):
+def adapter_install(service, ip, gateway, dns, adapter, nginx):
     bash_path = 'bash/shared/service_install.sh'
-    check = subprocess.run(['bash', bash_path, service, ip, gateway, dns, adapter])
+    check = subprocess.run(['bash', bash_path, service, ip, gateway, dns, adapter, nginx])
     number = check.returncode
 
     return number
 
 
-def adapter_create_adapter_config(adapter, ip, gateway, dns):
+def adapter_create_adapter_config(adapter, ip, gateway, dns, status):
+    if ip == "" :
+        ip = "empty"
+    if gateway == "" :
+        gateway = "empty"
+    if dns == "" :
+        dns = "empty"
+
     part = "adapter-configuration"
     bash_path = 'bash/adapter/adapter_create_part.sh'
-    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opnetworkadapter, adapter, op.opip, ip, op.opgateway, gateway, op.opdns, dns])
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opnetworkadapter, adapter, op.opip, ip, op.opgateway, gateway, op.opdns, dns, op.opstatus, status])
     number = check.returncode
 
     return number
@@ -1055,6 +1062,83 @@ def adapter_create_adapter_config(adapter, ip, gateway, dns):
 def adapter_merge_config():
     bash_path = 'bash/adapter/adapter_merge_config.sh'
     check = subprocess.run(['bash', bash_path])
+    number = check.returncode
+
+    return number
+
+
+def adapter_disable():
+    part="network-adapter"
+    method="disable"
+    bash_path = 'bash/shared/service_remove.sh'
+    check = subprocess.run(['bash', bash_path, part, method])
+    number = check.returncode
+
+    return number
+
+
+
+def adapter_disable_and_restore():
+    part="network-adapter"
+    method="restore"
+    bash_path = 'bash/shared/service_remove.sh'
+    check = subprocess.run(['bash', bash_path, part, method])
+    number = check.returncode
+
+    return number
+
+
+
+def adapter_failed_install_restore():
+    part="network-adapter"
+    method="failed-install-restore"
+    bash_path = 'bash/shared/service_remove.sh'
+    check = subprocess.run(['bash', bash_path, part, method])
+    number = check.returncode
+
+    return number
+
+
+
+def adapter_check_all_adapter():
+    part="list-all-adapters"
+    try:
+        config = subprocess.check_output(["./bash/adapter/adapter_check_part.sh", op.oppart, part], universal_newlines=True)
+        array = config.split("\n")
+        if array[-1] == "":
+            array.pop(-1)
+        return array
+
+    except:
+        bash_path = '/bash/adapter/adapter_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number
+
+
+
+def adapter_check_one_adapter(button):
+    part="check-adapter"
+    try:
+        config = subprocess.check_output(["./bash/adapter/adapter_check_part.sh", op.oppart, part, op.opinput, button], universal_newlines=True)
+        array = config.split("\n")
+        if array[-1] == "":
+            array.pop(-1)
+        return array
+
+    except:
+        bash_path = '/bash/adapter/adapter_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part, op.opinput, button])
+        number = check.returncode
+
+        return number
+
+
+
+def adapter_netplan_apply(service):
+    bash_path = 'bash/adapter/adapter_netplan_apply.sh'
+    check = subprocess.run(['bash', bash_path, service])
     number = check.returncode
 
     return number

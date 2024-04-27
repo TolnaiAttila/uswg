@@ -44,3 +44,6 @@ for i in `ls $path3 | grep "^adapter_.\+\.conf$" | grep -v "^adapter_global.conf
         sudo -S echo "   nameservers:" | sudo -S tee -a $path2 > /dev/null
         sudo -S echo "    addresses: [${outdns}]" | sudo -S tee -a $path2 > /dev/null
     done
+
+sudo -S netplan apply
+sudo -S systemctl restart systemd-networkd

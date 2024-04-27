@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ARGS=$(getopt -n "$0" -o p:i:g:d:n: --long part:,ip-address:,gateway:,dns-server:,network-adapter: -- "$@")
+ARGS=$(getopt -n "$0" -o p:i:g:d:n:s: --long part:,ip-address:,gateway:,dns-server:,network-adapter:,status: -- "$@")
 
 if [ $? -ne 0 ]; then
     exit 161
@@ -13,6 +13,7 @@ ip=""
 gateway=""
 dns=""
 adapter=""
+status=""
 
 while true; do
     case "$1" in
@@ -60,6 +61,14 @@ while true; do
             fi
             ;;
 
+        --status | -s)
+            if [[ -n "$2" && "$2" != -* ]]; then
+                status="$2"
+                shift 2
+            else
+                exit 161
+            fi
+            ;;
 
         --)
             shift
@@ -79,22 +88,39 @@ fi
 case "$part" in
 
     adapter-configuration)
-        if [ ! `echo "$ip" | grep "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/[0-9]\{2\}$"` ]; then
-            exit 155
-        fi
-        
-        if [ ! `echo "$gateway" | grep "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}$"` ]; then
-            exit 155
-        fi
+        if [ "$ip" == "empty" ] && [ "$gateway" == "empty" ] && [ "$dns" == "empty" ]; then
+            if [ ! `ip address | grep "^[0-9]\+:[[:space:]].*$" | cut -d' ' -f2 | tr -d ':' | grep -v "^lo$" | grep "^${adapter}$"` ]; then
+                exit 155
+            fi
+            
+            if [ "$status" == "up" ]; then
+                sudo -S ip link set $adapter up
+            else
+                if [ "$status" == "down" ]; then
+                    sudo -S ip link set $adapter down
+                else
+                    exit 155
+                fi
+            fi
 
-        if [ ! `echo "$dns" | grep "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}$"` ]; then
-            exit 155
-        fi
+            exit 0
+        else
+            if [ ! `echo "$ip" | grep "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/[0-9]\{2\}$"` ]; then
+                exit 155
+            fi
         
-        if [ ! `ip address | grep "^[0-9]\+:[[:space:]].*$" | cut -d' ' -f2 | tr -d ':' | grep -v "^lo$" | grep "^${adapter}$"` ]; then
-            exit 155
-        fi
+            if [ ! `echo "$gateway" | grep "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}$"` ]; then
+                exit 155
+            fi
 
+            if [ ! `echo "$dns" | grep "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}$"` ]; then
+                exit 155
+            fi
+        
+            if [ ! `ip address | grep "^[0-9]\+:[[:space:]].*$" | cut -d' ' -f2 | tr -d ':' | grep -v "^lo$" | grep "^${adapter}$"` ]; then
+                exit 155
+            fi
+        fi
         path="/etc/.uswg_configs/adapter/adapter_${adapter}.conf"
 
         ./bash/shared/exist_file.sh $path
@@ -108,6 +134,17 @@ case "$part" in
         sudo -S echo "addresses:${ip}" | sudo -S tee -a $path > /dev/null
         sudo -S echo "gateway4:${gateway}" | sudo -S tee -a $path > /dev/null
         sudo -S echo "nameservers:${dns}" | sudo -S tee -a $path > /dev/null
+
+
+        if [ "$status" == "up" ]; then
+                sudo -S ip link set $adapter up
+            else
+                if [ "$status" == "down" ]; then
+                    sudo -S ip link set $adapter down
+                else
+                    exit 155
+                fi
+            fi
 
         ;;
 
