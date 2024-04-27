@@ -1458,6 +1458,11 @@ def service_modify(current_user):
             text = err.error(number)
             return render_template('shared/error.html', text=text)
 
+        number = f.adapter_merge_config()
+        if number != 0 :
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+
         return redirect(url_for('adapter'))
         
     return render_template('shared/error.html', text=text)

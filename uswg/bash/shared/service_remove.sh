@@ -124,8 +124,9 @@ case $service in
                 else
                     exit 167
                 fi
-                sudo -S systemctl restart nginx
-                sudo -S systemctl restart uswg
+                sudo -S netplan apply
+                sudo -S nginx -s reload
+                
 
                 ;;
             failed-install-restore)
@@ -156,7 +157,7 @@ case $service in
                 sudo -S rm -d -r $path
                 sudo -S netplan apply
                 sudo -S systemctl restart systemd-networkd
-                sudo -S systemctl restart nginx
+                sudo -S nginx -s reload
                 sudo -S systemctl restart uswg
 
                 exit 168
