@@ -103,6 +103,13 @@ case "$part" in
                 fi
             fi
 
+            filename="adapter_${adapter}.conf"
+            path="/etc/.uswg_configs/adapter/"
+            ./bash/shared/exist_file.sh $path$filename
+            if [ $? -eq 0 ]; then
+                sudo -S rm $path$filename
+            fi
+
             exit 0
         else
             if [ ! `echo "$ip" | grep "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/[0-9]\{2\}$"` ]; then
