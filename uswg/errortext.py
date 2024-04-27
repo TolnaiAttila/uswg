@@ -11,6 +11,9 @@ def error(x):
     elif x == 155 :
         text = "Hibás érték!"
         return text
+    elif x == 156 :
+        text = "A szükséges szolgáltatás nincs telepítve!"
+        return text
     elif x == 161 :
         text = "Hibás opció!"
         return text
@@ -21,13 +24,19 @@ def error(x):
         text = "A két jelszó nem azonos!"
         return text
     elif x == 164 :
-        text = "Hiba történ egy vagy több szkript futásában!"
+        text = "Valamelyik szükséges szolgáltatást nem sikerült elindítani!"
         return text
     elif x == 165 :
         text = "A megadott érték már szerepel a listában!"
         return text
     elif x == 166 :
         text = "A megadott érték még használatban van!"
+        return text
+    elif x == 167 :
+        text = "A megadott mappa nem létezik!"
+        return text
+    elif x == 168 :
+        text = "Sikertelen telepítés!"
         return text
     else:
         return "Ismeretlen hiba! Ez hatalmas probléma!"

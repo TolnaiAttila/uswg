@@ -308,7 +308,10 @@ def samba_users(current_user):
 def adapter(current_user):
     adapterarray = f.list_all_network_adapter()
     allowed = f.adapter_status()
-    return render_template('adapter/adapter.html', allowed=allowed, adapterarray=adapterarray)
+    adaptersconf = f.adapter_check_all_adapter()
+    if isinstance(adaptersconf, int):
+        return render_template('adapter/adapter.html', allowed=allowed, adapterarray=adapterarray)
+    return render_template('adapter/adapter.html', allowed=allowed, adapterarray=adapterarray, adaptersconf=adaptersconf)
 
 
 
@@ -1430,6 +1433,32 @@ def service_modify(current_user):
 
             return redirect(url_for('ftp'))
 
+
+    if id == "adapter-modify-redirect":
+        button = str(request.form.get('modify-adapter-button'))
+
+        adapter = f.adapter_check_one_adapter(button)
+        if isinstance(adapter, int):
+            number = adapter
+            text=err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        return render_template('adapter/adapter_modify.html', adapter=adapter)
+    
+    if id == "adapter-modify":
+        adapter = str(request.form.get('adapter-name'))
+        ip = str(request.form.get('ip'))
+        gateway = str(request.form.get('gateway'))
+        dns = str(request.form.get('nameserver'))
+        status = str(request.form.get('status'))
+
+        
+        number = f.adapter_create_adapter_config(adapter, ip, gateway, dns, status)
+        if number != 0 :
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+
+        return redirect(url_for('adapter'))
         
     return render_template('shared/error.html', text=text)
 
@@ -1548,22 +1577,29 @@ def service_install(current_user):
         gateway = str(request.form.get('gateway'))
         dns = str(request.form.get('nameserver'))
         adapter = str(request.form.get('network-adapter'))
+        nginx = str(request.form.get('server-config'))
 
-        number = f.adapter_install(service, ip, gateway, dns, adapter)
+        number = f.adapter_install(service, ip, gateway, dns, adapter, nginx)
         if number != 0:
-            
-            text = err.error(number)
-            return render_template('shared/error.html', text=text)
+            number = f.adapter_failed_install_restore()
+            if number != 0:
+                text = err.error(number)
+                return render_template('shared/error.html', text=text)
 
-        number = f.adapter_create_adapter_config(adapter, ip, gateway, dns)
+        status = "up"
+        number = f.adapter_create_adapter_config(adapter, ip, gateway, dns, status)
         if number != 0:
-            text = err.error(number)
-            return render_template('shared/error.html', text=text)
+            number = f.adapter_failed_install_restore()
+            if number != 0:
+                text = err.error(number)
+                return render_template('shared/error.html', text=text)
 
         number = f.adapter_merge_config()
         if number != 0:
-            text = err.error(number)
-            return render_template('shared/error.html', text=text)
+            number = f.adapter_failed_install_restore()
+            if number != 0:
+                text = err.error(number)
+                return render_template('shared/error.html', text=text)
 
         return redirect(url_for('adapter'))
 
@@ -1627,6 +1663,24 @@ def service_remove(current_user):
             return render_template('shared/error.html', text=text)
         
         return redirect(url_for('ftp'))
+
+    
+    if id == "adapter":
+        if 'disable-button' in request.form:
+            number = f.adapter_disable()
+            if number != 0:
+                text = err.error(number)
+                return render_template('shared/error.html', text=text)
+        
+            return redirect(url_for('adapter'))
+        
+        if 'disable-and-restore-button' in request.form:
+            number = f.adapter_disable_and_restore()
+            if number != 0:
+                text = err.error(number)
+                return render_template('shared/error.html', text=text)
+        
+            return redirect(url_for('adapter'))
 
     return render_template('shared/error.html')
 
@@ -1697,6 +1751,28 @@ def service_status(current_user):
             return render_template('shared/error.html', text=text)
 
 
+    if id == "adapter":
+        if 'netplan-apply-button' in request.form:
+            service = "netplan"
+            number = f.adapter_netplan_apply(service)
+
+            if number == 0:
+                return redirect(url_for('adapter'))
+            else:
+                text = err.error(number)
+                return render_template('shared/error.html', text=text)
+
+        if 'systemd-networkd-button' in request.form:
+            action = "restart"
+            service = "systemd-networkd"
+            number = f.service_startstop(service, action)
+
+            if number == 0:
+                return redirect(url_for('adapter'))
+            else:
+                text = err.error(number)
+                return render_template('shared/error.html', text=text)
+        
     return render_template('shared/error.html', text=text)
 
 if __name__ == "__main__":

@@ -32,20 +32,62 @@
                         {% endfor %}
                     </select>
                     <br>
+                    <p>!! Webkiszolgáló elérhetőségének módosítása a megadott címre !!</p>
+                    <input type="radio" name="server-config" id="server-config-yes" value="yes" required><label for="server-config-yes">Igen</label>
+                    <br>
+                    <input type="radio" name="server-config" id="server-config-no" value="no" required><label for="server-config-no">Nem</label>
+                    <br>
                     <input type="submit" value="Küldés">
                 </form>
             {% else %}
             
             <p>A hálózati adapter konfigurálása engedélyezve van!</p>
             <p>Az letiltáshoz kattintson a "Tiltás" gombra!</p>
-            <p>Amennyiben az engedélyezés során probléma adódott a konfigurációval, a "Visszaállítás" gomb segítségével az engedélyezés elötti állapot visszaállítható!</p>
+            <p>A "Visszaállítás" gomb segítségével az engedélyezés elötti állapot visszaállítható!</p>
                 <form id="denyadapterForm" action="/service/remove" method="post">
                     <input type="hidden" name="form_id" value="adapter">
-                    <input type="submit" name="deny" value="Tiltás">
-                    <input type="submit" name="deny-and-backup" value="Visszaállítás">
+                    <input type="submit" name="disable-button" value="Tiltás">
+                    <input type="submit" name="disable-and-restore-button" value="Visszaállítás">
                 </form>
-            {% endif %}
+            <hr>
+            <form id="adapterstartstopForm" action="/service/status" method="post">
+                <input type="hidden" name="form_id" value="adapter">
+                <label>Kényszerített netplan apply:</label>
+                <input type="submit" name="netplan-apply-button" value="Küldés">
+                <br><br>
+                <label>Systemd-networkd újraindítás:</label>
+                <input type="submit" name="systemd-networkd-button" value="Újraindítás">
+            </form>
+            <hr>
 
+            <h2>Elérhető hálózati adapterek</h2>
+            <table>
+                <tr class="table-title">
+                    <th>Adapter</th>
+                    <th>MAC-cím</th>
+                    <th>IP-cím / maszk</th>
+                    <th>Alapértelmezett átjáró</th>
+                    <th>DNS szerver</th>
+                    <th>Állapot</th>
+                </tr>
+                <form id="modifyadapterForm" action="/service/modify" method="post">
+                    <input type="hidden" name="form_id" value="adapter-modify-redirect">
+                    {% for i in adaptersconf %}
+                        {% if (loop.index-1) % 6 == 0 %}
+                            </tr><tr>
+                            <td>{{ i }}</td>
+                        {% else %}
+                            <td>{{ i }}</td>
+                        {% endif %}
+                
+                        {% if loop.index % 6 == 0 or loop.last %}
+                            <td><button name="modify-adapter-button" id="modifyadapter{{ adaptersconf[loop.index0 - (loop.index % 6) - 5] }}Button" value="modify_adapter_{{ adaptersconf[loop.index0 - (loop.index % 6) - 5] }}_Button">Módosítás</button></td>
+                        {% endif %}
+                    {% endfor %}
+                </form>
+            
+            </tr></table>
+            {% endif %}
         </div>
     </div>
 </body>
