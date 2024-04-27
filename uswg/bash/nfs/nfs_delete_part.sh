@@ -106,7 +106,7 @@ case "$part" in
             exit 151
         fi
 
-        linenumber=`grep -n "^$access($rule)$" $path| cut -d':' -f1`
+        linenumber=`sudo -S grep -n "^$access($rule)$" $path| cut -d':' -f1`
         
         sudo -S sed -i "${linenumber}d" $path
 
