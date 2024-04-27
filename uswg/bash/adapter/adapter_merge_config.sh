@@ -21,7 +21,7 @@ for i in `ls $path3 | grep "^adapter_.\+\.conf$" | grep -v "^adapter_global.conf
     do
         outadapter=`cat $path3$i | grep "^adapter:.\+$" | cut -d ':' -f 2`
         kk=""
-        kk="ip address show dev ${outadapter} up"
+        kk=`ip address show dev ${outadapter} up`
         if [ ! -z "$kk" ]; then
         
             outip=`cat $path3$i | grep "^addresses:.\+$" | cut -d ':' -f 2`
