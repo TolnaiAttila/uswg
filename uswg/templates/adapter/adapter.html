@@ -87,6 +87,14 @@
                 </form>
             
             </tr></table>
+            <br>
+            <hr>
+            <h2>Hostname módosítása</h2>
+            <form id="hostnameForm" action="/service/modify" method="post">
+                <input type="hidden" name="form_id" value="hostname">
+                <input type="text" name="hostname" id="hostname" value="{{hostname}}" pattern="[a-zA-Z0-9]{1,15}" required>
+                <button type="submit">Küldés</button>
+            </form>
             {% endif %}
         </div>
     </div>

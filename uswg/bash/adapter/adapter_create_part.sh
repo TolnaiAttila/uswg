@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ARGS=$(getopt -n "$0" -o p:i:g:d:n:s: --long part:,ip-address:,gateway:,dns-server:,network-adapter:,status: -- "$@")
+ARGS=$(getopt -n "$0" -o p:i:g:d:n:s:h: --long part:,ip-address:,gateway:,dns-server:,network-adapter:,status:,hostname: -- "$@")
 
 if [ $? -ne 0 ]; then
     exit 161
@@ -14,6 +14,7 @@ gateway=""
 dns=""
 adapter=""
 status=""
+hname=""
 
 while true; do
     case "$1" in
@@ -64,6 +65,15 @@ while true; do
         --status | -s)
             if [[ -n "$2" && "$2" != -* ]]; then
                 status="$2"
+                shift 2
+            else
+                exit 161
+            fi
+            ;;
+
+        --hostname | -h)
+            if [[ -n "$2" && "$2" != -* ]]; then
+                hname="$2"
                 shift 2
             else
                 exit 161
@@ -152,6 +162,18 @@ case "$part" in
                     exit 155
                 fi
             fi
+
+        ;;
+
+
+    hostname)
+        kk=""
+        kk=`echo -n "$hname" | grep "^[a-zA-Z0-9]\{1,15\}$"`
+        if [ -z "$hname" ] || [ -z "$kk" ]; then
+            exit 155
+        fi
+
+        sudo -S hostnamectl set-hostname $hname
 
         ;;
 
