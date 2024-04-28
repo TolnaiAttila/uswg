@@ -1142,3 +1142,27 @@ def adapter_netplan_apply(service):
     number = check.returncode
 
     return number
+
+
+
+def adapter_hostname():
+    part="hostname"
+    try:
+        config = subprocess.check_output(["./bash/adapter/adapter_check_part.sh", op.oppart, part], universal_newlines=True)
+        return config
+
+    except:
+        bash_path = '/bash/adapter/adapter_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number
+
+
+def adapter_modify_hostname(hostname):
+    part = "hostname"
+    bash_path = 'bash/adapter/adapter_create_part.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.ophostname2, hostname])
+    number = check.returncode
+
+    return number

@@ -309,9 +309,11 @@ def adapter(current_user):
     adapterarray = f.list_all_network_adapter()
     allowed = f.adapter_status()
     adaptersconf = f.adapter_check_all_adapter()
+    hostname = f.adapter_hostname()
+    
     if isinstance(adaptersconf, int):
-        return render_template('adapter/adapter.html', allowed=allowed, adapterarray=adapterarray)
-    return render_template('adapter/adapter.html', allowed=allowed, adapterarray=adapterarray, adaptersconf=adaptersconf)
+        return render_template('adapter/adapter.html', allowed=allowed, adapterarray=adapterarray, hostname=hostname)
+    return render_template('adapter/adapter.html', allowed=allowed, adapterarray=adapterarray, adaptersconf=adaptersconf, hostname=hostname)
 
 
 
@@ -1464,7 +1466,16 @@ def service_modify(current_user):
             return render_template('shared/error.html', text=text)
 
         return redirect(url_for('adapter'))
+
+
+    if id == "hostname":
+        hostname = str(request.form.get('hostname'))
+        number = f.adapter_modify_hostname(hostname)
+        if number != 0 :
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
         
+        return redirect(url_for('adapter'))
     return render_template('shared/error.html', text=text)
 
 @app.route("/service/install", methods=['POST'])

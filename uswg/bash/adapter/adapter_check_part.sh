@@ -196,6 +196,12 @@ case "$part" in
             done
             ;;
 
+    hostname)
+        hostname=`hostname`
+        echo "$hostname"
+
+        ;;
+
     *)
         exit 155
         ;;
