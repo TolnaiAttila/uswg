@@ -342,6 +342,48 @@ case $service in
             sudo -S nginx -s reload
         fi
         ;;
+
+    openssh-server)
+        sudo -S apt update
+        sudo -S apt install openssh-server -y
+        
+        if [ $? -ne 0 ]; then
+            exit 153
+        fi
+
+
+
+        path="/etc/.uswg_configs/ssh/"
+        pathconfig="/etc/ssh/sshd_config"
+        pathfglobal="/etc/.uswg_configs/ssh/ssh_fglobal.conf"
+        pathsglobal="/etc/.uswg_configs/ssh/ssh_sglobal.conf"
+
+        sudo -S mkdir $path
+
+        ./bash/shared/exist_file.sh $pathconfig
+        if [ $? -ne 0 ]; then
+            exit 151
+        fi
+
+        sudo -S touch $pathfglobal
+
+        sudo -S cat $pathconfig | grep -v "\(^#.*$\)\|\(^$\)" | sudo -S tee -a $pathfglobal > /dev/null
+        sudo -S echo "AddressFamily any" | sudo -S tee -a $pathfglobal > /dev/null
+        
+        sudo -S touch $pathsglobal
+        
+        sudo -S echo "Port 22" | sudo -S tee -a $pathsglobal > /dev/null
+        sudo -S echo "ListenAddress 0.0.0.0" | sudo -S tee -a $pathsglobal > /dev/null
+
+        sudo -S truncate -s 0 $pathconfig
+
+        sudo -S cat $pathfglobal | sudo -S tee -a $pathconfig > /dev/null
+        sudo -S cat $pathsglobal | sudo -S tee -a $pathconfig > /dev/null
+
+        sudo -S systemctl enable --now ssh
+        sudo systemctl restart ssh
+
+        ;;
         
     *)
         exit 155

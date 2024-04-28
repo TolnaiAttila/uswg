@@ -171,6 +171,19 @@ case $service in
         sudo -S systemctl restart systemd-networkd
         ;;
 
+
+    openssh-server)
+        service="openssh-server"
+        sudo -S systemctl stop $service
+        sudo -S apt purge $service -y
+        
+        ./bash/shared/status.sh $service
+        if [ $? -eq 159 ]; then
+            sudo systemctl reset-failed $service
+        fi
+        sudo -S rm -d -r /etc/.uswg_configs/ssh
+        ;;
+
     *)
         exit 155
         ;;
