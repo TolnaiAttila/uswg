@@ -1166,3 +1166,31 @@ def adapter_modify_hostname(hostname):
     number = check.returncode
 
     return number
+
+
+
+def ssh_startup_status():
+    part="startup-status"
+    try:
+        config = subprocess.check_output(["./bash/ssh/ssh_check_part.sh", op.oppart, part], universal_newlines=True)
+        array = config.split("\n")
+        if array[-1] == "":
+            array.pop(-1)
+        return array
+
+    except:
+        bash_path = '/bash/ssh/ssh_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number
+
+
+
+def ssh_startup_modify(status):
+    part = "startup"
+    bash_path = 'bash/ssh/ssh_modify_part.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opstatus, status])
+    number = check.returncode
+
+    return number

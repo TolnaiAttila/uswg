@@ -3,7 +3,8 @@
 service=$1
 
 installed=`systemctl list-units --type=service --all | grep $service.service`
-if [ -z "$installed" ]; then
+installed2=`systemctl list-unit-files --type=service --state=disabled --no-pager | grep $service.service`
+if [ -z "$installed" ] && [ -z "$installed2" ]; then
     exit 156
 else
     status=`systemctl is-active $service`

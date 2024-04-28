@@ -317,6 +317,22 @@ def adapter(current_user):
 
 
 
+@app.route("/ssh")
+@token_required
+def ssh(current_user):
+    service = "ssh"
+    status = f.status(service)
+    startup = f.ssh_startup_status()
+    
+    return render_template('ssh/ssh.html', status=status, startup=startup)
+
+
+@app.route("/ufw")
+@token_required
+def ufw(current_user):
+    return render_template('ufw/ufw.html')
+
+
 @app.route("/service/add", methods=['POST'])
 @token_required
 def service_add(current_user):
@@ -1476,6 +1492,19 @@ def service_modify(current_user):
             return render_template('shared/error.html', text=text)
         
         return redirect(url_for('adapter'))
+    
+    
+    if id == "ssh-startup":
+        status = str(request.form.get('ssh-startup'))
+        number = f.ssh_startup_modify(status)
+
+        if number != 0 :
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+
+        return redirect(url_for('ssh'))
+    
+    
     return render_template('shared/error.html', text=text)
 
 @app.route("/service/install", methods=['POST'])
@@ -1619,6 +1648,18 @@ def service_install(current_user):
 
         return redirect(url_for('adapter'))
 
+
+    if id == "ssh":
+        service = "openssh-server"
+        number = f.service_install(service)
+        
+        if number != 0:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        return redirect(url_for('ssh'))
+
+
     return render_template('shared/error.html', text=text)
 
 @app.route("/service/remove", methods=['POST'])
@@ -1697,6 +1738,17 @@ def service_remove(current_user):
                 return render_template('shared/error.html', text=text)
         
             return redirect(url_for('adapter'))
+
+    
+    if id == "ssh":
+        service = "openssh-server"
+        number = f.service_remove(service)
+
+        if number != 0:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        return redirect(url_for('ssh'))
 
     return render_template('shared/error.html')
 
@@ -1788,6 +1840,19 @@ def service_status(current_user):
             else:
                 text = err.error(number)
                 return render_template('shared/error.html', text=text)
+
+
+
+    if id == "ssh":
+        action = str(request.form.get('startstop'))
+        service = "ssh"
+        number = f.service_startstop(service, action)
+
+        if number == 0:
+            return redirect(url_for('ssh'))
+        else:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
         
     return render_template('shared/error.html', text=text)
 

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/sidebar_style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/shared_style.css') }}" />
+    <title>SSH</title>
+</head>
+<body>
+    <div class="flex_site">
+        <div class="sidebar">
+            {% include 'shared/sidebar.html' %}
+        </div>
+        <div class="main_site">
+
+    {% if status == 156 %}
+        <p>Az SSH nincs telepítve.</p>
+        <form id="installsshForm" action="/service/install" method="post">
+            <input type="hidden" name="form_id" value="ssh">
+            <input type="submit" value="Telepítés">
+        </form>
+        
+
+    {% else %}
+        <p>Az SSH telepítve van.</p>
+        <form action="/service/remove" method="post">
+            <input type="hidden" name="form_id" value="ssh">
+
+            <p>Az eltávolításhoz kattintson az "Eltávolítás" gombra!</p>
+
+            <button type="submit">Eltávolítás</button>
+        </form>
+        {% if status == 157 %}
+            <p>Az SSH státusza: Aktív</p>
+        {% else %}
+            {% if status == 158 %}
+                <p>Az SSH státusza: Inaktív</p>
+            {% else %}
+                {% if status == 159 %}
+                    <p>Az SSH státusza: Hiba</p>
+                {% else %}
+                    <p>Az SSH státusza: Ismeretlen</p>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
+        {% if status == 157 %}
+        <form action="/service/status" method="post">
+            <input type="hidden" name="form_id" value="ssh">
+
+            <input type="radio" id="restart" name="startstop" value="restart">
+            <label for="restart">Újraindítás</label><br>
+    
+            <input type="radio" id="stop" name="startstop" value="stop">
+            <label for="stop">Leállítás</label><br>
+
+            <button type="submit">Küldés</button>
+        </form>
+        {% else %}
+        <form action="/service/status" method="post">
+            <input type="hidden" name="form_id" value="ssh">
+
+            <input type="radio" id="restart" name="startstop" value="restart">
+            <label for="restart">Újraindítás</label><br>
+    
+            <button type="submit">Küldés</button>
+        </form>
+        {% endif %}
+
+        <h1>Konfiguráció</h1>
+        <h2>Indulás a rendszerrel együtt</h2>
+        <form action="/service/modify" method="post">
+            <input type="hidden" name="form_id" value="ssh-startup">
+
+            <input type="radio" id="ssh-startup-yes" name="ssh-startup" value="yes" {% if startup[0] == "enabled" %} checked {% endif %}>
+            <label for="ssh-startup-yes">Induljon a rendszerrel</label><br>
+    
+            <input type="radio" id="ssh-startup-no" name="ssh-startup" value="no"{% if startup[0] == "disabled" %} checked {% endif %}>
+            <label for="ssh-startup-no">Ne induljon a rendszerrel</label><br>
+
+            <button type="submit">Küldés</button>
+        </form>
+    {% endif %}
+        </div>
+    </div>
+</body>
+</html>
