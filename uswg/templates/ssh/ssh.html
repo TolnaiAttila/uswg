@@ -81,6 +81,21 @@
 
             <button type="submit">Küldés</button>
         </form>
+
+        <h2>Hozzáférés</h2>
+        <form action="/service/modify" method="post">
+            <input type="hidden" name="form_id" value="ssh-access">
+            <label for="ip-address">Ip-cím:</label>
+            <select name="ip-address" id="ip-address" required>
+                <option value="any: 0.0.0.0" {% if i == selectedip[0] %} selected {% endif %} >any: 0.0.0.0</option>
+                {% for i in iplist %}
+                <option value="{{ i }}" {% if i == selectedip[0] %} selected {% endif %}>{{ i }}</option>
+                {% endfor %}
+            </select><br><br>
+            <label for="port">Port:</label>
+            <input type="text" name="port" id="port" pattern="[0-9]{1,5}" value="{{ selectedport[0] }}" required>
+            <button type="submit">Küldés</button>
+        </form>
     {% endif %}
         </div>
     </div>
