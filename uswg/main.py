@@ -323,8 +323,11 @@ def ssh(current_user):
     service = "ssh"
     status = f.status(service)
     startup = f.ssh_startup_status()
-    
-    return render_template('ssh/ssh.html', status=status, startup=startup)
+    iplist = f.ssh_list_ip_address()
+    selectedport = f.ssh_selected_port()
+    selectedip = f.ssh_selected_ip_address()
+
+    return render_template('ssh/ssh.html', status=status, startup=startup, iplist=iplist, selectedport=selectedport, selectedip=selectedip)
 
 
 @app.route("/ufw")
@@ -1504,6 +1507,23 @@ def service_modify(current_user):
 
         return redirect(url_for('ssh'))
     
+
+    if id == "ssh-access":
+        ip = str(request.form.get('ip-address'))
+        port = str(request.form.get('port'))
+
+        number = f.ssh_access_modify(ip, port)
+        if number != 0 :
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        number = f.ssh_merge_config()
+        if number != 0 :
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        return redirect(url_for('ssh'))
+        
     
     return render_template('shared/error.html', text=text)
 

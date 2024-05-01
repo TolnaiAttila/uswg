@@ -1194,3 +1194,77 @@ def ssh_startup_modify(status):
     number = check.returncode
 
     return number
+
+
+
+def ssh_list_ip_address():
+    part="list-ip-address"
+    try:
+        config = subprocess.check_output(["./bash/ssh/ssh_check_part.sh", op.oppart, part], universal_newlines=True)
+        array = config.split("\n")
+        if array[-1] == "":
+            array.pop(-1)
+        return array
+
+    except:
+        bash_path = '/bash/ssh/ssh_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number
+
+
+
+def ssh_selected_port():
+    part="selected-port"
+    try:
+        config = subprocess.check_output(["./bash/ssh/ssh_check_part.sh", op.oppart, part], universal_newlines=True)
+        array = config.split("\n")
+        if array[-1] == "":
+            array.pop(-1)
+        return array
+
+    except:
+        bash_path = '/bash/ssh/ssh_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number
+
+
+
+def ssh_selected_ip_address():
+    part="selected-ip-address"
+    try:
+        config = subprocess.check_output(["./bash/ssh/ssh_check_part.sh", op.oppart, part], universal_newlines=True)
+        array = config.split("\n")
+        if array[-1] == "":
+            array.pop(-1)
+        
+        return array
+
+    except:
+        bash_path = '/bash/ssh/ssh_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number
+
+
+
+def ssh_access_modify(ip, port):
+    part = "access"
+    bash_path = 'bash/ssh/ssh_modify_part.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opip, ip, op.opport, port])
+    number = check.returncode
+
+    return number
+
+
+
+def ssh_merge_config():
+    bash_path = 'bash/ssh/ssh_merge_config.sh'
+    check = subprocess.run(['bash', bash_path])
+    number = check.returncode
+
+    return number
