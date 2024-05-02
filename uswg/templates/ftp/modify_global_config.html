@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/sidebar_style.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/shared_style.css') }}" />
-    <title>FTP modify global config</title>
+    <title>FTP globális konfiguráció</title>
 </head>
 <body>
     <div class="flex_site">
@@ -89,7 +89,7 @@
                     </table>
                     
                     <br>
-                    <label for="message">Message text:</label><br>
+                    <label for="message">Üzenet szövege:</label><br>
                     <input type="text" id="message" name="message" {% if message == "empty" %} value="" {% else %} value="{{ message }}" {% endif %}>
 
                     <h3>Anonymous megosztás beállítások</h3>

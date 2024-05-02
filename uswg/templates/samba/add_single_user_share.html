@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/shared_style.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/sidebar_style.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/samba_add_nobody_share_style.css') }}" />
-    <title>New single user share</title>
+    <title>Új Samba megosztás</title>
 </head>
 <body>
     <div class="flex_site">
@@ -14,7 +14,7 @@
         {% include 'shared/sidebar.html' %}
         </div>
         <div class="main_site">
-            <h1>Új felhasználó nélküli megosztás</h1>
+            <h1>Új egy felhasználós megosztás</h1>
             <form id="addsambasingleusershareForm" action="/service/add" method="post">
                 <input type="hidden" name="form_id" value="samba-add-single-user-share">
                 

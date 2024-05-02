@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/sidebar_style.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/shared_style.css') }}" />
-    <title>Modify share</title>
+    <title>Megosztás módosítás</title>
 </head>
 <body>
     <div class="flex_site">
@@ -13,7 +13,7 @@
             {% include 'shared/sidebar.html' %}
         </div>
         <div class="main_site">
-            <h1>Modify {{configarray[0]}} share</h1>
+            <h1>Egy felhasználós megosztás módosítása</h1>
             <form id="modifysambasingleusershareForm" action="/service/modify" method="post">
                 <input type="hidden" name="form_id" value="samba-modify-single-user-share">
                 <input type="hidden" name="share-name" value="{{configarray[0]}}" >

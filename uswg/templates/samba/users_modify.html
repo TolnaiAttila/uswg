@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/sidebar_style.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/samba_users_style.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/shared_style.css') }}" />
-    <title>Samba users</title>
+    <title>Samba felhasználók</title>
 </head>
 <body>
 
@@ -18,6 +18,7 @@
         <div class="main_site">
             <div class="sys-user-flex-div">
                 <div class="sys_users">
+                    <h2>Felhasználók</h2>
                     <table>
                         <tr class="table-title">
                             <th>Rendszer felhasználók</th>
@@ -68,21 +69,9 @@
                     </table>
                 </form>
             </div>
-            
-            <h2>Rendszer felhasználó létrehozása</h2>
-            <p>A rendszerben létrehozott felhasználók is megjelennek és használhatók.</p>
-            <p>Az itt létrehozott felhasználó tulajdonságai:</p>
-            <ul>
-                <li>A nevén kívül más információ nem lesz eltárolva a felhasználóról</li>
-                <li>A users csoport (id: 100) tagja lesz</li>
-                <li>Rendelkezni fog home könyvtárral</li>
-                <li>Nem lesz jelszava</li>
-                <li>A bejelentkezés le lesz tiltva a létrehozott felhasználóval</li>
-                <li>Alapértelmezetten nem lesz hozzárendelve a samba-hoz</li>
-                
-            </ul>
-
             <br>
+            <h2>Rendszer felhasználó létrehozása</h2>
+            
             <p>Új felhasználó hozzáadása:</p>
             <form id="addsystemuserForm" action="/service/add" method="post">
                 <input type="hidden" name="form_id" value="add-system-user">

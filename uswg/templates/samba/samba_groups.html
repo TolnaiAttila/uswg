@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/sidebar_style.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/shared_style.css') }}" />
-    <title>Samba groups</title>
+    <title>Samba csoportok</title>
 </head>
 <body>
     <div class="flex_site">
@@ -42,7 +42,7 @@
                 <input type="hidden" name="form_id" value="samba-add-group">
                 <label for="group-name">Csoport neve: </label>
                 <input type="text" name="group-name" id="group-name" pattern="[a-zA-Z0-9\-\.]*" required>
-                <p>Felhasználók hozzáadása</p>
+                <p>Felhasználók hozzáadása:</p>
                 {% for i in usersarray %}
                     <input type="checkbox" name="user-{{i}}" id="user-{{i}}" value="{{ i }}">
                     <label for="user-{{ i }}">{{ i }}</label>
