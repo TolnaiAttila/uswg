@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/shared_style.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/sidebar_style.css') }}" />
    
-    <title>Modify share</title>
+    <title>Megosztás módosítás</title>
 </head>
 <body>
     <div class="flex_site">
@@ -14,7 +14,7 @@
             {% include 'shared/sidebar.html' %}
         </div>
         <div class="main_site">
-            <h1>Modify {{configarray[0]}} share</h1>
+            <h1>Csoportos megosztás módosítása</h1>
             <form id="modifysambagroupshareForm" action="/service/modify" method="post">
                 <input type="hidden" name="form_id" value="samba-modify-group-share">
                 <input type="hidden" name="share-name" value="{{configarray[0]}}" >

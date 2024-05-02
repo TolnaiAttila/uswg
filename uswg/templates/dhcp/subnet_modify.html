@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/shared_style.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/sidebar_style.css') }}" />
-    <title>Subnet módosítás</title>
+    <title>Alhálózat módosítás</title>
 </head>
 <body>
     <div class="flex_site">
@@ -16,7 +16,7 @@
     <form id="modifysubnetForm" action="/service/modify" method="post">
         <input type="hidden" name="form_id" value="subnet-modify">
 
-        <h1>Subnet módosítása</h1><br>
+        <h1>Alhálózat módosítása</h1><br>
         <h2>Alhálózat neve: {{ configarray[0] }}</h2>
         <input type="hidden" value="{{ configarray[0] }}" id="subnet-name" name="subnet-name" pattern="[a-zA-Z0-9\-\.]*" required>
         <br>

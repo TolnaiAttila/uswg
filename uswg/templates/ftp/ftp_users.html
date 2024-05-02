@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/ftp_users_style.css') }}" />
     <script src="{{url_for('static', filename='scripts/ftp_users_javascript.js')}}"></script>
 
-    <title>FTP users</title>
+    <title>FTP felhasználók</title>
 </head>
 <body>
     <div class="flex_site">
@@ -48,19 +48,8 @@
                     </form>
                 </div>
             </div>
-
-            <h2>Rendszer felhasználó létrehozása</h2>
-            <p>A rendszerben létrehozott felhasználók is megjelennek és használhatók.</p>
-            <p>Az itt létrehozott felhasználó tulajdonságai:</p>
-            <ul>
-                <li>A nevén kívül más információ nem lesz eltárolva a felhasználóról</li>
-                <li>A users csoport (id: 100) tagja lesz</li>
-                <li>Rendelkezni fog home könyvtárral</li>
-                <li>Nem lesz jelszava</li>
-                <li>A bejelentkezés le lesz tiltva a létrehozott felhasználóval</li>
-            </ul>
-
             <br>
+            <h2>Rendszer felhasználó létrehozása</h2>
             <p>Új felhasználó hozzáadása:</p>
             <form id="addsystemuserForm" action="/service/add" method="post">
                 <input type="hidden" name="form_id" value="add-ftp-system-user">
