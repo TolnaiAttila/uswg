@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/help_style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/sidebar_style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/shared_style.css') }}" />
+    <title>Felhasználói dokumentáció</title>
+</head>
+<body>
+    <div class="flex_site">
+        <div class="sidebar">
+            {% include 'shared/sidebar.html' %}
+        </div>
+
+        <div class="main_site">
+            <div class="doc">
+                <div class="toc">
+                    <h1>Felhasználói dokumentáció</h1>
+                    <h2>Tartalom</h2>
+                    <div class="toc_content">
+                        <ol>
+                            <a href="#general"><li>Általános</li></a>
+                            <a href="#adapter"><li>Adapter</li></a>
+                            <a href="#dhcp"><li>DHCP</li></a>
+                            <a href="#nfs"><li>NFS</li></a>
+                            <a href="#samba"><li>Samba</li></a>
+                            <a href="#ftp"><li>FTP</li></a>
+                            <a href="#ssh"><li>SSH</li></a>
+                            <a href="#ufw"><li>UFW</li></a>
+                        </ol>
+                    </div>
+                    <br>
+                    <hr>
+                </div>
+                <div class="content">
+                    <h2 id="general">Általános</h2>
+                    <p></p>
+                    <hr>
+                    <h2 id="adapter">Adapter</h2>
+                    <hr>
+                    <h2 id="dhcp">DHCP</h2>
+                        <h3>Telepítés</h3>
+                            <p>A szolgáltatás használatához telepíteni kell azt. Ha már telepítve volt a rendszeren és nem az USWG-n keresztül lett telepítve, akkor el kell távolítani és újra feltelepíteni, most viszont az USWG-n keresztül. Ez azért szükséges mert az alkalmazás a szolgáltatás telepítése mellett létrehozza a működéshez szükséges állományokat is.</p>
+                            <p>Amennyiben a szolgáltatás nincs telepítve a "Telepítés" gomb segítségével elindíthatjuk azt. A megjelenő űrlapon a következő információkat kell, illetve lehet megadni: </p>
+                            <table>
+                                <tr class="table-title">
+                                    <th>Megnevezés</th>
+                                    <th>Kötelező</th>
+                                    <th>Típus</th>
+                                    <th>Opciók/formátum</th>
+                                </tr>
+                                <tr>
+                                    <td>Authoritative</td>
+                                    <td>Igen</td>
+                                    <td>Radio gomb</td>
+                                    <td><p id="table_p">Opciók: Igen/Nem</p></td>
+                                </tr>
+                                <tr>
+                                    <td>Ddns-update-style</td>
+                                    <td>Igen</td>
+                                    <td>Radio gomb</td>
+                                    <td><p id="table_p">Opciók: None/Interim/Standard</p></td>
+                                </tr>
+                                <tr>
+                                    <td>Alhálózat neve</td>
+                                    <td>Igen</td>
+                                    <td>Szöveg</td>
+                                    <td>
+                                        <p id="table_p">Használható formátum: Számok/Kis és nagybetűk/Speciális karakterek: . és -</p>
+                                    </td>
+                                        
+                                </tr>
+                                <tr>
+                                    <td>Alhálózat címe</td>
+                                    <td>Igen</td>
+                                    <td>Szöveg</td>
+                                    <td><p id="table_p">Formátum: 192.168.1.0</p></td>
+                                </tr>
+                                <tr>
+                                    <td>Kezdő cím</td>
+                                    <td>Igen</td>
+                                    <td>Szöveg</td>
+                                    <td><p id="table_p">Formátum: 192.168.1.20</p></td>
+                                </tr>
+                                <tr>
+                                    <td>Utolsó cím</td>
+                                    <td>Igen</td>
+                                    <td>Szöveg</td>
+                                    <td><p id="table_p">Formátum: 192.168.1.50</p></td>
+                                </tr>
+                                <tr>
+                                    <td>DNS szerver címe</td>
+                                    <td>Igen</td>
+                                    <td>Szöveg</td>
+                                    <td><p id="table_p">Formátum: 192.168.1.1</p></td>
+                                </tr>
+                                <tr>
+                                    <td>Broadcast cím</td>
+                                    <td>Igen</td>
+                                    <td>Szöveg</td>
+                                    <td><p id="table_p">Formátum: 192.168.1.255</p></td>
+                                </tr>
+                                <tr>
+                                    <td>Router címe</td>
+                                    <td>Igen</td>
+                                    <td>Szöveg</td>
+                                    <td><p id="table_p">Formátum: 192.168.1.1</p></td>
+                                </tr>
+                                <tr>
+                                    <td>Subnet maszk</td>
+                                    <td>Igen</td>
+                                    <td>Szöveg</td>
+                                    <td><p id="table_p">Formátum: 255.25.255.0</p></td>
+                                </tr>
+                                <tr>
+                                    <td>Default least time</td>
+                                    <td>Igen</td>
+                                    <td>Szöveg</td>
+                                    <td><p id="table_p">Formátum: Csak szám</p></td>
+                                </tr>
+                                <tr>
+                                    <td>Max least time</td>
+                                    <td>Igen</td>
+                                    <td>Szöveg</td>
+                                    <td><p id="table_p">Formátum: Csak szám</p></td>
+                                </tr>
+                                <tr>
+                                    <td>NTP szerver</td>
+                                    <td>Nem</td>
+                                    <td>Szöveg</td>
+                                    <td><p id="table_p">Formátum: 192.168.1.1</p></td>
+                                </tr>
+                                <tr>
+                                    <td>Domain név</td>
+                                    <td>Nem</td>
+                                    <td>Szöveg</td>
+                                    <td><p id="table_p">Formátum: uswg.local</p></td>
+                                </tr>
+                                <tr>
+                                    <td>Hálózati adapter kiválasztása</td>
+                                    <td>Igen</td>
+                                    <td>Legördülő lista</td>
+                                    <td><p id="table_p">A rendszerhez csatlakoztatott hálózati adapterek</p></td>
+                                </tr>
+                            </table>
+                            <br>
+                            <img src="{{ url_for('static',filename='img/dhcp_install.png') }}" alt="dhcp_install">
+                            <br>
+                    <p>A telepítés után a megadott adatok érvénybe léptetéséhez újra kell indítani a szolgáltatást.</p>
+                    <h3>Általános műveletek</h3>
+                    <p>Lehetőség van az "Eltávolítás" gomb segítségével törölni a szolgáltatást és a hozzá tartozó konfigurációt.</p>
+                    <p>Megjelenik a jelenlegi státusz. Ez lehet "Aktív", "Inaktív", "Hiba", "Ismeretlen". A státusznak megfelelően lehetőség van a szolgáltatás leállítására és/vagy újraindítására.</p>
+                    <img src="{{ url_for('static', filename='img/dhcp_status.png')}}" alt="dhcp_status">
+                    <h3>Konfigurálás</h3>
+                    <p>Minden elvégzett módosítás után a módosítások életbeléptetéséhez újra kell indítani a szolgáltatást.</p>
+                    <h4>Globális beállítások</h4>
+                    <p>Ezek a beállítások a authoritativitás és a Ddns-update-style. Az éppen beállított értéknek megfelelő radio gomb kerül bejelölésre. A módosításhoz be kell jelölni a kívánt opciót és a "Küldés" gomb segítségével véglegesíteni azt.</p>
+                    <img src="{{ url_for('static', filename='img/dhcp_global.png')}}" alt="dhcp_global">
+                    <h4>Alhálózatok</h4>
+                    <p>Az alhálózatok és az azokra vonatkozó információk táblázatosan kerülnek megjelenítésre. At opcionálisan megadható adatok kihagyása esetén "---" karakterek jelennek meg. Lehetőség van ezek módosítására a táblázat jobb oldalán található "Módosítás" gombbal, vagy azok törlésére a "Törlés" gombbal.</p>
+                    <img id="img_exception" src="{{ url_for('static', filename='img/dhcp_subnets.png')}}" alt="dhcp_subnets">
+                    <p>A "Módosítás" gom megnyomása esetén átirányításra kerül a módosító oldalra, ahol a kiválasztott alhálózat adatai jelennek meg beviteli mezőkben. Ezekre a telepítésnél is megadott formátumok vonatkoznak. A név kivételével az összes adat módosítható. A véglegesítéshez a "Küldés" gombot kell lenyomni.</p>
+                    <img src="{{ url_for('static', filename='img/dhcp_subnet_modify.png')}}" alt="dhcp_subnet_modify">
+                    <p>Lehetőség van az "Új alhálózat hozzáadása" gomb segítségével új alhálózat hozzáadásához. a gomb megnyomása után megjelenik egy ugyan olyan űrlap, mint a telepítés során. A hozzáadás véglegesítéséhez a "Küldés" gombot kell megnyomni. Sikeres hozáadás után meg fog jelenni a táblázatban.</p>
+
+                    <h4>Statikus hosztok</h4>
+                    <p>Az eszközökhoz statikus IP-cím rendelhető, amennyiben szükséges. Az "Új statikus hoszt" gombbal előhívott űrlapon meg kell adni az alábbi információkat:</p>
+                    <table>
+                        <tr class="table-title">
+                            <th>Megnevezés</th>
+                            <th>Kötelező</th>
+                            <th>Típus</th>
+                            <th>Opciók/formátum</th>
+                        </tr>
+                        <tr>
+                            <td>Statikus hoszt neve</td>
+                            <td>Igen</td>
+                            <td>Szöveg</td>
+                            <td><p id="table_p">Használható formátum: Számok/Kis és nagybetűk/Speciális karakterek: . és -</p></td>
+                        </tr>
+                        <tr>
+                            <td>IP-cím</td>
+                            <td>Igen</td>
+                            <td>Szöveg</td>
+                            <td><p id="table_p">Formátum: 192.168.1.10</p></td>
+                        </tr>
+                        <tr>
+                            <td>MAC-cím</td>
+                            <td>Igen</td>
+                            <td>Szöveg</td>
+                            <td><p id="table_p">Formátum: 00:0C:29:AC:30:41</p></td>
+                        </tr>
+                    </table>
+                    <br>
+                    <img src="{{url_for('static', filename='img/dhcp_static_add.png')}}" alt="dhcp_static_add">
+                    <p>A "Küldés" gombbal véglegesíteni lehet a statikus hosztot. Ha sikeresen hozzáadásra került, akkor a táblázatban meg fog jelenni.</p>
+                    <img src="{{url_for('static', filename='img/dhcp_static_hosts.png')}}" alt="dhcp_static_hosts">
+                    <p>Lehtőség van a "Törlés" gombbal törölni a hosztot, a "Módosítás" gomb megnyomása átirányít egy másik oldalra, ahol a iválasztott hoszt adatai szerkeszthető formátumban jelennek meg. A név kivételével minden módosítható az elöbbiekben megadott formátumok szerint. A "Küldés" gombbal véglegesíthető a változtatás.
+                    <img src="{{url_for('static', filename='img/dhcp_static_modify.png')}}" alt="dhcp_static_modify">
+                    <h4>Mentés/Visszaállítás</h4>
+                    <p>A megfelelő konfiguráció megadása után lehetőség van menteni azt. A "Mentés" gomb megnyomáával az aktuális konfiguráció mentésre kerül. A mentés időpontja megjelenítésre kerül. A mentett beállítás a "Visszaállítás" gombbal visszaállítható.</p>
+                    <img src="{{url_for('static', filename='img/dhcp_backup.png')}}" alt="dhcp_backup">
+                    <hr>
+                    <h2 id="nfs">NFS</h2>
+                    <hr>
+                    <h2 id="samba">Samba</h2>
+                    <hr>
+                    <h2 id="ftp">FTP</h2>
+                    <hr>
+                    <h2 id="ssh">SSH</h2>
+                    <hr>
+                    <h2 id="ufw">UFW</h2>
+                    <hr>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

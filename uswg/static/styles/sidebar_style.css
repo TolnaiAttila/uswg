@@ -21,3 +21,31 @@
 .sidenav a:hover {
   color: #f1f1f1;
 }
+
+
+.sidenav img{
+  height: 100px;
+  width: 100px;
+}
+
+
+.sidenav_space {
+  height: 90%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sidenav_space p{
+  font-size: 20px;
+}
+
+#no_padding_a{
+  padding: 0px;
+  text-align: center;
+}
+.sidenav img {
+  display: block;
+  margin: 0 auto;
+}

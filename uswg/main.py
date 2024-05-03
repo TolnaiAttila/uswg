@@ -336,6 +336,13 @@ def ufw(current_user):
     return render_template('ufw/ufw.html')
 
 
+
+@app.route("/help")
+@token_required
+def help(current_user):
+    return render_template('help/help.html')
+
+
 @app.route("/service/add", methods=['POST'])
 @token_required
 def service_add(current_user):
