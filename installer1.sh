@@ -34,7 +34,7 @@ sudo cp uswg.conf /home/uswguser
 sudo cp uswg.service /home/uswguser
 sudo cp installer2.sh /home/uswguser
 sudo cp uswglog.conf /home/uswguser
-sudo cp uswg /home/uswguser
+sudo cp uswg_ufw_app /home/uswguser
 
 sudo chown -R uswguser:sudo /home/uswguser
 sudo chmod -R 770 /home/uswguser/

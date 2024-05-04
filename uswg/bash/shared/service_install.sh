@@ -384,7 +384,67 @@ case $service in
         sudo systemctl restart ssh
 
         ;;
+    
+    ufw)
+        sudo -S apt update
+        sudo -S apt install ufw -y
         
+        if [ $? -ne 0 ]; then
+            exit 153
+        fi
+
+        path="/etc/.uswg_configs/ufw/"
+        pathapp="/etc/ufw/applications.d/uswg"
+        sudo -S mkdir $path
+
+
+        ./bash/shared/exist_file.sh $pathapp
+        if [ $? -ne 0 ]; then
+            sudo -S touch $pathapp
+
+            sudo -S echo "[uswgSamba]" | sudo -S tee -a $pathapp
+            sudo -S echo "title=USWG Samba service" | sudo -S tee -a $pathapp
+            sudo -S echo "description=Allow Samba service over USWG" | sudo -S tee -a $pathapp
+            sudo -S echo "ports=137,138/udp|139,445/tcp" | sudo -S tee -a $pathapp
+            sudo -S echo "" | sudo -S tee -a $pathapp
+
+            sudo -S echo "[uswgSSH]" | sudo -S tee -a $pathapp
+            sudo -S echo "title=USWG SSH service" | sudo -S tee -a $pathapp
+            sudo -S echo "description=Allow SSH service over USWG" | sudo -S tee -a $pathapp
+            sudo -S echo "ports=22/tcp" | sudo -S tee -a $pathapp
+            sudo -S echo "" | sudo -S tee -a $pathapp
+
+            sudo -S echo "[uswgFTP]" | sudo -S tee -a $pathapp
+            sudo -S echo "title=USWG FTP service" | sudo -S tee -a $pathapp
+            sudo -S echo "description=Allow FTP service over USWG" | sudo -S tee -a $pathapp
+            sudo -S echo "ports=20,21,990,40000:50000/tcp" | sudo -S tee -a $pathapp
+            sudo -S echo "" | sudo -S tee -a $pathapp
+
+            sudo -S echo "[uswgNFS]" | sudo -S tee -a $pathapp
+            sudo -S echo "title=USWG NFS service" | sudo -S tee -a $pathapp
+            sudo -S echo "description=Allow NFS service over USWG" | sudo -S tee -a $pathapp
+            sudo -S echo "ports=2049/tcp|2049/udp" | sudo -S tee -a $pathapp
+            sudo -S echo "" | sudo -S tee -a $pathapp
+            
+            sudo -S echo "[uswgDHCP]" | sudo -S tee -a $pathapp
+            sudo -S echo "title=USWG DHCP service" | sudo -S tee -a $pathapp
+            sudo -S echo "description=Allow DHCP service over USWG" | sudo -S tee -a $pathapp
+            sudo -S echo "ports=67/udp" | sudo -S tee -a $pathapp
+            sudo -S echo "" | sudo -S tee -a $pathapp
+            
+            sudo -S echo "[uswgFull]" | sudo -S tee -a $pathapp
+            sudo -S echo "title=USWG all services" | sudo -S tee -a $pathapp
+            sudo -S echo "description=Allow all services over USWG" | sudo -S tee -a $pathapp
+            sudo -S echo "ports=139,445,22,20,21,990,2049,40000:50000/tcp|2049,67,137,138/udp" | sudo -S tee -a $pathapp
+
+        fi
+        sudo -S ufw default allow incoming
+        sudo -S ufw default allow outgoing
+        sudo -S ufw allow 'Nginx full'
+        sudo -S ufw enable 
+        sudo -S ufw reload
+        ;;
+
     *)
         exit 155
         ;;
