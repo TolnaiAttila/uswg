@@ -13,6 +13,114 @@
             {% include 'shared/sidebar.html' %}
         </div>
         <div class="main_site">
+            {% if status == 156 %}
+        <p>Az UFW szolgáltatás nincs telepítve.</p>
+
+        <form id="installufwForm" class="hidden" action="/service/install" method="post">
+            <input type="hidden" name="form_id" value="ufw">
+            <input type="submit" value="Telepítés">
+        </form>
+        
+
+    {% else %}
+        <p>Az UFW szolgáltatás telepítve van.</p>
+        <form action="/service/remove" method="post">
+            <input type="hidden" name="form_id" value="ufw">
+
+            <p>Az eltávolításhoz kattintson az "Eltávolítás" gombra!</p>
+
+            <button type="submit">Eltávolítás</button>
+        </form>
+        {% if status == 157 %}
+            <p>Az UFW szolgáltatás státusza: Aktív</p>
+        {% else %}
+            {% if status == 158 %}
+                <p>Az UFW szolgáltatás státusza: Inaktív</p>
+            {% else %}
+                {% if status == 159 %}
+                    <p>Az UFW szolgáltatás státusza: Hiba</p>
+                {% else %}
+                    <p>Az UFW szolgáltatás státusza: Ismeretlen</p>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
+        {% if status == 157 %}
+        <form action="/service/status" method="post">
+            <input type="hidden" name="form_id" value="ufw">
+
+            <input type="radio" id="restart" name="startstop" value="restart">
+            <label for="restart">Újraindítás</label><br>
+    
+            <input type="radio" id="stop" name="startstop" value="stop">
+            <label for="stop">Leállítás</label><br>
+
+            <button type="submit">Küldés</button>
+        </form>
+        {% else %}
+        <form action="/service/status" method="post">
+            <input type="hidden" name="form_id" value="ufw">
+
+            <input type="radio" id="restart" name="startstop" value="restart">
+            <label for="restart">Újraindítás</label><br>
+    
+            <button type="submit">Küldés</button>
+        </form>
+        {% endif %}
+        <br>
+        <p>A tűzfal állapota: {% if status2 == 158 %} Kikapcsolt {% else %} {% if status2 == 157 %} Bekapcsolt {% else %} Ismeretlen {% endif %}{% endif %}</p>
+        {% if status2 == 158 %}
+        <form action="/service/status" method="post">
+            <input type="hidden" name="form_id" value="ufw2">
+
+            <input type="radio" id="start2" name="startstop" value="start">
+            <label for="start2">Bekapcsolás</label><br>
+
+            <button type="submit">Küldés</button>
+        </form>
+        {% else %}
+            {% if status2 == 157 %}
+            <form action="/service/status" method="post">
+                <input type="hidden" name="form_id" value="ufw2">
+    
+                <input type="radio" id="stop2" name="startstop" value="stop">
+                <label for="stop2">Leállítás</label><br>
+        
+                <input type="radio" id="reload2" name="startstop" value="reload">
+                <label for="reload2">Újratöltés</label><br>
+    
+                <button type="submit">Küldés</button>
+            </form>
+            {% endif %}
+        {% endif %}
+
+        <h1>Konfiguráció</h1>
+        <h2>Alapértelmezett beállítások</h2>
+        <p>Bejövő adatforgalom:</p>
+        <form action="/service/modify" method="post">
+            <input type="hidden" name="form_id" value="ufw-incoming-policy">
+
+            <input type="radio" id="deny-default" name="incoming-policy" value="deny" {% if indefault == "deny" %} checked {% endif %}>
+            <label for="deny-default">Összes tiltása</label><br>
+    
+            <input type="radio" id="allow-default" name="incoming-policy" value="allow" {% if indefault == "allow" %} checked {% endif %}>
+            <label for="allow-default">Összes engedélyezése</label><br>
+
+            <button type="submit">Küldés</button>
+        </form>
+        <br>
+        <p>Kimenő adatforgalom:</p>
+        <form action="/service/modify" method="post">
+            <input type="hidden" name="form_id" value="ufw-outgoing-policy">
+
+            <input type="radio" id="deny-default2" name="outgoing-policy" value="deny" {% if outdefault == "deny" %} checked {% endif %}>
+            <label for="deny-default2">Összes tiltása</label><br>
+    
+            <input type="radio" id="allow-default2" name="outgoing-policy" value="allow" {% if outdefault == "allow" %} checked {% endif %}>
+            <label for="allow-default2">Összes engedélyezése</label><br>
+            <button type="submit">Küldés</button>
+        </form>
+        {% endif %}
         </div>
     </div>
 </body>

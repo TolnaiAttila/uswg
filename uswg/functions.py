@@ -1268,3 +1268,70 @@ def ssh_merge_config():
     number = check.returncode
 
     return number
+
+
+def ufw_check_status2():
+    part = "status"
+    bash_path = 'bash/ufw/ufw_check_part.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part])
+    number = check.returncode
+
+    return number
+
+
+
+def ufw_modify_status2(action):
+    bash_path = 'bash/ufw/ufw_status2.sh'
+    check = subprocess.run(['bash', bash_path, action])
+    number = check.returncode
+
+    return number
+
+
+def ufw_check_incoming_default():
+    part="incoming-default"
+    try:
+        config = subprocess.check_output(["./bash/ufw/ufw_check_part.sh", op.oppart, part], universal_newlines=True)
+        return config
+
+    except:
+        bash_path = '/bash/ufw/ufw_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number
+
+
+def ufw_check_outgoing_default():
+    part="outgoing-default"
+    try:
+        config = subprocess.check_output(["./bash/ufw/ufw_check_part.sh", op.oppart, part], universal_newlines=True)
+        
+        return config
+
+    except:
+        bash_path = '/bash/ufw/ufw_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number
+
+
+
+def ufw_modify_incoming_default(action):
+    part = "incoming-default"
+    bash_path = 'bash/ufw/ufw_modify_part.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opaction, action])
+    number = check.returncode
+
+    return number
+
+
+
+def ufw_modify_outgoing_default(action):
+    part = "outgoing-default"
+    bash_path = 'bash/ufw/ufw_modify_part.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opaction, action])
+    number = check.returncode
+
+    return number

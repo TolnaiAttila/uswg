@@ -67,7 +67,7 @@ if [ -z "$installed" ] && [ -z "$installed2" ]; then
     echo "UFW is not installed"
 else
     sudo ufw allow 'Nginx full'
-    sudo cp uswg /etc/ufw/applications.d/
+    sudo cp uswg_ufw_app /etc/ufw/applications.d/
 fi
 
 

@@ -333,7 +333,13 @@ def ssh(current_user):
 @app.route("/ufw")
 @token_required
 def ufw(current_user):
-    return render_template('ufw/ufw.html')
+    service = "ufw"
+    status = f.status(service)
+    status2 = f.ufw_check_status2()
+    indefault = f.ufw_check_incoming_default()
+    outdefault = f.ufw_check_outgoing_default()
+
+    return render_template('ufw/ufw.html', status=status, status2=status2, indefault=indefault, outdefault=outdefault)
 
 
 
@@ -1532,6 +1538,23 @@ def service_modify(current_user):
         return redirect(url_for('ssh'))
         
     
+    if id == "ufw-incoming-policy":
+        action = str(request.form.get('incoming-policy'))
+        number = f.ufw_modify_incoming_default(action)
+        if number != 0 :
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+        return redirect(url_for('ufw'))
+
+
+    if id == "ufw-outgoing-policy":
+        action = str(request.form.get('outgoing-policy'))
+        number = f.ufw_modify_outgoing_default(action)
+        if number != 0 :
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+        return redirect(url_for('ufw'))
+
     return render_template('shared/error.html', text=text)
 
 @app.route("/service/install", methods=['POST'])
@@ -1686,6 +1709,16 @@ def service_install(current_user):
         
         return redirect(url_for('ssh'))
 
+
+    if id == "ufw":
+        service = "ufw"
+        number = f.service_install(service)
+        
+        if number != 0:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        return redirect(url_for('ufw'))
 
     return render_template('shared/error.html', text=text)
 
@@ -1880,7 +1913,31 @@ def service_status(current_user):
         else:
             text = err.error(number)
             return render_template('shared/error.html', text=text)
+
+
+    if id == "ufw":
+        action = str(request.form.get('startstop'))
+        service = "ufw"
+        number = f.service_startstop(service, action)
+
+        if number == 0:
+            return redirect(url_for('ufw'))
+        else:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
         
+
+    if id == "ufw2":
+        action = str(request.form.get('startstop'))
+        number = f.ufw_modify_status2(action)
+
+        if number == 0:
+            return redirect(url_for('ufw'))
+        else:
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+
+
     return render_template('shared/error.html', text=text)
 
 if __name__ == "__main__":
