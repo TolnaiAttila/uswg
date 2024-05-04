@@ -61,6 +61,15 @@ newcontent="	server_name $input;"
 sudo -S sed -i "${linenumber}s/.*/${newcontent}/" "/etc/nginx/sites-available/uswg.conf"
 
 
+installed=`systemctl list-units --type=service --all | grep ufw.service`
+installed2=`systemctl list-unit-files --type=service --state=disabled --no-pager | grep ufw.service`
+if [ -z "$installed" ] && [ -z "$installed2" ]; then
+    echo "UFW is not installed"
+else
+    sudo ufw allow 'Nginx full'
+    sudo cp uswg /etc/ufw/applications.d/
+fi
+
 
 touch /home/uswguser/uswg/uswg.db
 touch /home/uswguser/uswg/.env
