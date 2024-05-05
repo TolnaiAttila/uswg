@@ -438,7 +438,7 @@ case $service in
             sudo -S echo "ports=139,445,22,20,21,990,2049,40000:50000/tcp|2049,67,137,138/udp" | sudo -S tee -a $pathapp
 
         fi
-        sudo -S ufw default allow incoming
+        sudo -S ufw default deny incoming
         sudo -S ufw default allow outgoing
         sudo -S ufw allow 'Nginx full'
         sudo -S ufw enable 
