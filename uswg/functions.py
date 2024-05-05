@@ -1335,3 +1335,67 @@ def ufw_modify_outgoing_default(action):
     number = check.returncode
 
     return number
+
+
+
+def ufw_check_rules():
+    part="rules"
+    try:
+        config = subprocess.check_output(["./bash/ufw/ufw_check_part.sh", op.oppart, part], universal_newlines=True)
+        array = config.split("\n")
+        if array[-1] == "":
+            array.pop(-1)
+        return array
+
+    except:
+        bash_path = '/bash/ufw/ufw_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number
+
+
+
+def ufw_delete_rule(rule):
+    part = "delete-rule"
+    bash_path = 'bash/ufw/ufw_modify_part.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opinput, rule])
+    number = check.returncode
+
+    return number
+
+
+def ufw_add_rule(action, direct, adapter, sfrom, to, port, proto):
+    part = "add-rule"
+    bash_path = 'bash/ufw/ufw_modify_part.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opaction, action, op.opdirection, direct, op.opnetworkadapter, adapter, op.opfrom, sfrom, op.opto, to, op.opport, port, op.opprotocol, proto])
+    number = check.returncode
+
+    return number
+
+
+def ufw_check_apps():
+    part="apps"
+    try:
+        config = subprocess.check_output(["./bash/ufw/ufw_check_part.sh", op.oppart, part], universal_newlines=True)
+        array = config.split("\n")
+        if array[-1] == "":
+            array.pop(-1)
+        return array
+
+    except:
+        bash_path = '/bash/ufw/ufw_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number
+
+
+
+def ufw_add_app(app):
+    part = "add-app"
+    bash_path = 'bash/ufw/ufw_modify_part.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opapp, app])
+    number = check.returncode
+
+    return number

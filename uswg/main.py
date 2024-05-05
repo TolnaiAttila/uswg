@@ -338,8 +338,14 @@ def ufw(current_user):
     status2 = f.ufw_check_status2()
     indefault = f.ufw_check_incoming_default()
     outdefault = f.ufw_check_outgoing_default()
+    adapters = f.list_all_network_adapter()
+    apps = f.ufw_check_apps()
+    if status2 == 157:
+        rules = f.ufw_check_rules()
+        return render_template('ufw/ufw.html', status=status, status2=status2, indefault=indefault, outdefault=outdefault, rules=rules, adapters=adapters, apps=apps)
+    
+    return render_template('ufw/ufw.html', status=status, status2=status2, indefault=indefault, outdefault=outdefault, adapters=adapters, apps=apps)
 
-    return render_template('ufw/ufw.html', status=status, status2=status2, indefault=indefault, outdefault=outdefault)
 
 
 
@@ -1554,6 +1560,43 @@ def service_modify(current_user):
             text = err.error(number)
             return render_template('shared/error.html', text=text)
         return redirect(url_for('ufw'))
+
+
+    if id == 'ufw-delete-rules':
+        rule = str(request.form.get('delete-rule-button'))
+        number = f.ufw_delete_rule(rule)
+        if number != 0 :
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+        return redirect(url_for('ufw'))
+
+
+    if id == 'ufw-add-rules':
+        action = str(request.form.get('action'))
+        direct = str(request.form.get('direction'))
+        adapter = str(request.form.get('adapter'))
+        sfrom = str(request.form.get('from'))
+        to = str(request.form.get('to'))
+        port = str(request.form.get('port'))
+        proto = str(request.form.get('proto'))
+
+        number = f.ufw_add_rule(action, direct, adapter, sfrom, to, port, proto)
+        if number != 0 :
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+        return redirect(url_for('ufw'))
+
+
+    if id == "ufw-add-app":
+        app = str(request.form.get('app'))
+        
+        number = f.ufw_add_app(app)
+        if number != 0 :
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+        return redirect(url_for('ufw'))
+
+
 
     return render_template('shared/error.html', text=text)
 

@@ -70,6 +70,54 @@ case "$part" in
         echo -n "$policy"
         ;;
 
+    
+    rules)
+        OLDIFS=$IFS
+        IFS=$'\n'
+        actionai="ALLOW IN"
+        actionao="ALLOW OUT"
+        actiondi="DENY IN"
+        actiondo="DENY OUT"
+        for i in `sudo ufw status numbered | tail -n +5 | grep -v "^$" | tr -s ' ' | grep "^.\+[[:space:]]ALLOW[[:space:]]IN[[:space:]].\+$" |  sed "s/\[.\+\] //"`
+        do
+            to=`echo "$i" | awk -F' ALLOW IN ' '{print $1}'`
+            from=`echo "$i" | awk -F' ALLOW IN ' '{print $2}'`
+            echo "$to"
+            echo "$actionai"
+            echo "$from"
+        done
+        for i in `sudo ufw status numbered | tail -n +5 | grep -v "^$" | tr -s ' ' | grep "^.\+[[:space:]]ALLOW[[:space:]]OUT[[:space:]].\+$" |  sed "s/\[.\+\] //"`
+        do
+            to=`echo "$i" | awk -F' ALLOW OUT ' '{print $1}'`
+            from=`echo "$i" | awk -F' ALLOW OUT ' '{print $2}'`
+            echo "$to"
+            echo "$actionao"
+            echo "$from"
+        done
+        for i in `sudo ufw status numbered | tail -n +5 | grep -v "^$" | tr -s ' ' | grep "^.\+[[:space:]]DENY[[:space:]]IN[[:space:]].\+$" |  sed "s/\[.\+\] //"`
+        do
+            to=`echo "$i" | awk -F' DENY IN ' '{print $1}'`
+            from=`echo "$i" | awk -F' DENY IN ' '{print $2}'`
+            echo "$to"
+            echo "$actiondi"
+            echo "$from"
+        done
+        for i in `sudo ufw status numbered | tail -n +5 | grep -v "^$" | tr -s ' ' | grep "^.\+[[:space:]]DENY[[:space:]]OUT[[:space:]].\+$" |  sed "s/\[.\+\] //"`
+        do
+            to=`echo "$i" | awk -F' DENY OUT ' '{print $1}'`
+            from=`echo "$i" | awk -F' DENY OUT ' '{print $2}'`
+            echo "$to"
+            echo "$actiondo"
+            echo "$from"
+        done
+        IFS=$OLDIFS
+        ;;
+
+    apps)
+        sudo ufw app list | tail -n +2 | tr -s ' ' | sed "s/ //"
+        ;;
+
+
     *)
         exit 155
         ;;
