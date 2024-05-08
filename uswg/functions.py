@@ -272,41 +272,6 @@ def dhcp_merge_config():
 
 
 
-def dns_create_listenon(ip, port):
-    part = "listen-on"
-    bash_path = 'bash/dns/dns_create_part.sh'
-    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opip, ip, op.opport, port])
-    number = check.returncode
-
-    return number
-
-
-
-def dns_check_listenon():
-    part = "listen-on"
-    
-    try:
-        listenon = subprocess.check_output(["./bash/dns/dns_check_part.sh", op.oppart, part], universal_newlines=True)
-        array = listenon.split()
-        return array
-
-    except:
-        bash_path = '/bash/dns/dns_check_part.sh'
-        check = subprocess.run(['bash', bash_path, op.oppart, part])
-        number = check.returncode
-
-        return number
-
-
-def dns_delete_listenon(buttonvalue):
-    part = "listen-on"
-    bash_path = 'bash/dns/dns_delete_part.sh'
-    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opinput, buttonvalue])
-    number = check.returncode
-
-    return number
-
-
 def nfs_check_configuration():
     part = "configuration"
     try:

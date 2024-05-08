@@ -20,19 +20,7 @@ case $service in
         fi
         exit 0
         ;;
-    bind9)
-        
-        sudo -S systemctl stop $service
-        sudo -S apt purge $service -y
-
-        sudo -S rm -d -r /etc/.uswg_configs/dns
-        ./bash/shared/status.sh $service
-        if [ $? -eq 159 ]; then
-            sudo systemctl reset-failed $service
-        fi
-
-        exit 0
-        ;;
+    
 
     nfs-kernel-server)
         sudo -S systemctl stop $service

@@ -21,21 +21,6 @@ case $service in
         exit 0
         ;;
 
-    bind9)
-        sudo -S apt update
-        sudo -S apt install bind9 -y
-
-        if [ $? -ne 0 ]; then
-            exit 153
-        else
-
-        sudo -S mkdir /etc/.uswg_configs/dns/dns_config
-        sudo -S mkdir /etc/.uswg_configs/dns/old_dns_config
-
-        fi
-
-        exit 0
-        ;;
     
     nfs-kernel-server)
         path="/etc/exports"
