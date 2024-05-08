@@ -118,23 +118,6 @@ def dhcp(current_user):
     return render_template('dhcp/dhcp.html', status=status, configarray=configarray, staticarray=staticarray, globalconfarray=globalconfarray, lastbackupdate=lastbackupdate, adapterarray=adapterarray)
 
 
-@app.route("/dns")
-@token_required
-def dns(current_user):
-    service = "named"
-    status = f.status(service)
-
-    listenon = f.dns_check_listenon()
-
-    if isinstance(listenon, int):
-        number = listenon
-        text = err.error(number)
-        return render_template('shared/error.html', text=text)
-    
-
-
-    return render_template('dns/dns.html', status=status, listenon=listenon)
-
 
 
 @app.route("/nfs")
@@ -434,18 +417,6 @@ def service_add(current_user):
             
             return redirect(url_for('dhcp'))
         
-    if id == "listen-on":
-
-        ip = str(request.form.get("listen-on-ip"))
-        port = str(request.form.get("listen-on-port"))
-
-        number = f.dns_create_listenon(ip, port)
-
-        if number != 0:
-            text = err.error(number)
-            return render_template('shared/error.html', text=text)
-        
-        return redirect(url_for('dns'))
 
     if id == "nfs-share":
         name = str(request.form.get('share-name'))
@@ -946,16 +917,6 @@ def service_modify(current_user):
 
 
         return redirect(url_for('dhcp'))
-
-
-    if id == "listen-on-delete":
-        button = str(request.form.get('delete-listen-on-button'))
-        number = f.dns_delete_listenon(button)
-        if number != 0:
-            text = err.error(number)
-            return render_template('shared/error.html', text=text)
-        
-        return redirect(url_for('dns'))
 
 
     if id == "nfs-share-check":
@@ -1665,17 +1626,6 @@ def service_install(current_user):
         return redirect(url_for('dhcp'))
 
 
-    if id == "dns":
-        service = "bind9"
-        number = f.service_install(service)
-
-        if number != 0:
-            text = err.error(number)
-            return render_template('shared/error.html', text=text)
-        
-        return redirect(url_for('dns'))
-
-
     if id == "nfs":
         service = "nfs-kernel-server"
         number = f.service_install(service)
@@ -1783,17 +1733,6 @@ def service_remove(current_user):
         return redirect(url_for('dhcp'))
 
 
-    if id == "dns":
-        service = "bind9"
-        number = f.service_remove(service)
-
-        if number != 0:
-            text = err.error(number)
-            return render_template('shared/error.html', text=text)
-        
-        return redirect(url_for('dns'))
-
-
     if id == "nfs":
         service = "nfs-kernel-server"
         number = f.service_remove(service)
@@ -1870,18 +1809,6 @@ def service_status(current_user):
 
         if number == 0:
             return redirect(url_for('dhcp'))
-        else:
-            text = err.error(number)
-            return render_template('shared/error.html', text=text)
-
-    
-    if id == "dns":
-        action = str(request.form.get('startstop'))
-        service = "bind9"
-        number = f.service_startstop(service, action)
-
-        if number == 0:
-            return redirect(url_for('dns'))
         else:
             text = err.error(number)
             return render_template('shared/error.html', text=text)
