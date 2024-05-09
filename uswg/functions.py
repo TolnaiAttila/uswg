@@ -1007,17 +1007,15 @@ def adapter_install(service, ip, gateway, dns, adapter, nginx):
     return number
 
 
-def adapter_create_adapter_config(adapter, ip, gateway, dns, status):
+def adapter_create_adapter_config(adapter, ip, dns, status):
     if ip == "" :
         ip = "empty"
-    if gateway == "" :
-        gateway = "empty"
     if dns == "" :
         dns = "empty"
 
     part = "adapter-configuration"
     bash_path = 'bash/adapter/adapter_create_part.sh'
-    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opnetworkadapter, adapter, op.opip, ip, op.opgateway, gateway, op.opdns, dns, op.opstatus, status])
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opnetworkadapter, adapter, op.opip, ip, op.opdns, dns, op.opstatus, status])
     number = check.returncode
 
     return number
@@ -1098,6 +1096,32 @@ def adapter_check_one_adapter(button):
         number = check.returncode
 
         return number
+#
+def adapter_check_default_gateway():
+    part="check-gateway"
+    try:
+        config = subprocess.check_output(["./bash/adapter/adapter_check_part.sh", op.oppart, part], universal_newlines=True)
+        array = config.split("\n")
+        if array[-1] == "":
+            array.pop(-1)
+        return array
+
+    except:
+        bash_path = '/bash/adapter/adapter_check_part.sh'
+        check = subprocess.run(['bash', bash_path, op.oppart, part])
+        number = check.returncode
+
+        return number
+
+
+def adapter_create_default_gateway(gateway, adapter):
+    part="gateway"
+    bash_path = 'bash/adapter/adapter_create_part.sh'
+    check = subprocess.run(['bash', bash_path, op.oppart, part, op.opgateway, gateway, op.opnetworkadapter, adapter])
+    number = check.returncode
+
+    return number
+#
 
 
 

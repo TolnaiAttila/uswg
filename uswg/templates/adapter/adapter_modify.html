@@ -22,7 +22,6 @@
                         <th>Adapter</th>
                         <th>MAC-cím</th>
                         <th>IP-cím / maszk</th>
-                        <th>Alapértelmezett átjáró</th>
                         <th>DNS szerver</th>
                         <th>Állapot</th>
                     </tr>
@@ -36,15 +35,13 @@
                         <td>
                             <input type="text" name="ip" id="ip" {% if adapter[2] == "empty" %} value="" {% else %} value="{{ adapter[2] }}" {% endif %} pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/[0-9]{1,2}">
                         </td>
+                        
                         <td>
-                            <input type="text" name="gateway" id="gateway" {% if adapter[3] == "empty" %} value="" {% else %} value="{{ adapter[3] }}" {% endif %} pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}">
+                            <input type="text" name="nameserver" id="nameserver" {% if adapter[3] == "empty" %} value="" {% else %} value="{{ adapter[3] }}" {% endif %} pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}">
                         </td>
                         <td>
-                            <input type="text" name="nameserver" id="nameserver" {% if adapter[4] == "empty" %} value="" {% else %} value="{{ adapter[4] }}" {% endif %} pattern="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}">
-                        </td>
-                        <td>
-                            <input type="radio" name="status" id="status_up" value="up" {% if adapter[5] == "up" %} checked {% endif %}><label for="status_up">up</label>
-                            <input type="radio" name="status" id="status_down" value="down" {% if adapter[5] == "down" %} checked {% endif %}><label for="status_down">down</label>
+                            <input type="radio" name="status" id="status_up" value="up" {% if adapter[4] == "up" %} checked {% endif %}><label for="status_up">up</label>
+                            <input type="radio" name="status" id="status_down" value="down" {% if adapter[4] == "down" %} checked {% endif %}><label for="status_down">down</label>
                         </td>
                     </tr>
                 </table>
