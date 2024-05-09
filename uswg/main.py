@@ -293,10 +293,11 @@ def adapter(current_user):
     allowed = f.adapter_status()
     adaptersconf = f.adapter_check_all_adapter()
     hostname = f.adapter_hostname()
-    
+    defgateway = f.adapter_check_default_gateway()
+
     if isinstance(adaptersconf, int):
-        return render_template('adapter/adapter.html', allowed=allowed, adapterarray=adapterarray, hostname=hostname)
-    return render_template('adapter/adapter.html', allowed=allowed, adapterarray=adapterarray, adaptersconf=adaptersconf, hostname=hostname)
+        return render_template('adapter/adapter.html', allowed=allowed, adapterarray=adapterarray, hostname=hostname, defgateway=defgateway)
+    return render_template('adapter/adapter.html', allowed=allowed, adapterarray=adapterarray, adaptersconf=adaptersconf, hostname=hostname, defgateway=defgateway)
 
 
 
@@ -1449,12 +1450,11 @@ def service_modify(current_user):
     if id == "adapter-modify":
         adapter = str(request.form.get('adapter-name'))
         ip = str(request.form.get('ip'))
-        gateway = str(request.form.get('gateway'))
         dns = str(request.form.get('nameserver'))
         status = str(request.form.get('status'))
 
         
-        number = f.adapter_create_adapter_config(adapter, ip, gateway, dns, status)
+        number = f.adapter_create_adapter_config(adapter, ip, dns, status)
         if number != 0 :
             text = err.error(number)
             return render_template('shared/error.html', text=text)
@@ -1466,6 +1466,23 @@ def service_modify(current_user):
 
         return redirect(url_for('adapter'))
 
+    if id == "adapter-modify-gateway":
+        adapter = str(request.form.get('network-adapter'))
+        gateway = str(request.form.get('gateway'))
+
+        number = f.adapter_create_default_gateway(gateway, adapter)
+        if number != 0 :
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+        
+        number = f.adapter_merge_config()
+        if number != 0 :
+            text = err.error(number)
+            return render_template('shared/error.html', text=text)
+
+        return redirect(url_for('adapter'))
+
+        
 
     if id == "hostname":
         hostname = str(request.form.get('hostname'))
@@ -1674,8 +1691,15 @@ def service_install(current_user):
                 text = err.error(number)
                 return render_template('shared/error.html', text=text)
 
+        number = f.adapter_create_default_gateway(gateway, adapter)
+        if number != 0:
+            number = f.adapter_failed_install_restore()
+            if number != 0:
+                text = err.error(number)
+                return render_template('shared/error.html', text=text)
+
         status = "up"
-        number = f.adapter_create_adapter_config(adapter, ip, gateway, dns, status)
+        number = f.adapter_create_adapter_config(adapter, ip, dns, status)
         if number != 0:
             number = f.adapter_failed_install_restore()
             if number != 0:

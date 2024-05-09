@@ -97,6 +97,26 @@ fi
 
 case "$part" in
 
+
+    gateway)
+        if [ ! `echo "$gateway" | grep "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}$"` ]; then
+            exit 155
+        fi
+        if [ ! `ip address | grep "^[0-9]\+:[[:space:]].*$" | cut -d' ' -f2 | tr -d ':' | grep -v "^lo$" | grep "^${adapter}$"` ]; then
+            exit 155
+        fi
+        
+        path="/etc/.uswg_configs/adapter/"
+        filename="default_gateway.conf"
+        ./bash/shared/exist_file.sh $path$filename
+        if [ $? -ne 0 ]; then
+            sudo -S touch $path$filename
+        else
+            sudo -S truncate -s 0 $path$filename
+        fi
+        sudo -S echo "adapter:${adapter}" | sudo -S tee -a $path$filename > /dev/null
+        sudo -S echo "gateway4:${gateway}" | sudo -S tee -a $path$filename > /dev/null
+        ;;
     adapter-configuration)
         if [ "$ip" == "empty" ] && [ "$gateway" == "empty" ] && [ "$dns" == "empty" ]; then
             if [ ! `ip address | grep "^[0-9]\+:[[:space:]].*$" | cut -d' ' -f2 | tr -d ':' | grep -v "^lo$" | grep "^${adapter}$"` ]; then
@@ -125,10 +145,6 @@ case "$part" in
             if [ ! `echo "$ip" | grep "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/[0-9]\{2\}$"` ]; then
                 exit 155
             fi
-        
-            if [ ! `echo "$gateway" | grep "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}$"` ]; then
-                exit 155
-            fi
 
             if [ ! `echo "$dns" | grep "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}$"` ]; then
                 exit 155
@@ -149,7 +165,6 @@ case "$part" in
 
         sudo -S echo "adapter:${adapter}" | sudo -S tee -a $path > /dev/null
         sudo -S echo "addresses:${ip}" | sudo -S tee -a $path > /dev/null
-        sudo -S echo "gateway4:${gateway}" | sudo -S tee -a $path > /dev/null
         sudo -S echo "nameservers:${dns}" | sudo -S tee -a $path > /dev/null
 
 

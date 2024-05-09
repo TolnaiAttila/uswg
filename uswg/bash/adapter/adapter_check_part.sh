@@ -79,7 +79,6 @@ case "$part" in
             outadapter=$input
             outmac=`ip address show dev $input | grep "link/ether[[:space:]].*[[:space:]]brd[[:space:]].*" | tr -s ' ' | cut -d ' ' -f 3`
             outip=`cat $pathconfig | grep "^addresses:.\+$" | cut -d ':' -f 2`
-            outgateway=`cat $pathconfig | grep "^gateway4:.\+$" | cut -d ':' -f 2`
             outdns=`cat $pathconfig | grep "^nameservers:.\+$" | cut -d ':' -f 2`
             outstatus="unknown"
 
@@ -95,7 +94,6 @@ case "$part" in
             outadapter=$input
             outmac=`ip address show dev $input | grep "link/ether[[:space:]].*[[:space:]]brd[[:space:]].*" | tr -s ' ' | cut -d ' ' -f 3`
             outip="empty"
-            outgateway="empty"
             outdns="empty"
             outstatus="unknown"
 
@@ -117,16 +115,12 @@ case "$part" in
         if [ -z "$outip" ]; then
             outip="empty"
         fi
-        if [ -z "$outgateway" ]; then
-            outgateway="empty"
-        fi
         if [ -z "$outdns" ]; then
             outdns="empty"
         fi
         echo "$outadapter"
         echo "$outmac"
         echo "$outip"
-        echo "$outgateway"
         echo "$outdns"
         echo "$outstatus"
 
@@ -142,7 +136,6 @@ case "$part" in
                     outadapter=$i
                     outmac=`ip address show dev $i | grep "link/ether[[:space:]].*[[:space:]]brd[[:space:]].*" | tr -s ' ' | cut -d ' ' -f 3`
                     outip=`cat $pathconfig | grep "^addresses:.\+$" | cut -d ':' -f 2`
-                    outgateway=`cat $pathconfig | grep "^gateway4:.\+$" | cut -d ':' -f 2`
                     outdns=`cat $pathconfig | grep "^nameservers:.\+$" | cut -d ':' -f 2`
                     outstatus="unknown"
 
@@ -158,7 +151,6 @@ case "$part" in
                     outadapter=$i
                     outmac=`ip address show dev $i | grep "link/ether[[:space:]].*[[:space:]]brd[[:space:]].*" | tr -s ' ' | cut -d ' ' -f 3`
                     outip="empty"
-                    outgateway="empty"
                     outdns="empty"
                     outstatus="unknown"
 
@@ -181,21 +173,40 @@ case "$part" in
                 if [ -z "$outip" ]; then
                     outip="empty"
                 fi
-                if [ -z "$outgateway" ]; then
-                    outgateway="empty"
-                fi
                 if [ -z "$outdns" ]; then
                     outdns="empty"
                 fi
                 echo "$outadapter"
                 echo "$outmac"
                 echo "$outip"
-                echo "$outgateway"
                 echo "$outdns"
                 echo "$outstatus"
             done
             ;;
+    check-gateway)
+        path="/etc/.uswg_configs/adapter/default_gateway.conf"
+        ./bash/shared/exist_file.sh $path
 
+        if [ $? -ne 0 ]; then
+            exit 151
+        fi
+
+        outgateway=`cat $path | grep "^gateway4:.\+$" | cut -d ':' -f 2`
+        
+        if [ -z "$outgateway" ]; then
+            outgateway="empty"
+        fi
+
+        outadapter=`cat $path | grep "^adapter:.\+$" | cut -d ':' -f 2`
+        
+        if [ -z "$outadapter" ]; then
+            outadapter="empty"
+        fi
+
+        echo "${outadapter}"
+        echo "${outgateway}"
+
+        ;;
     hostname)
         hostname=`hostname`
         echo "$hostname"
