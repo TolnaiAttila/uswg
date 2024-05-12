@@ -21,8 +21,7 @@
                     <h2>Tartalom</h2>
                     <div class="toc_content">
                         <ol>
-                            <a href="#general"><li>Általános</li></a>
-                            <a href="#adapter"><li>Adapter</li></a>
+                            <!--<a href="#adapter"><li>Adapter</li></a>-->
                             <a href="#dhcp"><li>DHCP</li></a>
                             <a href="#nfs"><li>NFS</li></a>
                             <a href="#samba"><li>Samba</li></a>
@@ -35,14 +34,11 @@
                     <hr>
                 </div>
                 <div class="content">
-                    <h2 id="general">Általános</h2>
-                    <p></p>
-                    <hr>
-                    <h2 id="adapter">Adapter</h2>
-                    <hr>
+                    <!--<h2 id="adapter">Adapter</h2>
+                    <hr>-->
                     <h2 id="dhcp">DHCP</h2>
                         <h3>Telepítés</h3>
-                            <p>A szolgáltatás használatához telepíteni kell azt. Ha már telepítve volt a rendszeren és nem az USWG-n keresztül lett telepítve, akkor el kell távolítani és újra feltelepíteni, most viszont az USWG-n keresztül. Ez azért szükséges mert az alkalmazás a szolgáltatás telepítése mellett létrehozza a működéshez szükséges állományokat is.</p>
+                            <p>A szolgáltatás használatához telepíteni kell azt. Ha már telepítve volt a rendszeren és nem az USWG-n keresztül lett telepítve, akkor el kell távolítani és újra feltelepíteni, most viszont az USWG-n keresztül. Ez azért szükséges, mert az alkalmazás a szolgáltatás telepítése mellett létrehozza a működéshez szükséges állományokat is.</p>
                             <p>Amennyiben a szolgáltatás nincs telepítve a "Telepítés" gomb segítségével elindíthatjuk azt. A megjelenő űrlapon a következő információkat kell, illetve lehet megadni: </p>
                             <table>
                                 <tr class="table-title">
@@ -148,7 +144,7 @@
                             <br>
                             <img src="{{ url_for('static',filename='img/dhcp_install.png') }}" alt="dhcp_install">
                             <br>
-                    <p>A telepítés után a megadott adatok érvénybe léptetéséhez újra kell indítani a szolgáltatást.</p>
+                    <p>A telepítés után a megadott adatok érvénybeléptetéséhez újra kell indítani a szolgáltatást.</p>
                     <h3>Általános műveletek</h3>
                     <p>Lehetőség van az "Eltávolítás" gomb segítségével törölni a szolgáltatást és a hozzá tartozó konfigurációt.</p>
                     <p>Megjelenik a jelenlegi státusz. Ez lehet "Aktív", "Inaktív", "Hiba", "Ismeretlen". A státusznak megfelelően lehetőség van a szolgáltatás leállítására és/vagy újraindítására.</p>
@@ -159,11 +155,11 @@
                     <p>Ezek a beállítások a authoritativitás és a Ddns-update-style. Az éppen beállított értéknek megfelelő radio gomb kerül bejelölésre. A módosításhoz be kell jelölni a kívánt opciót és a "Küldés" gomb segítségével véglegesíteni azt.</p>
                     <img src="{{ url_for('static', filename='img/dhcp_global.png')}}" alt="dhcp_global">
                     <h4>Alhálózatok</h4>
-                    <p>Az alhálózatok és az azokra vonatkozó információk táblázatosan kerülnek megjelenítésre. At opcionálisan megadható adatok kihagyása esetén "---" karakterek jelennek meg. Lehetőség van ezek módosítására a táblázat jobb oldalán található "Módosítás" gombbal, vagy azok törlésére a "Törlés" gombbal.</p>
+                    <p>Az alhálózatok és az azokra vonatkozó információk táblázatosan kerülnek megjelenítésre. Az opcionálisan megadható adatok kihagyása esetén "---" karakterek jelennek meg. Lehetőség van ezek módosítására a táblázat jobb oldalán található "Módosítás" gombbal, vagy azok törlésére a "Törlés" gombbal.</p>
                     <img id="img_exception" src="{{ url_for('static', filename='img/dhcp_subnets.png')}}" alt="dhcp_subnets">
-                    <p>A "Módosítás" gom megnyomása esetén átirányításra kerül a módosító oldalra, ahol a kiválasztott alhálózat adatai jelennek meg beviteli mezőkben. Ezekre a telepítésnél is megadott formátumok vonatkoznak. A név kivételével az összes adat módosítható. A véglegesítéshez a "Küldés" gombot kell lenyomni.</p>
+                    <p>A "Módosítás" gomb megnyomása esetén átirányításra kerül a módosító oldalra, ahol a kiválasztott alhálózat adatai jelennek meg a beviteli mezőkben. Ezekre a telepítésnél is megadott formátumok vonatkoznak. A név kivételével az összes adat módosítható. A véglegesítéshez a "Küldés" gombot kell lenyomni.</p>
                     <img src="{{ url_for('static', filename='img/dhcp_subnet_modify.png')}}" alt="dhcp_subnet_modify">
-                    <p>Lehetőség van az "Új alhálózat hozzáadása" gomb segítségével új alhálózat hozzáadásához. a gomb megnyomása után megjelenik egy ugyan olyan űrlap, mint a telepítés során. A hozzáadás véglegesítéséhez a "Küldés" gombot kell megnyomni. Sikeres hozáadás után meg fog jelenni a táblázatban.</p>
+                    <p>Lehetőség van az "Új alhálózat hozzáadása" gomb segítségével új alhálózat hozzáadására. A gomb megnyomása után megjelenik egy ugyan olyan űrlap, mint a telepítés során. A hozzáadás véglegesítéséhez a "Küldés" gombot kell megnyomni. Sikeres hozzáadás után meg fog jelenni a táblázatban.</p>
 
                     <h4>Statikus hosztok</h4>
                     <p>Az eszközökhoz statikus IP-cím rendelhető, amennyiben szükséges. Az "Új statikus hoszt" gombbal előhívott űrlapon meg kell adni az alábbi információkat:</p>
@@ -197,21 +193,693 @@
                     <img src="{{url_for('static', filename='img/dhcp_static_add.png')}}" alt="dhcp_static_add">
                     <p>A "Küldés" gombbal véglegesíteni lehet a statikus hosztot. Ha sikeresen hozzáadásra került, akkor a táblázatban meg fog jelenni.</p>
                     <img src="{{url_for('static', filename='img/dhcp_static_hosts.png')}}" alt="dhcp_static_hosts">
-                    <p>Lehtőség van a "Törlés" gombbal törölni a hosztot, a "Módosítás" gomb megnyomása átirányít egy másik oldalra, ahol a iválasztott hoszt adatai szerkeszthető formátumban jelennek meg. A név kivételével minden módosítható az elöbbiekben megadott formátumok szerint. A "Küldés" gombbal véglegesíthető a változtatás.
+                    <p>Lehtőség van a "Törlés" gombbal törölni a hosztot, a "Módosítás" gomb megnyomása átirányít egy másik oldalra, ahol a kiválasztott hoszt adatai szerkeszthető formátumban jelennek meg. A név kivételével minden módosítható az előbbiekben megadott formátumok szerint. A "Küldés" gombbal véglegesíthető a változtatás.
                     <img src="{{url_for('static', filename='img/dhcp_static_modify.png')}}" alt="dhcp_static_modify">
                     <h4>Mentés/Visszaállítás</h4>
-                    <p>A megfelelő konfiguráció megadása után lehetőség van menteni azt. A "Mentés" gomb megnyomáával az aktuális konfiguráció mentésre kerül. A mentés időpontja megjelenítésre kerül. A mentett beállítás a "Visszaállítás" gombbal visszaállítható.</p>
+                    <p>A megfelelő konfiguráció megadása után lehetőség van menteni azt. A "Mentés" gomb megnyomásával az aktuális konfiguráció mentésre kerül. A mentés időpontja megjelenítésre kerül. A mentett beállítás a "Visszaállítás" gombbal visszaállítható.</p>
                     <img src="{{url_for('static', filename='img/dhcp_backup.png')}}" alt="dhcp_backup">
                     <hr>
                     <h2 id="nfs">NFS</h2>
+                    <h3>Telepítés</h3>
+                        <p>A szolgáltatás használatához telepíteni kell azt. Ha már telepítve volt a rendszeren és nem az USWG-n keresztül lett telepítve, akkor el kell távolítani és újra feltelepíteni, most viszont az USWG-n keresztül. Ez azért szükséges, mert az alkalmazás a szolgáltatás telepítése mellett létrehozza a működéshez szükséges állományokat is.</p>
+                        <p>Amennyiben a szolgáltatás nincs telepítve a "Telepítés" gomb segítségével elindíthatjuk azt.</p>
+                    <h3>Általános műveletek</h3>
+                    <p>Lehetőség van az "Eltávolítás" gomb segítségével törölni a szolgáltatást és a hozzá tartozó konfigurációt.</p>
+                    <p>Megjelenik a jelenlegi státusz. Ez lehet "Aktív", "Inaktív", "Hiba", "Ismeretlen". A státusznak megfelelően lehetőség van a szolgáltatás leállítására és/vagy újraindítására.</p>
+                    <img src="{{ url_for('static', filename='img/nfs_status.png')}}" alt="nfs_status">
+                    <h3>Konfigurálás</h3>
+                    <p>Minden elvégzett módosítás után a módosítások életbeléptetéséhez újra kell indítani a szolgáltatást.</p>
+                    <h4>Megosztások</h4>
+                    <p>A létrehozott megosztások táblázatos formátumban jelennek meg.</p>
+                    <img src="{{ url_for ('static', filename='img/nfs_table.png') }}" alt="">
+                    <p>Új megosztás létrhozásához az "Új megosztás hozzáadása" gombot kell megnyomni. A megjelenő űrlapon meg kell adni az alábbi adatokat:</p>
+                    <table>
+                        <tr class="table-title">
+                            <th>Megnevezés</th>
+                            <th>Kötelező</th>
+                            <th>Típus</th>
+                            <th>Opciók/formátum</th>
+                        </tr>
+                        <tr>
+                            <td>Megosztás neve</td>
+                            <td>Igen</td>
+                            <td>Szöveg</td>
+                            <td><p id="table_p">Formátum: Számok/Kis és nagybetűk/Speciális karakterek: . -</p></td>
+                        </tr>
+                        <tr>
+                            <td>Megosztott mappa</td>
+                            <td>Igen</td>
+                            <td>Szöveg</td>
+                            <td><p id="table_p">Formátum: Számok/Kis és nagybetűk/Speciális karakterek: . - /</p></td>
+                        </tr>
+                        <tr>
+                            <td>Mappához tartozó jogosultság</td>
+                            <td>Igen</td>
+                            <td>Szöveg</td>
+                            <td><p id="table_p">Formátum: Csak szám</p></td>
+                        </tr>
+                        <tr>
+                            <td>Elérheti</td>
+                            <td>Igen</td>
+                            <td>Szöveg</td>
+                            <td><p id="table_p">Formátum: 192.168.1.1 | 192.168.1.0/24 | *</p></td>
+                        </tr>
+                        <tr>
+                            <td>Elérési szabályok megadása</td>
+                            <td>Igen</td>
+                            <td>Radio gomb</td>
+                            <td>
+                                <p id="table_p">
+                                Opciók: <br>
+                                Írás, olvasás/Csak olvasás<br>
+                                sync/async<br>
+                                root squash/no root squash<br>
+                                subtree check/no subtree check
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                    <br>
+                    <img src="{{ url_for('static', filename='img/nfs_new_share.png') }}" alt="nfs_new_share">
+                    <p>A hozzáférésnél megadható * karakter mindenki számára elérhetővé teszi a megosztást. A "Küldés" gombbal lehet véglegesíteni a megadott adatokat.</p>
+                    <p>A már létező megosztások szerkeszthetőek a táblázat jobb oldalán található "Módosítás" gombbal. Ekkor egy új oldal jelenik meg a kiválasztott megosztás adataival. A név és a mappa kivételével minden adat módosítható.</p>
+                    <img src="{{ url_for('static', filename='img/nfs_modify.png') }}" alt="nfs_modify">
+                    <p>A megosztások teljes egészében törölhetőek, de a hozzáférések külön-külön is törölhetőek. A teljes törlés esetén meg kell adni, hogy a megosztáshoz tartozó mappa és annak tartalma is eltávolításra kerüljön vagy az maradjon meg.</p>
+                    <h4>Hozzáférések</h4>
+                    <p>A megosztások létrehozásánál egy hozzáférés megadása kötelező. A hozzáférések egyessével eltávolíthatóak vagí a megosztással együtt törölhetőek. Az összes elérhetőség eltávolítható az egyes megosztásoknál, ebben az esetben az adott megosztás nem kerül bele a konfigurációs fájlba.</p>
+                    <p>Új hozzáférés megadása az "Új hozzáférés hozzáadása" gombbal lehettséges. A megjelenő űrlapon az alábbi információkat kell megadni.</p>
+                    <table>
+                        <tr class="table-title">
+                            <th>Megnevezés</th>
+                            <th>Kötelező</th>
+                            <th>Típus</th>
+                            <th>Opciók/formátum</th>
+                        </tr>
+                        <tr>
+                            <td>Megosztás kiválasztása</td>
+                            <td>Igen</td>
+                            <td>Legördülő lista</td>
+                            <td><p id="table_p">A már létrehozott megosztások nevei</p></td>
+                        </tr>
+                        <tr>
+                            <td>Elérheti</td>
+                            <td>Igen</td>
+                            <td>Szöveg</td>
+                            <td><p id="table_p">Formátum: 192.168.1.1 | 192.168.1.0/24 | *</p></td>
+                        </tr>
+                        <tr>
+                            <td>Elérési szabályok megadása</td>
+                            <td>Igen</td>
+                            <td>Radio gomb</td>
+                            <td>
+                                <p id="table_p">
+                                Opciók: <br>
+                                Írás, olvasás/Csak olvasás<br>
+                                sync/async<br>
+                                root squash/no root squash<br>
+                                subtree check/no subtree check
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                    <br>
+                    <img src="{{ url_for('static', filename='img/nfs_add_access.png')}}" alt="nfs_add_access">
+                    <p>A hozzáférésnél megadható * karakter mindenki számára elérhetővé teszi a megosztást. A "Küldés" gombbal lehet véglegesíteni a megadott adatokat.</p>
                     <hr>
                     <h2 id="samba">Samba</h2>
+                    <h3>Telepítés</h3>
+                        <p>A szolgáltatás használatához telepíteni kell azt. Ha már telepítve volt a rendszeren és nem az USWG-n keresztül lett telepítve, akkor el kell távolítani és újra feltelepíteni, most viszont az USWG-n keresztül. Ez azért szükséges, mert az alkalmazás a szolgáltatás telepítése mellett létrehozza a működéshez szükséges állományokat is.</p>
+                        <p>Amennyiben a szolgáltatás nincs telepítve a "Telepítés" gomb segítségével elindíthatjuk azt.</p>
+                    <h3>Általános műveletek</h3>
+                    <p>Lehetőség van az "Eltávolítás" gomb segítségével törölni a szolgáltatást és a hozzá tartozó konfigurációt.</p>
+                    <p>Megjelenik a jelenlegi státusz. Ez lehet "Aktív", "Inaktív", "Hiba", "Ismeretlen". A státusznak megfelelően lehetőség van a szolgáltatás leállítására és/vagy újraindítására.</p>
+                    <img src="{{ url_for('static', filename='img/samba_status.png')}}" alt="samba_status">
+                    <h3>Konfigurálás</h3>
+                    <p>Minden elvégzett módosítás után a módosítások életbeléptetéséhez újra kell indítani a szolgáltatást.</p>
+                    <h4>Globális beállítások</h4>
+                    <p>Annek ellenére, hogy egyes beállítások megadása kötelező van lehetőség nem konfigurált állapot kijelölésére. Ebben az esetben az adott beállítás nem kerül bele a konfigurációs fájlba.</p>
+                    <table>
+                        <tr class="table-title">
+                            <th>Megnevezés</th>
+                            <th>Kötelező</th>
+                            <th>Típus</th>
+                            <th>Opciók/formátum</th>
+                        </tr>
+                        <tr>
+                            <td>Workgroup</td>
+                            <td>Igen</td>
+                            <td>Szöveg</td>
+                            <td><p id="table_p">Formátum: Számok/Kis és nagybetűk/Speciális karakterek: . - /</p></td>
+                        </tr>
+                        <tr>
+                            <td>Netbios name</td>
+                            <td>Igen</td>
+                            <td>Szöveg</td>
+                            <td><p id="table_p">Formátum: Számok/Kis és nagybetűk/Speciális karakterek: . - /</p></td>
+                        </tr>
+                        <tr>
+                            <td>Map to guest</td>
+                            <td>Igen</td>
+                            <td>Radio gomb</td>
+                            <td><p id="table_p">
+                                Opciók: <br>
+                                Bad user<br>
+                                Never<br>
+                                Bad password<br>
+                                Not configured
+                                </p></td>
+                        </tr>
+                        <tr>
+                            <td>Usershare allow guests</td>
+                            <td>Igen</td>
+                            <td>Radio gomb</td>
+                            <td><p id="table_p">
+                                Opciók: <br>
+                                Igen<br>
+                                Nem<br>
+                                Not configured
+                                </p></td>
+                        </tr>
+                        <tr>
+                            <td>Security</td>
+                            <td>Igen</td>
+                            <td>Radio gomb</td>
+                            <td><p id="table_p">
+                                Opciók: <br>
+                                User<br>
+                                Share<br>
+                                Not configured
+                                </p></td>
+                        </tr>
+                        <tr>
+                            <td>Public</td>
+                            <td>Igen</td>
+                            <td>Radio gomb</td>
+                            <td><p id="table_p">
+                                Opciók: <br>
+                                Igen<br>
+                                Nem<br>
+                                Not configured
+                                </p></td>
+                        </tr>
+                    </table>
+                    <br>
+                    <img src="{{ url_for('static', filename='img/samba_global.png') }}" alt="samba_global">
+                    <h4>Megosztások</h4>
+                    <p>A megosztások 3 különböző csoportra vannak bontva és ennek megfelelően szeparált táblázatokban jelennek meg az egyes csoportokhoz tartozó megosztások.</p>
+                    <img id="img_exception" src="{{ url_for('static', filename='img/samba_tables.png') }}" alt="samba_tables">
+                    <p>Csoportok:</p>
+                    <ul>
+                        <li>Felhasználó nélküli</li>
+                        <li>Egy felhasználós</li>
+                        <li>Több felhasználós</li>
+                    </ul>
+                    <p>A "Felhasználó nélküli megosztás" esetén nem nincs lehetőség "valid user" opció megadásra, viszont csak itt érhető el a "guest only" beállítás. Akkor javasolt ennek a használata, ha a megosztást nem akarjuk senkihez sem hozzárendelni vagy csak vendégfelhasználók számára szeretnénk elérhetővé tenni.</p>
+                    <p>Az "Egy felhasználós megosztás" rendelkezik "valid user" opcióval, így egy felhasználó hozzárendelhető a megosztáshoz. Itt nem érhető el a "guest only" lehetőség. Csak olyan felhasználó rendelhető a megosztáshoz aki szerepel a rendszeren, ha nem szerepel van lehetőség annak létrehozására is. Használata, akkor javasolt, ha egy felhasználónak kell megosztást létrehozni.</p>
+                    <p>A "Több felhasználós megosztás" szintén nem rendelkezik "guest only" opcióval, viszont a "valid users" mellett megjelenik az "invalid users" beállítás is. Itt felhasználók egy csoportját lehet hozárendelni a megosztáshoz vagy tiltani a hozzáférésüket. A csoportokat létre kell hozni előtte, olyan felhasználók vehetőek bele a csoportokba, akik szerepelnek a rendszeren. Használata, akkor javasolt, ha csoportos hozzáférést szeretnénk biztosítani.</p>
+
+                    <p>Annak ellenére, hogy az egyes beállítások megadása kötelező van lehetőség nem konfigurált opció kiválasztására, ebben az esetben az adott opció nem kerül bele a konfigurációs fájlba. Az összes konfigurációs lehetőség:</p>
+                    <table>
+                        <tr class="table-title">
+                            <th>Megnevezés</th>
+                            <th>Kötelező</th>
+                            <th>Típus</th>
+                            <th>Opciók/formátum</th>
+                        </tr>
+                        <tr>
+                            <td>Megosztás neve</td>
+                            <td>Igen</td>
+                            <td>Szöveg</td>
+                            <td><p id="table_p">Formátum: Számok/Kis és nagybetűk/Speciális karakterek: . -</p></td>
+                        </tr>
+                        <tr>
+                            <td>Mappa</td>
+                            <td>Igen</td>
+                            <td>Szöveg</td>
+                            <td><p id="table_p">Formátum: Számok/Kis és nagybetűk/Speciális karakterek: . - /</p></td>
+                        </tr>
+                        <tr>
+                            <td>Mappa jog</td>
+                            <td>Nem</td>
+                            <td>Szöveg</td>
+                            <td><p id="table_p">Formátum: Csak szám</p></td>
+                        </tr>
+                        <tr>
+                            <td>Mappa tulaj</td>
+                            <td>Igen</td>
+                            <td>Legördülő lista</td>
+                            <td><p id="table_p">A rendszeren szereplő felhasználók, plusz "Not configured"</p></td>
+                        </tr>
+                        <tr>
+                            <td>Mappa csoport</td>
+                            <td>Igen</td>
+                            <td>Legördülő lista</td>
+                            <td><p id="table_p">A rendszeren szereplő csoportok, plusz "Not configured"</p></td>
+                        </tr>
+                        <tr>
+                            <td>Komment</td>
+                            <td>Nem</td>
+                            <td>Szöveg</td>
+                            <td><p id="table_p">Formátum: nincs megszabva</p></td>
+                        </tr>
+                        <tr>
+                            <td>Read only</td>
+                            <td>Igen</td>
+                            <td>Radio gomb</td>
+                            <td>
+                                <p id="table_p">
+                                Opciók: <br>
+                                Igen<br>
+                                Nem<br>
+                                Not configured
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Writable</td>
+                            <td>Igen</td>
+                            <td>Radio gomb</td>
+                            <td>
+                                <p id="table_p">
+                                Opciók: <br>
+                                Igen<br>
+                                Nem<br>
+                                Not configured
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Guest ok</td>
+                            <td>Igen</td>
+                            <td>Radio gomb</td>
+                            <td>
+                                <p id="table_p">
+                                Opciók: <br>
+                                Igen<br>
+                                Nem<br>
+                                Not configured
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Guest only</td>
+                            <td>Igen</td>
+                            <td>Radio gomb</td>
+                            <td>
+                                <p id="table_p">
+                                Opciók: <br>
+                                Igen<br>
+                                Nem<br>
+                                Not configured
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Browsable</td>
+                            <td>Igen</td>
+                            <td>Radio gomb</td>
+                            <td>
+                                <p id="table_p">
+                                Opciók: <br>
+                                Igen<br>
+                                Nem<br>
+                                Not configured
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Public</td>
+                            <td>Igen</td>
+                            <td>Radio gomb</td>
+                            <td>
+                                <p id="table_p">
+                                Opciók: <br>
+                                Igen<br>
+                                Nem<br>
+                                Not configured
+                                </p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Create mask</td>
+                            <td>Igen</td>
+                            <td>Szöveg</td>
+                            <td><p id="table_p">Formátum: Csak szám</p></td>
+                        </tr>
+                        <tr>
+                            <td>Directory mask</td>
+                            <td>Igen</td>
+                            <td>Szöveg</td>
+                            <td><p id="table_p">Formátum: Csak szám</p></td>
+                        </tr>
+                        <tr>
+                            <td>Force user</td>
+                            <td>Igen</td>
+                            <td>Legördülő lista</td>
+                            <td><p id="table_p">A rendszeren szereplő felhasználók, plusz "Not configured"</p></td>
+                        </tr>
+                        <tr>
+                            <td>Force group</td>
+                            <td>Igen</td>
+                            <td>Legördülő lista</td>
+                            <td><p id="table_p">A rendszeren szereplő csoportok, plusz "Not configured"</p></td>
+                        </tr>
+                        <tr>
+                            <td>Hide dot files</td>
+                            <td>Igen</td>
+                            <td>Radio gomb</td>
+                            <td>
+                                <p id="table_p">
+                                Opciók: <br>
+                                Igen<br>
+                                Nem<br>
+                                Not configured
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Valid user</td>
+                            <td>Igen</td>
+                            <td>Legördülő lista</td>
+                            <td><p id="table_p">A rendszeren szereplő felhasználók</p></td>
+                        </tr>
+                        <tr>
+                            <td>Valid users / Invalid users</td>
+                            <td>Igen</td>
+                            <td>Legördülő lista</td>
+                            <td><p id="table_p">Az alkalmazásban létrehozott csoportok</p></td>
+                        </tr>
+                    </table>
+                    <p>Az alábbi képen egy "Felhasználó nélküli megosztás" létrehozása látható:</p>
+                    <img src="{{ url_for('static', filename='img/samba_create_share.png')}}" alt="samba_create_share">
+                    <p>Mindegyik megosztásra érvényes, hogy a módosításuk külön oldalon lehetséges, ahol megjelenik az adott megosztásra vonatkozó összes adat. A megosztás neve és a megosztott mappa kivételével minden más szerkeszthető. Egy megosztás törlése esetén meg kell adni, hogy a megosztott mappa és annak tartalma is eltávolításra kerüljön vagy az maradjon meg.</p>
+                    <h4>Felhasználók kezelése</h4>
+                    <p>A felhasználók kezelése egy külön oldalon történik, ahol megjelennek a rendszerben szereplő felhasználók két csoportra bontva az alapján, hogy szerepelnek vagy sem a Samba adatbázisában. Lehetőség van a felhasználók hozzáadására a Samba-hoz. A "Hozzáadás" gomb megnyomását követően felugrik egy jelszó bekérő ablak. A jelszó megadása és a küldés után hozzáadásra kerül a felhasználó. A már hozzáadott fiókokat a másik táblázatban szereplő "Eltávolítás" gombbal el lehet távolítani az adatbázisból.</p>
+                    <img src="{{ url_for('static', filename='img/samba_users.png') }}" alt="samba_users">
+                    <p>Lehetőség van új felhasználó hozzáadására magán a rendszeren is. Az itt létrehozott felhasználókra az alábbiak lesznek érvényesek:</p>
+                    <ul>
+                        <li>A nevén kívül más információ nem lesz eltárolva a felhasználóról</li>
+                        <li>A users csoport (id: 100) tagja lesz</li>
+                        <li>Rendelkezni fog home könyvtárral</li>
+                        <li>Nem lesz jelszava</li>
+                        <li>A bejelentkezés le lesz tiltva a létrehozott felhasználóval</li>
+                        <li>Alapértelmezetten nem lesz hozzárendelve a samba-hoz</li>
+                        
+                    </ul>
+                    <img src="{{ url_for('static', filename='img/system_user_create.png') }}" alt="system_user_create">
+                    <h4>Csoportok kezelése</h4>
+                    <p>A csoportok kezelése egy külön oldalon történik. Itt megjelennek a már létrehozott csoportok, lehetőség van ezek módosítására, törlésére és új létrehozására.</p>
+                    <img src="{{ url_for('static', filename='img/samba_groups.png') }}" alt="samba_groups">
+                    <p>Egy csoport törlése csak, akkor lehetséges, ha az nincs hozzárendelve egy megosztáshoz sem.</p>
+                    <p>Módosítás esetén csak a felhasználók tagsága szerkeszthető.</p>
+                    <p>Új létrehozásánál meg kell adni a csoport nevét és ki kell jelölni a tagjait. Csak azok a felhasználók jelölhetőek ki, akik szerepelnek a Samba adatbázisban.</p>
                     <hr>
                     <h2 id="ftp">FTP</h2>
+                    <h3>Telepítés</h3>
+                        <p>A szolgáltatás használatához telepíteni kell azt. Ha már telepítve volt a rendszeren és nem az USWG-n keresztül lett telepítve, akkor el kell távolítani és újra feltelepíteni, most viszont az USWG-n keresztül. Ez azért szükséges, mert az alkalmazás a szolgáltatás telepítése mellett létrehozza a működéshez szükséges állományokat is.</p>
+                        <p>Amennyiben a szolgáltatás nincs telepítve a "Telepítés" gomb segítségével elindíthatjuk azt.</p>
+                    <h3>Általános műveletek</h3>
+                    <p>Lehetőség van az "Eltávolítás" gomb segítségével törölni a szolgáltatást és a hozzá tartozó konfigurációt.</p>
+                    <p>Megjelenik a jelenlegi státusz. Ez lehet "Aktív", "Inaktív", "Hiba", "Ismeretlen". A státusznak megfelelően lehetőség van a szolgáltatás leállítására és/vagy újraindítására.</p>
+                    <img src="{{ url_for('static', filename='img/ftp_status.png')}}" alt="ftp_status">
+                    <h3>Konfigurálás</h3>
+                    <p>Minden elvégzett módosítás után a módosítások életbeléptetéséhez újra kell indítani a szolgáltatást.</p>
+                    <h4>Globális és anonymos beállítások</h4>
+                    <p>A globális és anonymous beállítások táblázatosan kerülnek megjelenítésre és az alábbi beállítási lehetőségekkel rendelkeznek:</p>
+                    <table>
+                        <tr class="table-title">
+                            <th>Megnevezés</th>
+                            <th>Kötelező</th>
+                            <th>Típus</th>
+                            <th>Opciók/formátum</th>
+                        </tr>
+                        <tr>
+                            <td>Listen IPv4</td>
+                            <td>Igen</td>
+                            <td>Radio gomb</td>
+                            <td><p id="table_p">
+                                Opciók: <br>
+                                Yes<br>
+                                No
+                                </p></td>
+                        </tr>
+                        <tr>
+                            <td>Listen IPv6</td>
+                            <td>Igen</td>
+                            <td>Radio gomb</td>
+                            <td><p id="table_p">
+                                Opciók: <br>
+                                Yes<br>
+                                No
+                                </p></td>
+                        </tr>
+                        <tr>
+                            <td>Local user enable</td>
+                            <td>Igen</td>
+                            <td>Radio gomb</td>
+                            <td><p id="table_p">
+                                Opciók: <br>
+                                Yes<br>
+                                No
+                                </p></td>
+                        </tr>
+                        <tr>
+                            <td>Message enable</td>
+                            <td>Igen</td>
+                            <td>Radio gomb</td>
+                            <td><p id="table_p">
+                                Opciók: <br>
+                                Yes<br>
+                                No
+                                </p></td>
+                        </tr>
+                        <tr>
+                            <td>Write enable</td>
+                            <td>Igen</td>
+                            <td>Radio gomb</td>
+                            <td><p id="table_p">
+                                Opciók: <br>
+                                Yes<br>
+                                No
+                                </p></td>
+                        </tr>
+                        <tr>
+                            <td>Force dot files</td>
+                            <td>Igen</td>
+                            <td>Radio gomb</td>
+                            <td><p id="table_p">
+                                Opciók: <br>
+                                Yes<br>
+                                No
+                                </p></td>
+                        </tr>
+                        <tr>
+                            <td>Hide IDs</td>
+                            <td>Igen</td>
+                            <td>Radio gomb</td>
+                            <td><p id="table_p">
+                                Opciók: <br>
+                                Yes<br>
+                                No
+                                </p></td>
+                        </tr>
+                        <tr>
+                            <td>Max client / IP</td>
+                            <td>Igen</td>
+                            <td>Szöveg</td>
+                            <td><p id="table_p">Formátum: Csak szám</p></td>
+                        </tr>
+                        <tr>
+                            <td>Max clients</td>
+                            <td>Igen</td>
+                            <td>Szöveg</td>
+                            <td><p id="table_p">Formátum: Csak szám</p></td>
+                        </tr>
+
+                        <tr>
+                            <td>Message text</td>
+                            <td>Igen</td>
+                            <td>Szöveg</td>
+                            <td><p id="table_p">Formátum: Nincs megszabva</p></td>
+                        </tr>
+                        <tr>
+                            <td>Anonymous enable</td>
+                            <td>Igen</td>
+                            <td>Radio gomb</td>
+                            <td><p id="table_p">
+                                Opciók: <br>
+                                Yes<br>
+                                No
+                                </p></td>
+                        </tr>
+                        <tr>
+                            <td>Anonim upload enable</td>
+                            <td>Igen</td>
+                            <td>Radio gomb</td>
+                            <td><p id="table_p">
+                                Opciók: <br>
+                                Yes<br>
+                                No
+                                </p></td>
+                        </tr>
+                        <tr>
+                            <td>Anonim mkdir enable</td>
+                            <td>Igen</td>
+                            <td>Radio gomb</td>
+                            <td><p id="table_p">
+                                Opciók: <br>
+                                Yes<br>
+                                No
+                                </p></td>
+                        </tr>
+                        <tr>
+                            <td>Anonim other write enable</td>
+                            <td>Igen</td>
+                            <td>Radio gomb</td>
+                            <td><p id="table_p">
+                                Opciók: <br>
+                                Yes<br>
+                                No
+                                </p></td>
+                        </tr>
+                        <tr>
+                            <td>Anonim world readonly</td>
+                            <td>Igen</td>
+                            <td>Radio gomb</td>
+                            <td><p id="table_p">
+                                Opciók: <br>
+                                Yes<br>
+                                No
+                                </p></td>
+                        </tr>
+                    </table>
+                    <br>
+                    <img id="img_exception" src="{{ url_for('static', filename='img/ftp_config.png') }}" alt="ftp_config">
+                    <h4>Megosztások</h4>
+                    <p>A megosztások létrehozása, úgy lehetséges, hogy a rendszerben szereplő jelszóval rendelkező felhasználókhoz kerülnek hozzárenelésre. Alapértelmezetten minden felhasználó tilva van. Megosztás létrehozása esetén alapból senkinek nincs jogosultsága kilépni a saját mappájából, de ez módosítható. A létrehozásnál az alkalmazás feltételezi, hogy az adott felhasználó rendelkezik home könyvtárral (ha nem, akkor a megosztás nem lesz elérhető). A megosztott mappák megegyeznek a hozzárendelt fiók nevével és a /srv/ftp/ könyvtárban kerülnek létrehozásra.</p>
+                    <img src="{{ url_for('static', filename='img/ftp_shares.png') }}" alt="ftp_shares">
+                    <p>A felhasználók tiltása esetén meg kell adni, hogy a megosztott mappa törlődjön vagy megmaradjon.</p>
+                    <h4>Felhasználók kezelése</h4>
+                    <p>A felhasználó kezelése egy külön öldalon lehetséges. Itt megjelennek azok a fiókok, amik nem rendelkeznek jelszóval. A "Módosítás" gomb segítségével a jelszó rendelhető a kiválasztott felhasználóhoz.</p>
+                    <img src="{{ url_for('static', filename='img/ftp_users_passwd.png') }}" alt="ftp_users_passwd">
+                    <p>Amennyiben szükséges új felhasználó is létrehozható a rendszeren, amire ugyan azok a tulajdonságok vonatkoznak mint, amik a Samba felhasználó létrehozásnál meg lettek adva.</p>
+                    <p>Ha igény van rá egy anonymous megosztás is létrehozható.</p>
                     <hr>
                     <h2 id="ssh">SSH</h2>
+                    <h3>Telepítés</h3>
+                        <p>A szolgáltatás használatához telepíteni kell azt. Ha már telepítve volt a rendszeren és nem az USWG-n keresztül lett telepítve, akkor el kell távolítani és újra feltelepíteni, most viszont az USWG-n keresztül. Ez azért szükséges, mert az alkalmazás a szolgáltatás telepítése mellett létrehozza a működéshez szükséges állományokat is.</p>
+                        <p>Amennyiben a szolgáltatás nincs telepítve a "Telepítés" gomb segítségével elindíthatjuk azt.</p>
+                    <h3>Általános műveletek</h3>
+                    <p>Lehetőség van az "Eltávolítás" gomb segítségével törölni a szolgáltatást és a hozzá tartozó konfigurációt.</p>
+                    <p>Megjelenik a jelenlegi státusz. Ez lehet "Aktív", "Inaktív", "Hiba", "Ismeretlen". A státusznak megfelelően lehetőség van a szolgáltatás leállítására és/vagy újraindítására.</p>
+                    <img src="{{ url_for('static', filename='img/ssh_status.png')}}" alt="ssh_status">
+                    <h3>Konfigurálás</h3>
+                    <p>Minden elvégzett módosítás után a módosítások életbeléptetéséhez újra kell indítani a szolgáltatást.</p>
+                    <h4>Globális beállítások</h4>
+                    <p>A rendszerrel együtt való indulása kikapcsolható a szolgáltatásnak.</p>
+                    <img src="{{ url_for('static', filename='img/ssh_start.png') }}" alt="ssh_start">
+                    <p>Az alapértelmezett port módosítható bármelyik másikra és kiválasztható, hogy melyik IP-címen, illetve melyik hálózati adapteren fogadjon kéréseket.</p>
+                    <img src="{{ url_for('static', filename='img/ssh_rule.png') }}" alt="ssh_rule">
                     <hr>
                     <h2 id="ufw">UFW</h2>
+                    <h3>Telepítés</h3>
+                        <p>A szolgáltatás használatához telepíteni kell azt.</p>
+                        <p>Amennyiben a szolgáltatás nincs telepítve a "Telepítés" gomb segítségével elindíthatjuk azt.</p>
+                    <h3>Általános műveletek</h3>
+                    <p>Lehetőség van az "Eltávolítás" gomb segítségével törölni a szolgáltatást és a hozzá tartozó konfigurációt.</p>
+                    <p>Megjelenik a jelenlegi státusz. Ez lehet "Aktív", "Inaktív", "Hiba", "Ismeretlen". A státusznak megfelelően lehetőség van a szolgáltatás leállítására és/vagy újraindítására.</p>
+                    <p>A szolgáltatás leállítása nélkül lehetőség van csak magát a programot kikapcsolni, újraindítani, illetve újratölteni a konfigurációt.</p>
+                    <img src="{{ url_for('static', filename='img/ufw_status.png')}}" alt="ufw_status">
+                    <h3>Konfigurálás</h3>
+                    <p>Az elvégzett módosítások után nincs szükség a szolgáltatás újraindítására.</p>
+                    <h4>Alapértelmezett beállítások</h4>
+                    <p>Itt adható meg, hogy mi legyen az alapértelmezett szabály a bejövő és a kimenő adatforgalomra.</p>
+                    <img src="{{ url_for('static', filename='img/ssh_default_rules.png') }}" alt="ssh_default_rules">
+                    <h4>Szabályok</h4>
+                    <p>A létrehozott szabályok táblázatosan jelennek meg és itt lehetőség van a törlésükre.</p>
+                    <img src="{{ url_for('static', filename='img/ssh_rule_table.png') }}" alt="ssh_rule_table">
+                    <p>Új szabály hozzáadása két módon történhet. Létrehozható egy általános szabály vagy egy előre az alkalmazások által definiált szabály adható hozzá a tűzfalhoz.</p>
+                    <p>Általános szabály létrehozása:</p>
+                    <table>
+                        <tr class="table-title">
+                            <th>Megnevezés</th>
+                            <th>Kötelező</th>
+                            <th>Típus</th>
+                            <th>Opciók/formátum</th>
+                        </tr>
+                        <tr>
+                            <td>Engedélyezés/Tiltás</td>
+                            <td>Igen</td>
+                            <td>Legördülő lista</td>
+                            <td><p id="table_p">
+                                Opciók:<br>
+                                Allow <br>
+                                Deny
+                            </p></td>
+                        </tr>
+                        <tr>
+                            <td>Ki menő/Be menő</td>
+                            <td>Igen</td>
+                            <td>Legördülő lista</td>
+                            <td><p id="table_p">
+                                Opciók:<br>
+                                in <br>
+                                out
+                            </p></td>
+                        </tr>
+                        <tr>
+                            <td>Adapter</td>
+                            <td>Igen</td>
+                            <td>Legördülő lista</td>
+                            <td><p id="table_p">A rendszerhez csatlakoztatott hálózati adapterek, plusz "any"</p></td>
+                        </tr>
+
+                        <tr>
+                            <td>Honnan</td>
+                            <td>Igen</td>
+                            <td>Szöveg</td>
+                            <td><p id="table_p">Formátum: 192.168.1.1 | 192.168.1.0/24 | "any"</p></td>
+                        </tr>
+
+                        <tr>
+                            <td>Hova</td>
+                            <td>Igen</td>
+                            <td>Szöveg</td>
+                            <td><p id="table_p">Formátum: 192.168.1.1 | 192.168.1.0/24 | "any"</p></td>
+                        </tr>
+
+                        <tr>
+                            <td>Port</td>
+                            <td>Igen</td>
+                            <td>Szöveg</td>
+                            <td><p id="table_p">Formátum: Csak szám | szám:szám (30000:40000) | "any"</p></td>
+                        </tr>
+
+                        <tr>
+                            <td>Protokoll</td>
+                            <td>Igen</td>
+                            <td>Legördülő lista</td>
+                            <td><p id="table_p">
+                                Opciók:<br>
+                                tcp <br>
+                                udp
+                            </p></td>
+                        </tr>
+                    </table>
+                    <br>
+                    <img id="img_exception" src="{{ url_for('static', filename='img/ufw_create_rule.png') }}" alt="ufw_create_rule">
+                    <p>Alkalmazás által definiált portokat név alapján egy legördülő listából lehet kiválasztani. Az USWG a telepítés során létrehozza az általa kezelt alkalmazásokhoz tartozó portok listáját és nevet társít hozzájuk.</p>
+                    <p>Az USWG által definiált lehetőségek:</p>
+                    <ul>
+                        <li>uswgDHCP: 67/udp</li>
+                        <li>uswgNFS: 2049/tcp | 2049/udp</li>
+                        <li>uswgSamba: 137,138/udp | 139,445/tcp</li>
+                        <li>uswgFTP: 20,21,990,40000:50000/tcp</li>
+                        <li>uswgSSH: 22/tcp</li>
+                        <li>uswgFull: az összes előzőleg definiált portot tartalmazza</li>
+                    </ul>
+                    <img src="{{ url_for('static', filename='img/ufw_add_app.png') }}" alt="ufw_add_app">
                     <hr>
                     
                 </div>
