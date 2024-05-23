@@ -86,9 +86,6 @@ case "$part" in
         
         ;;
     
-    #list-all-system-users)
-     #   cat /etc/passwd | cut -d':' -f 1-3 | grep -v "^nobody:.\+" | grep "[0-9]\{4,5\}$" | cut -d':' -f 1
-      #  ;;
     list-all-users)
         cat /etc/passwd | cut -d':' -f 1
         ;;
