@@ -47,4 +47,6 @@
     ```bash
     systemctl status nginx
     ```
-    Illetve a böngészőbe, ha beírja az elérési címet, amit megadott.
+    Illetve a böngészőbe, ha beírja az elérési címet, amit megadott az alábbi módon.<br>
+    http://<elérési cím>/login <br>
+     Pl.: http://192.168.1.2/login
