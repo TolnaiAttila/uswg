@@ -1096,7 +1096,7 @@ def adapter_check_one_adapter(button):
         number = check.returncode
 
         return number
-#
+
 def adapter_check_default_gateway():
     part="check-gateway"
     try:
@@ -1121,7 +1121,7 @@ def adapter_create_default_gateway(gateway, adapter):
     number = check.returncode
 
     return number
-#
+
 
 
 

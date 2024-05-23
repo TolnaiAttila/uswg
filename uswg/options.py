@@ -1,41 +1,23 @@
-#create part options
-oppart="--part" #subnet, global, backup, static-host, network-adapter
-
-#create subet options
-opsubnetname="--subnet-name" #string enabled separators: ., -
-opip="--ip-address" #ip address
-opsubnetmask="--subnet-mask" #netmask format 255.255.255.0
-opfirstaddress="--first-address" #ip address
-oplastaddress="--last-address" #ip address
-opdns="--dns-server" #ip address or string separated by ,
-oprouters="--routers" #ip address
-opbroadcast="--broadcast" #ip address
-opdlt="--dlt" #number
-opmlt="--mlt" #number
+oppart="--part"
+opsubnetname="--subnet-name"
+opip="--ip-address"
+opsubnetmask="--subnet-mask"
+opfirstaddress="--first-address"
+oplastaddress="--last-address"
+opdns="--dns-server"
+oprouters="--routers"
+opbroadcast="--broadcast"
+opdlt="--dlt"
+opmlt="--mlt"
 opnetworkadapter="--network-adapter"
-opntp="--ntp-server" #ip address
-opdomainname="--domain-name" #string
-
-#create global config options
-opauthor="--authoritative" #yes, no
-opddns="--ddns-style" #standard, interim, none
-
-#create statis-host options
+opntp="--ntp-server"
+opdomainname="--domain-name"
+opauthor="--authoritative"
+opddns="--ddns-style"
 ophostname="--host-name"
 opmac="--mac-address"
-#opip="--ip-address" #subnet
-
-#delete subnet option
-#opsubnetname="--subnet-name" #string enabled separators: ., -
-
-#delete static-host
-#ophostname="--host-name"
-
-#check
 opinput="--input"
-
 opport="--port"
-
 opaction="--action"
 opname="--name"
 opdirectory="--directory"
@@ -74,7 +56,6 @@ opvalidusers="--valid-users"
 opgroupname="--group-name"
 opforcedelete="--force-delete"
 opvalidtype="--valid-type"
-
 opipv4="--listen-ipv4"
 opipv6="--listen-ipv6"
 oplocalen="--local-enable"

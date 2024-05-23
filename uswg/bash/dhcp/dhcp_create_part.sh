@@ -8,7 +8,6 @@ fi
 
 eval set -- "$ARGS"
 
-#part parameter ellenorzese
 part=""
 author=""
 ddns=""
@@ -208,7 +207,7 @@ if [ -z "$part" ]; then
     exit 155
 fi
 
-#part parameter alapjan vegrehajtas
+
 case "$part" in
     backup)
         path="/etc/.uswg_configs/dhcp/dhcp_config/"
@@ -275,7 +274,6 @@ case "$part" in
     static-host)
 
         if [ -z "$hostname" ] || [ -z "$ip" ] || [ -z "$mac" ]; then
-            #invalid ertek, ures bemenet
             exit 155
         fi
 
@@ -299,7 +297,6 @@ case "$part" in
     subnet)
 
         if [ -z "$ip" ] || [ -z "$subnetmask" ] || [ -z "$subnetname" ] || [ -z "$firstaddress" ] || [ -z "$lastaddress" ] || [ -z "$dns" ] || [ -z "$routers" ] || [ -z "$broadcast" ] || [ -z "$dlt" ] || [ -z "$mlt" ] || [ -z "$networkadapter" ]; then
-            #invalid ertek, ures bemenet
             exit 155
         else
             path="/etc/.uswg_configs/dhcp/dhcp_config/dhcp_subnet_$subnetname.conf"
@@ -370,7 +367,6 @@ case "$part" in
                     sudo -S sed -i "${linenumber}s/.*/${newcontent}/" "$path"
                 fi
             else
-                #nem talalhato a szoveg
                 exit 162
             fi
         fi

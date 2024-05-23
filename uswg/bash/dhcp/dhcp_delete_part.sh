@@ -8,7 +8,7 @@ fi
 
 eval set -- "$ARGS"
 
-#part parameter ellenorzese
+
 part=""
 subnetname=""
 hostname=""
@@ -111,5 +111,3 @@ case "$part" in
         exit 155
         ;;
 esac
-
-#./bash/dhcp/dhcp_merge_config.sh

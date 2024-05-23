@@ -19,7 +19,7 @@ app = Flask(__name__)
 
 
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://///home/ati/Desktop/uswg/uswg.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://///home/uswguser/uswg/uswg.db'
 
 
 db = SQLAlchemy(app)
@@ -42,7 +42,6 @@ def token_required(f):
             token = request.cookies.get('x-access-token')
 
         if not token:
-            #jsonify({'message' : 'Token is missing'}),
             return render_template('shared/relogin.html'), 401
 
         try:
@@ -51,7 +50,6 @@ def token_required(f):
             
         except:
             return render_template('shared/relogin.html'), 401
-            #return jsonify({'message' : 'Token is invalid'}), 401
 
         return f(current_user, *args, **kwargs)
 
@@ -65,7 +63,6 @@ def login():
 
 @app.route('/login/check', methods=['POST'])
 def login_check():
-    #auth = request.authorization
     passwd = None
     uname = None
     passwd = str(request.form.get('passwd'))
@@ -75,15 +72,12 @@ def login_check():
         text = "Sikertelen bejelentkezés"
         return redirect(url_for('login', text=text))
 
-    #if not auth or not auth.username or not auth.password:
-     #   return make_response('Sikertelen bejelentkezés!', 401, {'WWW-Authenticate' : 'Basic realm="Login Required!"'})
 
     user = Users.query.filter_by(username=uname).first()
 
     if not user:
         text = "Sikertelen bejelentkezés"
         return redirect(url_for('login', text=text))
-        #return make_response('Sikertelen bejelentkezés!', 401, {'WWW-Authenticate' : 'Basic realm="Login Required!"'})
 
 
 
@@ -99,7 +93,6 @@ def login_check():
     text = "Sikertelen bejelentkezés"
     return redirect(url_for('login', text=text))
 
-    #return make_response('Could not verify!', 401, {'WWW-Authenticate' : 'Basic realm="Login Required!"'})
 
 @app.route("/dhcp")
 @token_required
@@ -266,7 +259,6 @@ def samba_groups(current_user):
 @app.route("/samba/users", methods=['POST'])
 @token_required
 def samba_users(current_user):
-    #if id == "samba-users-check":
     sysusers = f.samba_list_leftover_system_users()
     sambausers = f.samba_list_samba_users()
 

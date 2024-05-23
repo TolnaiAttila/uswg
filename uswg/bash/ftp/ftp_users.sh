@@ -106,7 +106,6 @@ case "$part" in
         
         ;;
     list-denied-ftp-users)
-    #with passwd
     path="/etc/.uswg_configs/ftp/ftp_allowed_users"
     ./bash/shared/exist_file.sh $path
     if [ $? -ne 0 ]; then
